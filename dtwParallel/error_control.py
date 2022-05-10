@@ -1,4 +1,5 @@
 # File error control of input
 
-def validate():
+def validate(input_obj):
+
     print("Control de errores")

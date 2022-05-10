@@ -1,14 +1,19 @@
 import argparse
+import csv
 import sys
 import pandas as pd
 from scipy.spatial import distance
 import os.path
-from dtw_functions import dtw
+from dtw_functions import dtw, dtw_tensor_3d
 from error_control import validate
 import ast
+import numpy as np
+import configparser
 
 class Input:
     def __init__(self):
+        # config = configparser.ConfigParser()
+        # print(config.read('.\dtwParallel\configuration.ini'))
         self.conf_path = '.\dtwParallel\conf.txt'
         constant_parameters = Input.read_configuration(self)
         self.errors_control = bool(constant_parameters[0])
@@ -18,6 +23,7 @@ class Input:
         #self.distance = constant_parameters[3]
         self.distance = distance.euclidean
         self.visualization = ast.literal_eval(constant_parameters[5])
+        self.output_file = ast.literal_eval(constant_parameters[6])
 
     def read_configuration(self):
         with open(self.conf_path) as f:
@@ -25,6 +31,7 @@ class Input:
             f.close()
         split_lines = []
         for i in range(len(lines)):
+            print(lines[i])
             split_lines.append(lines[i].split('=')[1].replace('\n', ""))
         return split_lines
 
@@ -32,6 +39,7 @@ class Input:
 
 def string_to_float(data):
     arr_float = []
+
     for i in range(len(data)):
         arr_float.append(float(data[i]))
 
@@ -41,9 +49,12 @@ def string_to_float(data):
 def read_data(fname):
     return pd.read_csv(fname, header=None)
 
+def read_npy(fname):
+    return np.load(fname)
+
 
 def parse_args():
-
+    print(pd.__file__)
     parser = argparse.ArgumentParser(description='Read POST run outputs.')
     parser.add_argument('file',
                         type=argparse.FileType('r'),
@@ -76,21 +87,31 @@ def input_File():
     input_obj.y = y
 
     if input_obj.errors_control:
-        validate()
+        validate(input_obj)
 
-    return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, MTS, input_obj.visualization)
+    return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, MTS, input_obj.visualization), input_obj.output_file
 
 
 def main():
     # Input type 1: input by csv file
     if len(sys.argv) == 2:
+        print("ENTRAMOS")
+        # input 2D file
         if os.path.exists(sys.argv[1]) and sys.argv[1].endswith('.csv'):
-            print(input_File())
+            dtw_distance, output_file = input_File()
+        # input 3D file
+        elif os.path.exists(sys.argv[1]) and sys.argv[1].endswith('.npy'):
+            args = parse_args()
+            X = read_npy(args.file)
+            type_dtw = "d"
+            dist = distance.euclidean
+            dtw_distance, output_file = dtw_tensor_3d(X, X, type_dtw, dist)
         else:
             raise ValueError('Error in load file.')
     # Input type 2: input by terminal
     elif len(sys.argv) > 2:
         print("Other input")
+        # implementar para prueba sencilla
         # parser.add_argument("--x", nargs='+', type=int)
         # parser.add_argument("--y", nargs='+', type=int)
         # parser.add_argument("--dist", type=int)
@@ -100,7 +121,11 @@ def main():
         # args = parser.parse_args()
         # print(args.file.readlines())
 
-    # print(args)
+    # if output_file:
+    #     print("output to file")
+    #     pd.DataFrame(np.array([dtw_distance])).to_csv("output.csv", index=False)
+    # else:
+    print(dtw_distance)
 
 
     # if args.MTS == "True":

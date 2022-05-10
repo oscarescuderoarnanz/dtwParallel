@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sbn
 
 import gower
+# from joblib import Parallel, delayed
 
 
 def plot_cost_matrix(warp_path, cost):
@@ -144,3 +145,20 @@ def dtw(x, y, type_dtw, dist, MTS=False, get_visualization=False):
             raise ValueError('Display not allowed. Only univariate case.')
 
     return dtw_distance
+
+
+def dtw_tensor_3d(X_1, X_2, type_dtw, dist, MTS=True):
+
+    print(X_1.shape)
+    print(X_2.shape)
+
+    dtw_matrix_train = Parallel(n_jobs=-1)(
+        delayed(dtw)(X_1[i], X_2[j], type_dtw, dist, MTS) for i in
+        range(X_1.shape[0]) for j in range(X_1.shape[0]))
+    data_train = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_1.shape[0]))
+
+    print("Final dimension of DTW: ", data_train.shape)
+
+    return data_train
+
+    # pd.DataFrame(data_train).to_csv("./Datos_09032022/minmax/DTW_D/" + carpetas[index] + "/X_train.csv", index=False)

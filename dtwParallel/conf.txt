@@ -4,3 +4,4 @@ verbose=0
 n_threads=1
 distance=distance.euclidean
 visualization=False
+output_file=True
