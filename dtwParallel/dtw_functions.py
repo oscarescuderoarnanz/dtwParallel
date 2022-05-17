@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sbn
 
 import gower
-# from joblib import Parallel, delayed
+from joblib import Parallel, delayed
 
 
 def plot_cost_matrix(warp_path, cost):
@@ -162,3 +162,6 @@ def dtw_tensor_3d(X_1, X_2, type_dtw, dist, MTS=True):
     return data_train
 
     # pd.DataFrame(data_train).to_csv("./Datos_09032022/minmax/DTW_D/" + carpetas[index] + "/X_train.csv", index=False)
+
+
+	
