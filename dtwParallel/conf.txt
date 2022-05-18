@@ -3,6 +3,6 @@ type_dtw=d
 MTS=False
 verbose=0
 n_threads=1
-distance=distance.euclidean
+distance=euclidean
 visualization=False
 output_file=False

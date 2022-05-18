@@ -9,6 +9,8 @@ from error_control import validate
 import ast
 import numpy as np
 import configparser
+import io
+from contextlib import redirect_stdout
 
 
 
@@ -48,8 +50,13 @@ class Input:
         self.MTS = bool(constant_parameters[2])
         self.verbose = int(constant_parameters[3])
         self.n_threads = int(constant_parameters[4])
-        self.distance = constant_parameters[5]
-        #self.distance = distance.euclidean
+        
+        # If the distance introduced is not correct, the execution is terminated.
+        test_distance = possible_distances()
+        if not constant_parameters[5] in test_distance:
+             raise ValueError('Distance introduced not allowed or incorrect.')
+             
+        self.distance = eval("distance." + constant_parameters[5])
         self.visualization = ast.literal_eval(constant_parameters[6])
         self.output_file = ast.literal_eval(constant_parameters[7])
 
@@ -75,6 +82,7 @@ def string_to_float(data):
 
 def read_data(fname):
     return pd.read_csv(fname, header=None)
+    
 
 def read_npy(fname):
     return np.load(fname)
@@ -94,9 +102,9 @@ def input_File():
     args = parse_args()
     data = read_data(args.file)
     input_obj = Input()
+    
     if (data.shape[0] == 2) and (data.shape[0] % 2 == 0):
         input_obj.MTS = False
-        print("Caso univariante")
         x = string_to_float(data.iloc[0, :].values[0].split(';'))
         y = string_to_float(data.iloc[1, :].values[0].split(';'))
 
@@ -107,8 +115,7 @@ def input_File():
             x.append(string_to_float(data.iloc[0:int(data.shape[0] / 2), :].values[i][0].split(';')))
         y = []
         for i in range(int(data.shape[0] / 2)):
-            y.append(
-                string_to_float(data.iloc[int(data.shape[0] / 2):int(data.shape[0]), :].values[i][0].split(';')))
+            y.append(string_to_float(data.iloc[int(data.shape[0] / 2):int(data.shape[0]), :].values[i][0].split(';')))
 
     input_obj.x = x
     input_obj.y = y
@@ -119,11 +126,41 @@ def input_File():
     return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization), input_obj.output_file
 
 
+# Functions to obtain the possible distances to be managed. 
+def is_distance_function(func, checker):
+    with io.StringIO() as buf, redirect_stdout(buf):
+        help(func)
+        output = buf.getvalue()
+
+    if output.split("\n")[0].find(checker) == -1:
+        return False
+    else:
+        return True
+        
+        
+def possible_distances():
+   # Check that the parameter introduced by terminal associated to the 
+   # distance is one of the possible parameters to use.
+   possible_distance = []
+   for i in range(len(dir(distance))):
+	   if(len(dir(distance)[i].split("_")) == 1) and not any(c.isupper() for c in dir(distance)[i]):
+		   if is_distance_function("scipy.spatial.distance."+dir(distance)[i], checker = "function " + dir(distance)[i] + " in scipy.spatial.distance"):
+			   possible_distance.append(dir(distance)[i])
+			   
+   return possible_distance
+   
+   
+# Function to convert string to boolean
+def str_to_bool(a):
+    if a == "True":
+        return True
+        
+    return False
+   
+        
 def main():
 	
     # Input type 1: input by csv file
-    #print(sys.argv)
-    #if len(sys.argv) == 2 and not sys.argv[1] in ["-h", "-v", "-g"]:
     if len(sys.argv) == 2 and os.path.exists(sys.argv[1]):
         # input 2D file
         if sys.argv[1].endswith('.csv'):
@@ -146,8 +183,10 @@ def main():
             
     # Input type 2: input by terminal
     else:
-        
+        # Generate an object with the deafult parameters
         input_obj = Input()
+        
+        # Control input arguments by terminal
         parser = argparse.ArgumentParser(usage=DTW_USAGE_MSG,
                                      description=DTW_DESC_MSG,
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -163,7 +202,6 @@ def main():
                         help=argparse.SUPPRESS)
 
                         
-        # implementar para prueba sencilla
         parser.add_argument('-x', nargs='+', type=int, help="Temporal Serie 1")
         parser.add_argument('-y', nargs='+', type=int, help="Temporal Serie 2")
         parser.add_argument("-d", "--distance", type=str, help="Use a possible distance of scipy.spatial.distance")
@@ -171,8 +209,8 @@ def main():
         parser.add_argument("MTS", choices=('True','False'))
         parser.add_argument("visualization", choices=('True','False'))
         
+        # Save de input arguments
         args = parser.parse_args()
-        print(args)
         input_obj.x = args.x
         input_obj.y = args.y
         input_obj.type_dtw = args.type_dtw
@@ -183,25 +221,30 @@ def main():
             parser.print_help()
             sys.exit(1)
         
-        if args.MTS == "True":
-            input_obj.MTS = True
-        else:
-            input_obj.MTS = False
+        # Convert boolean parameters introduced by terminal
+        input_obj.MTS = str_to_bool(args.MTS)
+        input_obj.visualization = str_to_bool(args.visualization)
     
-        if args.visualization == "True":
-            input_obj.visualization = True
-        else:
-            input_obj.visualization = False
-            
-        possible_distance = []
-        for i in range(len(dir(distance))):
-            if(len(dir(distance)[i].split("_")) == 1) and not any(c.isupper() for c in dir(distance)[i]):
-                possible_distance.append(dir(distance)[i])
-				
-        if not input_obj.distance in possible_distance:
-             sys.exit(1)
-    
-        print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw, distance.euclidean, input_obj.MTS, input_obj.visualization))
+      
+		# If the distance introduced is not correct, the execution is terminated.
+        test_distance = possible_distances()
+        if not input_obj.distance in test_distance:
+             raise ValueError('Distance introduced not allowed or incorrect.')
+             
+        input_obj.distance = eval("distance." + input_obj.distance)
+		
+        print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization))
+
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+

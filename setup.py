@@ -15,7 +15,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="dtwParallel",
-    version="0.0.1",
+    version="0.0.3",
     description="Python implementation of Dynamic Time Warping (DTW), which allows computing the dtw distance between one-dimensional and multidimensional time series, with the possibility of visualisation (one-dimensional case) and parallelisation (multidimensional case).",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -25,10 +25,10 @@ setup(
     license="BSD 2-clauses",
     packages=["dtwParallel"],
     keywords="Dynamic Time Warping Parallelization Visualisation Distance",
-    classifiers=[
-        'Intended Audience :: Developers/Science/Reasearch',
-        'Topic :: Scientific/Engineering/Software Development',
-        'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 3'
-    ]
+    #classifiers=[
+    #    'Intended Audience :: Developers/Science/Reasearch',
+    #    'Topic :: Scientific/Engineering/Software Development',
+    #    'License :: OSI Approved :: BSD License',
+    #    'Programming Language :: Python :: 3'
+    #]
 )
