@@ -12,6 +12,8 @@ import configparser
 import io
 from contextlib import redirect_stdout
 
+from configuration import create_file_ini
+
 
 
 DTW_USAGE_MSG = \
@@ -37,37 +39,26 @@ DTW_VERSION_MSG = \
 
 class Input:
     def __init__(self):
-        #config = configparser.ConfigParser()
-        #config.read('./dtwParallel/configuration.ini')
-        #print(config['DEFAULT'].items())
-        #print(config['DEFAULT'].values())
-        #print(config.getboolean('DEFAULT', 'errors_control'))
-        #print(config.values())
-        self.conf_path = './dtwParallel/conf.txt'
-        constant_parameters = Input.read_configuration(self)
-        self.errors_control = bool(constant_parameters[0])
-        self.type_dtw = bool(constant_parameters[1])
-        self.MTS = bool(constant_parameters[2])
-        self.verbose = int(constant_parameters[3])
-        self.n_threads = int(constant_parameters[4])
+        Input.execute_configuration(self)
+        config = configparser.ConfigParser()
+        config.read('./configuration.ini')
+        self.errors_control = config.getboolean('DEFAULT', 'errors_control')
+        self.type_dtw = config.get('DEFAULT', 'type_dtw')
+        self.MTS = config.getboolean('DEFAULT', 'MTS')
+        self.verbose = config.getint('DEFAULT', 'verbose')
+        self.n_threads = config.getint('DEFAULT', 'n_threads')
         
         # If the distance introduced is not correct, the execution is terminated.
         test_distance = possible_distances()
-        if not constant_parameters[5] in test_distance:
+        if not config.get('DEFAULT', 'distance') in test_distance:
              raise ValueError('Distance introduced not allowed or incorrect.')
              
-        self.distance = eval("distance." + constant_parameters[5])
-        self.visualization = ast.literal_eval(constant_parameters[6])
-        self.output_file = ast.literal_eval(constant_parameters[7])
+        self.distance = eval("distance." + config.get('DEFAULT', 'distance'))
+        self.visualization = config.getboolean('DEFAULT', 'visualization')
+        self.output_file = config.getboolean('DEFAULT', 'output_file')
 
-    def read_configuration(self):
-        with open(self.conf_path) as f:
-            lines = f.readlines()
-            f.close()
-        split_lines = []
-        for i in range(len(lines)):
-            split_lines.append(lines[i].split('=')[1].replace('\n', ""))
-        return split_lines
+    def execute_configuration(self):
+        create_file_ini()
 
 
 
@@ -89,7 +80,6 @@ def read_npy(fname):
 
 
 def parse_args():
-    print(pd.__file__)
     parser = argparse.ArgumentParser(description='Read POST run outputs.')
     parser.add_argument('file',
                         type=argparse.FileType('r'),
