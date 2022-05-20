@@ -11,7 +11,6 @@ import numpy as np
 import configparser
 import io
 from contextlib import redirect_stdout
-
 from configuration import create_file_ini
 
 

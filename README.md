@@ -6,7 +6,7 @@ This package allows to measure the similarity between two time sequences, i.e. i
 
 The package can be used in three different ways:
 
-1) Downloading the repository::
+1) Downloading the repository:
 
     a) Entering the parameters by terminal.  
 
