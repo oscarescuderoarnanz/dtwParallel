@@ -58,6 +58,8 @@ class Input:
         self.distance = config.get('DEFAULT', 'distance')
         self.visualization = config.getboolean('DEFAULT', 'visualization')
         self.output_file = config.getboolean('DEFAULT', 'output_file')
+        self.DTW_to_kernel = config.getboolean('DEFAULT', 'DTW_to_kernel')
+        self.sigma = config.getint('DEFAULT', 'sigma')
 
     def execute_configuration(self):
         create_file_ini()
@@ -106,7 +108,8 @@ def main():
             args = parse_args()
             X = read_npy(args.file)
             input_obj.distance = eval("distance."+input_obj.distance)
-            dtw_distance = dtw_tensor_3d(X, X, input_obj.type_dtw, input_obj.distance, input_obj.n_threads)
+            input_obj.DTW_to_kernel = str_to_bool(input_obj.DTW_to_kernel)
+            dtw_distance = dtw_tensor_3d(X, X, input_obj)
         else:
             raise ValueError('Error in load file.')
             
