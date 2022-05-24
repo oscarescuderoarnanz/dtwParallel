@@ -8,6 +8,8 @@ import seaborn as sbn
 import gower
 from joblib import Parallel, delayed
 
+from error_control import control_inputs
+
 
 def plot_cost_matrix(warp_path, cost):
     fig, ax = plt.subplots(figsize=(12, 10))
@@ -24,25 +26,6 @@ def plot_cost_matrix(warp_path, cost):
     ax.plot(path_xx, path_yy, color='blue', linewidth=3, alpha=0.2)
 
 
-def control_inputs(x, y, type_dtw, MTS):
-    if type_dtw == "i" and not MTS:
-        raise ValueError('Get independent dtw distance only valid for MTS.')
-
-    x = np.asanyarray(x, dtype='float')
-    y = np.asanyarray(y, dtype='float')
-
-
-    # Irregular multivariate time series are not allowed.
-    if x.ndim == y.ndim > 1 and x.shape[1] != y.shape[1]:
-        raise ValueError('Irregular multivariate time series are not allowed.')
-
-    if x.ndim == 1 and MTS:
-        raise ValueError('The data entered are not Multivariate Time Series.')
-
-    if x.ndim == y.ndim > 1 and not MTS:
-        raise ValueError('Change the value of the MTS flag.')
-
-    return x, y
 
 
 def dtw_ind(x, y, dist, dtw_distance=0):
@@ -124,8 +107,9 @@ def get_cost_matrix(D):
     return np.delete(arr, np.s_[0], 0)
 
 
-def dtw(x, y, type_dtw, dist, MTS=False, get_visualization=False):
-    x, y = control_inputs(x, y, type_dtw, MTS)
+def dtw(x, y, type_dtw, dist, MTS=False, get_visualization=False, errors_control=False):
+    if errors_control:
+        x, y = control_inputs(x, y, type_dtw, MTS)
 
     if MTS:
         if type_dtw == "i":

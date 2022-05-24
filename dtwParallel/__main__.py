@@ -5,13 +5,14 @@ import pandas as pd
 from scipy.spatial import distance
 import os.path
 from dtw_functions import dtw, dtw_tensor_3d
-from error_control import validate
-import ast
+#import ast
 import numpy as np
 import configparser
-import io
-from contextlib import redirect_stdout
+#import io
+#from contextlib import redirect_stdout
 from configuration import create_file_ini
+from error_control import possible_distances
+from utils import *
 
 
 
@@ -33,7 +34,7 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.1"""
+    """%(prog)s 0.0.5"""
 
 
 class Input:
@@ -48,11 +49,13 @@ class Input:
         self.n_threads = config.getint('DEFAULT', 'n_threads')
         
         # If the distance introduced is not correct, the execution is terminated.
-        test_distance = possible_distances()
-        if not config.get('DEFAULT', 'distance') in test_distance:
-             raise ValueError('Distance introduced not allowed or incorrect.')
+        if self.errors_control:
+            test_distance = possible_distances()
+            if not config.get('DEFAULT', 'distance') in test_distance:
+                raise ValueError('Distance introduced not allowed or incorrect.')
              
-        self.distance = eval("distance." + config.get('DEFAULT', 'distance'))
+        #self.distance = eval("distance." + config.get('DEFAULT', 'distance'))
+        self.distance = config.get('DEFAULT', 'distance')
         self.visualization = config.getboolean('DEFAULT', 'visualization')
         self.output_file = config.getboolean('DEFAULT', 'output_file')
 
@@ -60,36 +63,10 @@ class Input:
         create_file_ini()
 
 
-
-def string_to_float(data):
-    arr_float = []
-
-    for i in range(len(data)):
-        arr_float.append(float(data[i]))
-
-    return arr_float
-
-
-def read_data(fname):
-    return pd.read_csv(fname, header=None)
-    
-
-def read_npy(fname):
-    return np.load(fname)
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Read POST run outputs.')
-    parser.add_argument('file',
-                        type=argparse.FileType('r'),
-                        help='POST file to be analyzed.')
-    return parser.parse_args()
-
-
 def input_File():
 
-    args = parse_args()
-    data = read_data(args.file)
+    args = utils.parse_args()
+    data = utils.read_data(args.file)
     input_obj = Input()
     
     if (data.shape[0] == 2) and (data.shape[0] % 2 == 0):
@@ -109,44 +86,11 @@ def input_File():
     input_obj.x = x
     input_obj.y = y
 
-    if input_obj.errors_control:
-        validate(input_obj)
-
-    return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization), input_obj.output_file
+    return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance,
+     input_obj.MTS, input_obj.visualization, input_obj.errors_control), input_obj.output_file
 
 
-# Functions to obtain the possible distances to be managed. 
-def is_distance_function(func, checker):
-    with io.StringIO() as buf, redirect_stdout(buf):
-        help(func)
-        output = buf.getvalue()
-
-    if output.split("\n")[0].find(checker) == -1:
-        return False
-    else:
-        return True
-        
-        
-def possible_distances():
-   # Check that the parameter introduced by terminal associated to the 
-   # distance is one of the possible parameters to use.
-   possible_distance = []
-   for i in range(len(dir(distance))):
-	   if(len(dir(distance)[i].split("_")) == 1) and not any(c.isupper() for c in dir(distance)[i]):
-		   if is_distance_function("scipy.spatial.distance."+dir(distance)[i], checker = "function " + dir(distance)[i] + " in scipy.spatial.distance"):
-			   possible_distance.append(dir(distance)[i])
-			   
-   return possible_distance
    
-   
-# Function to convert string to boolean
-def str_to_bool(a):
-    if a == "True":
-        return True
-        
-    return False
-   
-        
 def main():
 	
     # Input type 1: input by csv file
@@ -193,18 +137,20 @@ def main():
                         
         parser.add_argument('-x', nargs='+', type=int, help="Temporal Serie 1")
         parser.add_argument('-y', nargs='+', type=int, help="Temporal Serie 2")
-        parser.add_argument("-d", "--distance", type=str, help="Use a possible distance of scipy.spatial.distance")
-        parser.add_argument('-t', '--type_dtw', type=str, help="d: dependient or i: independient")
-        parser.add_argument("MTS", choices=('True','False'))
-        parser.add_argument("visualization", choices=('True','False'))
+        parser.add_argument("-ec", "--errors_control", nargs='?', default=input_obj.errors_control, type=str, help="Control whether or not check for errors.")
+        parser.add_argument("-d", "--distance", nargs='?', default=input_obj.distance, type=str, help="Use a possible distance of scipy.spatial.distance.")
+        parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str, help="d: dependient or i: independient.")
+        parser.add_argument("MTS", nargs='?', default=input_obj.type_dtw, type=bool, help="Indicates whether the data are multivariate time series or not.")
+        parser.add_argument("visualization", nargs='?', default=input_obj.visualization, type=bool, help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
         
         # Save de input arguments
         args = parser.parse_args()
         input_obj.x = args.x
         input_obj.y = args.y
+        input_obj.errors_control = args.errors_control
         input_obj.type_dtw = args.type_dtw
         input_obj.distance = args.distance
-            
+
         
         if len(sys.argv) == 1:
             parser.print_help()
@@ -216,13 +162,16 @@ def main():
     
       
 		# If the distance introduced is not correct, the execution is terminated.
-        test_distance = possible_distances()
-        if not input_obj.distance in test_distance:
-             raise ValueError('Distance introduced not allowed or incorrect.')
+        if input_obj.errors_control:
+            test_distance = possible_distances()
+            if not input_obj.distance in test_distance:
+                raise ValueError('Distance introduced not allowed or incorrect.')
              
         input_obj.distance = eval("distance." + input_obj.distance)
 		
-        print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization))
+        print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
+         input_obj.distance, input_obj.MTS, input_obj.visualization,
+         input_obj.errors_control))
 
 
 if __name__ == "__main__":
