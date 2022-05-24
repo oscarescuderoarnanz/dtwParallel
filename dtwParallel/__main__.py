@@ -46,7 +46,6 @@ class Input:
         self.errors_control = config.getboolean('DEFAULT', 'errors_control')
         self.type_dtw = config.get('DEFAULT', 'type_dtw')
         self.MTS = config.getboolean('DEFAULT', 'MTS')
-        self.verbose = config.getint('DEFAULT', 'verbose')
         self.n_threads = config.getint('DEFAULT', 'n_threads')
         
         # If the distance introduced is not correct, the execution is terminated.
@@ -64,11 +63,10 @@ class Input:
         create_file_ini()
 
 
-def input_File():
+def input_File(input_obj):
 
     args = parse_args()
     data = read_data(args.file)
-    input_obj = Input()
     
     if (data.shape[0] == 2) and (data.shape[0] % 2 == 0):
         input_obj.MTS = False
@@ -95,32 +93,32 @@ def input_File():
    
 def main():
 	
+	# Generate an object with the deafult parameters
+    input_obj = Input()
+	
     # Input type 1: input by csv file
     if len(sys.argv) == 2 and os.path.exists(sys.argv[1]):
         # input 2D file
         if sys.argv[1].endswith('.csv'):
-            dtw_distance, output_file = input_File()
+            dtw_distance, output_file = input_File(input_obj)
         # input 3D file. We include the possibility to parallelise.
         elif sys.argv[1].endswith('.npy'):
             args = parse_args()
             X = read_npy(args.file)
-            type_dtw = "d"
-            dist = distance.euclidean
-            dtw_distance, output_file = dtw_tensor_3d(X, X, type_dtw, dist)
+            input_obj.distance = eval("distance."+input_obj.distance)
+            dtw_distance = dtw_tensor_3d(X, X, input_obj.type_dtw, input_obj.distance, input_obj.n_threads)
         else:
             raise ValueError('Error in load file.')
             
-        if output_file:
+        if input_obj.output_file:
             print("output to file")
             pd.DataFrame(np.array([dtw_distance])).to_csv("output.csv", index=False)
         else:
-            print(dtw_distance)
+            return dtw_distance
             
     # Input type 2: input by terminal
     else:
-        # Generate an object with the deafult parameters
-        input_obj = Input()
-        
+
         # Control input arguments by terminal
         parser = argparse.ArgumentParser(usage=DTW_USAGE_MSG,
                                      description=DTW_DESC_MSG,
@@ -171,9 +169,9 @@ def main():
              
         input_obj.distance = eval("distance." + input_obj.distance)
 		
-        print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
+        return dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
          input_obj.distance, input_obj.MTS, input_obj.visualization,
-         input_obj.errors_control))
+         input_obj.errors_control)
 
 
 if __name__ == "__main__":

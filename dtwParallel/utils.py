@@ -24,7 +24,7 @@ def read_data(fname):
     
 
 def read_npy(fname):
-    return np.load(fname)
+    return np.load(fname.name)
 
 
 def parse_args():

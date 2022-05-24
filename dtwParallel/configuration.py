@@ -7,8 +7,7 @@ def create_file_ini():
 	                     'distance': "euclidean",
 						 'type_dtw': 'd',
 						 'MTS': 'False',
-						 'verbose': 0,
-						 'n_threads': 1,
+						 'n_threads': -1,
 						 'visualization': 'False',
 						 'output_file': 'False'}
 						 
