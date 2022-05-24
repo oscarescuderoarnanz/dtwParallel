@@ -24,8 +24,9 @@ DTW_DESC_MSG = \
     Args:
 	   -x   Time series 1
 	   -y   Time series 2
+	   -ec  Error control
 	   -d   Type of distance
-	   -t   Calculation type DTW 
+	   -t   Calculation type DTW
     
     Optional arguments:
       -h, --help            show this help message and exit
@@ -65,8 +66,8 @@ class Input:
 
 def input_File():
 
-    args = utils.parse_args()
-    data = utils.read_data(args.file)
+    args = parse_args()
+    data = read_data(args.file)
     input_obj = Input()
     
     if (data.shape[0] == 2) and (data.shape[0] % 2 == 0):
@@ -85,6 +86,7 @@ def input_File():
 
     input_obj.x = x
     input_obj.y = y
+    input_obj.distance = eval("distance."+input_obj.distance)
 
     return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance,
      input_obj.MTS, input_obj.visualization, input_obj.errors_control), input_obj.output_file
@@ -98,7 +100,7 @@ def main():
         # input 2D file
         if sys.argv[1].endswith('.csv'):
             dtw_distance, output_file = input_File()
-        # input 3D file
+        # input 3D file. We include the possibility to parallelise.
         elif sys.argv[1].endswith('.npy'):
             args = parse_args()
             X = read_npy(args.file)
