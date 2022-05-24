@@ -8,17 +8,35 @@ The package can be used in three different ways:
 
 1) Downloading the repository:
 
-    a) Entering the parameters by terminal.  
+    a) Entering the parameters by terminal.
 
     ```
     python3 dtwParallel/__main__.py -x 1 2 3 -y 1 1 1 -d "euclidean" -t "d" False False
     ```
+    
+    Otros ejemplos que incluyen no necesariamente introducir todos los parámetros son:
+    
+    ```
+    python3 dtwParallel/__main__.py -x 1 2 3 -y 1 1 1
+    ```
+    
+    ```
+    python3 dtwParallel/__main__.py -x 1 2 3 -y 1 1 1 -d "euclidean"
+    ```
    
     b) By file.
+    
+	Ejemplo de cálculo para series temporales univariantes. 
 
-    ```
-    python3 dtwParallel/__main__.py Libro1.csv
-    ```
+        ```
+        python3 dtwParallel/__main__.py Libro1.csv
+        ```
+        
+	Ejemplo de cálculo para series temporales multivariantes. 
+
+        ```
+        python3 dtwParallel/__main__.py X_train.npy
+        ```
 
 2) Making use of the API. 
 
@@ -44,12 +62,7 @@ pip install -i https://test.pypi.org/simple/ dtwParallel
 ```
 
 ## Documentation
-
-## References
-
-
-### APA style
-
+Para cualquier modificación de los parámetros por defecto se puede llevar a cabo la configuración del fichero configuration.py. 
 
 ## Examples
 
