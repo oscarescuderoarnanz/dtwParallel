@@ -5,11 +5,8 @@ import pandas as pd
 from scipy.spatial import distance
 import os.path
 from dtw_functions import dtw, dtw_tensor_3d
-#import ast
 import numpy as np
 import configparser
-#import io
-#from contextlib import redirect_stdout
 from configuration import create_file_ini
 from error_control import possible_distances
 from utils import *
@@ -179,13 +176,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
 
 
 
