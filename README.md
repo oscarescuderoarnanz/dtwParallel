@@ -134,11 +134,9 @@ For Univariate Time Series:
  dtw_functions.dtw(x,y,type_dtw, get_visualization)
  
  [out]: 5.0
- 
- 
- 
-
  ```
+![img.png](img.png)
+
 For Multivariate Time Series: 
  ```
 from dtwParallel import dtw_functions
