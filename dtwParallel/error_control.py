@@ -47,6 +47,10 @@ def possible_distances():
 		   if is_distance_function("scipy.spatial.distance."+dir(distance)[i],
 		    checker = "function " + dir(distance)[i] + " in scipy.spatial.distance"):
 			   possible_distance.append(dir(distance)[i])
-			   
+
+   # I add as a possible distance measurement the gower distance. Gower distance allows the 
+   # calculation of distance between continuous and binary variables. 
+   possible_distance.append("gower")	  
+    
    return possible_distance
    

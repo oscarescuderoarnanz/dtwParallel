@@ -3,7 +3,7 @@ import configparser
 
 def create_file_ini():
 	config = configparser.ConfigParser()
-	config['DEFAULT'] = {'errors_control': 'True',
+	config['DEFAULT'] = {'check_errors': 'True',
 	                     'distance': "euclidean",
 						 'type_dtw': 'd',
 						 'MTS': 'False',

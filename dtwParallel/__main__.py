@@ -21,7 +21,7 @@ DTW_DESC_MSG = \
     Args:
 	   -x   Time series 1
 	   -y   Time series 2
-	   -ec  Error control
+	   -ce  Check data for errors
 	   -d   Type of distance
 	   -t   Calculation type DTW
     
@@ -40,13 +40,13 @@ class Input:
         Input.execute_configuration(self)
         config = configparser.ConfigParser()
         config.read('./configuration.ini')
-        self.errors_control = config.getboolean('DEFAULT', 'errors_control')
+        self.errors_control = config.getboolean('DEFAULT', 'check_errors')
         self.type_dtw = config.get('DEFAULT', 'type_dtw')
         self.MTS = config.getboolean('DEFAULT', 'MTS')
         self.n_threads = config.getint('DEFAULT', 'n_threads')
         
         # If the distance introduced is not correct, the execution is terminated.
-        if self.errors_control:
+        if self.check_errors:
             test_distance = possible_distances()
             if not config.get('DEFAULT', 'distance') in test_distance:
                 raise ValueError('Distance introduced not allowed or incorrect.')
@@ -86,7 +86,7 @@ def input_File(input_obj):
     input_obj.distance = eval("distance."+input_obj.distance)
 
     return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance,
-     input_obj.MTS, input_obj.visualization, input_obj.errors_control), input_obj.output_file
+     input_obj.MTS, input_obj.visualization, input_obj.check_errors), input_obj.output_file
 
 
    
@@ -141,7 +141,7 @@ def main():
                         
         parser.add_argument('-x', nargs='+', type=int, help="Temporal Serie 1")
         parser.add_argument('-y', nargs='+', type=int, help="Temporal Serie 2")
-        parser.add_argument("-ec", "--errors_control", nargs='?', default=input_obj.errors_control, type=str, help="Control whether or not check for errors.")
+        parser.add_argument("-ce", "--check_errors", nargs='?', default=input_obj.check_errors, type=str, help="Control whether or not check for errors.")
         parser.add_argument("-d", "--distance", nargs='?', default=input_obj.distance, type=str, help="Use a possible distance of scipy.spatial.distance.")
         parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str, help="d: dependient or i: independient.")
         parser.add_argument("MTS", nargs='?', default=input_obj.type_dtw, type=bool, help="Indicates whether the data are multivariate time series or not.")
@@ -151,7 +151,7 @@ def main():
         args = parser.parse_args()
         input_obj.x = args.x
         input_obj.y = args.y
-        input_obj.errors_control = args.errors_control
+        input_obj.check_errors = args.check_errors
         input_obj.type_dtw = args.type_dtw
         input_obj.distance = args.distance
 
@@ -166,7 +166,7 @@ def main():
     
       
 		# If the distance introduced is not correct, the execution is terminated.
-        if input_obj.errors_control:
+        if input_obj.check_errors:
             test_distance = possible_distances()
             if not input_obj.distance in test_distance:
                 raise ValueError('Distance introduced not allowed or incorrect.')
@@ -175,7 +175,7 @@ def main():
 		
         return print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
          input_obj.distance, input_obj.MTS, input_obj.visualization,
-         input_obj.errors_control))
+         input_obj.check_errors))
 
 
 if __name__ == "__main__":
