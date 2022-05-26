@@ -123,7 +123,21 @@ For Univariate Time Series:
  distance = distance.euclidean
  dtw_functions.dtw(x,y,type_dtw)
  
- out=5.0
+ [out]: 5.0
+ ```
+ 
+ ```
+ x = [1,2,3]
+ y = [0,0,1]
+ distance = distance.euclidean
+ get_visualization=True
+ dtw_functions.dtw(x,y,type_dtw, get_visualization)
+ 
+ [out]: 5.0
+ 
+ 
+ 
+
  ```
 For Multivariate Time Series: 
  ```
@@ -138,7 +152,7 @@ y = np.array([[2, 0,8],
             
 dtw_functions.dtw(x,y,"d", distance.euclidean, MTS=True)
 
-out=7.548509256375962
+ [out]: 7.548509256375962
  ```
 
 

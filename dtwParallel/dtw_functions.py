@@ -143,14 +143,12 @@ def dtw_tensor_3d(X_1, X_2, type_dtw="d", dist=distance.euclidean, n_threads=-1,
     dtw_matrix_train = Parallel(n_jobs=n_threads)(
         delayed(dtw)(X_1[i], X_2[j], type_dtw, dist, MTS=True) 
         for i in range(X_1.shape[0]) 
-        for j in range(X_1.shape[0])
+        for j in range(X_2.shape[0])
     )
-    data_train = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_1.shape[0]))
+    print(data_train)
+    data_train = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
     
     if dtw_to_kernel:
 	     return transform_DTW_to_kernel(data_train, sigma)
 
     return data_train
-
-
-	
