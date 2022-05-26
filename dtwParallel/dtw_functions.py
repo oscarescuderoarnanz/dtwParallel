@@ -7,6 +7,7 @@ import seaborn as sbn
 
 import gower
 from joblib import Parallel, delayed
+from scipy.spatial import distance
 
 from error_control import control_inputs
 
@@ -107,7 +108,7 @@ def get_cost_matrix(D):
     return np.delete(arr, np.s_[0], 0)
 
 
-def dtw(x, y, type_dtw, dist, MTS=False, get_visualization=False, errors_control=False):
+def dtw(x, y, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualization=False, errors_control=False):
     if errors_control:
         x, y = control_inputs(x, y, type_dtw, MTS)
 
@@ -133,21 +134,17 @@ def dtw(x, y, type_dtw, dist, MTS=False, get_visualization=False, errors_control
 
 # We transform the DTW matrix to an exponential kernel. 
 def transform_DTW_to_kernel(data_train, sigma):
+	
 	return np.exp(-X_pre_train/(2*sigma[index_sigma]**2))
 	
 	
-def dtw_tensor_3d(X_1, X_2, input_obj):
-	
-    type_dtw = input_obj.type_dtw
-    dist = input_obj.distance
-    n_threads = input_obj.n_threads
-    sigma = input_obj.sigma
-    dtw_to_kernel = input_obj.DTW_to_kernel
-    MTS = True
+def dtw_tensor_3d(X_1, X_2, type_dtw="d", dist=distance.euclidean, n_threads=-1, errors_control=False, dtw_to_kernel=False, sigma=1):
 	
     dtw_matrix_train = Parallel(n_jobs=n_threads)(
-        delayed(dtw)(X_1[i], X_2[j], type_dtw, dist, MTS) for i in
-        range(X_1.shape[0]) for j in range(X_1.shape[0]))
+        delayed(dtw)(X_1[i], X_2[j], type_dtw, dist, MTS=True) 
+        for i in range(X_1.shape[0]) 
+        for j in range(X_1.shape[0])
+    )
     data_train = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_1.shape[0]))
     
     if dtw_to_kernel:

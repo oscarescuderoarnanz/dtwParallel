@@ -32,7 +32,7 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.5"""
+    """%(prog)s 0.0.6"""
 
 
 class Input:
@@ -96,17 +96,21 @@ def main():
     input_obj = Input()
 	
     # Input type 1: input by csv file
-    if len(sys.argv) == 2 and os.path.exists(sys.argv[1]):
+    if os.path.exists(sys.argv[1]):
         # input 2D file
         if sys.argv[1].endswith('.csv'):
             dtw_distance, output_file = input_File(input_obj)
         # input 3D file. We include the possibility to parallelise.
         elif sys.argv[1].endswith('.npy'):
             args = parse_args()
-            X = read_npy(args.file)
+            if len(sys.argv) == 3 and sys.argv[2].endswith('.npy'):
+                X, Y = read_npy(args.X), read_npy(args.Y)
+            else:
+                X = read_npy(args.X)
+                Y = X
             input_obj.distance = eval("distance."+input_obj.distance)
             input_obj.DTW_to_kernel = str_to_bool(input_obj.DTW_to_kernel)
-            dtw_distance = dtw_tensor_3d(X, X, input_obj)
+            dtw_distance = dtw_tensor_3d(X, Y, input_obj)
         else:
             raise ValueError('Error in load file.')
             
@@ -114,7 +118,7 @@ def main():
             print("output to file")
             pd.DataFrame(np.array([dtw_distance])).to_csv("output.csv", index=False)
         else:
-            return dtw_distance
+            return print(dtw_distance)
             
     # Input type 2: input by terminal
     else:
@@ -169,9 +173,9 @@ def main():
              
         input_obj.distance = eval("distance." + input_obj.distance)
 		
-        return dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
+        return print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
          input_obj.distance, input_obj.MTS, input_obj.visualization,
-         input_obj.errors_control)
+         input_obj.errors_control))
 
 
 if __name__ == "__main__":

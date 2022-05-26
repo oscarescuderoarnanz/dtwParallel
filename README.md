@@ -52,7 +52,11 @@ It is only necessary to indicate the x and y parameters, the rest, in case they 
    b)  Example of calculation for time series from a .npy file: 
 
    ```
-      python3 dtwParallel/__main__.py dtwParallel/X_train.npy
+      python3 dtwParallel/__main__.py dtwParallel/X_train.npy dtwParallel/X_train.npy
+   ```
+   
+   ```
+      python3 dtwParallel/__main__.py dtwParallel/X_train.npy dtwParallel/X_test.npy
    ```
 
 **3) Making use of the API.** 
@@ -65,7 +69,7 @@ For Univariate Time Series:
  ```
 For Multivariate Time Series: 
  ```
- dtw_functions.dtw_tensor(x,y,input_object)
+ dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, sigma, errors_control, dtw_to_kernel)
  ```
 
 
@@ -103,6 +107,39 @@ If you use dtwParallel in your research papers, please refer to ...
 
 
 ## Examples
+
+**3) Making use of the API.** 
+
+Different examples are shown making direct use of the API:
+
+ ```
+ from dtwParallel import dtw_functions
+ from scipy.spatial import distance
+ ```
+For Univariate Time Series: 
+ ```
+ x = [1,2,3]
+ y = [0,0,1]
+ distance = distance.euclidean
+ dtw_functions.dtw(x,y,type_dtw)
+ 
+ out=5.0
+ ```
+For Multivariate Time Series: 
+ ```
+from dtwParallel import dtw_functions
+from scipy.spatial import distance
+
+x = np.array([[3,5,8], 
+             [5, 1,9]])
+
+y = np.array([[2, 0,8],
+             [4, 3,8]])
+            
+dtw_functions.dtw(x,y,"d", distance.euclidean, MTS=True)
+
+out=7.548509256375962
+ ```
 
 
 ## License
