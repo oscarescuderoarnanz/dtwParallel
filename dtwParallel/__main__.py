@@ -32,7 +32,7 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.6"""
+    """%(prog)s 0.0.9"""
 
 
 class Input:
@@ -40,7 +40,7 @@ class Input:
         Input.execute_configuration(self)
         config = configparser.ConfigParser()
         config.read('./configuration.ini')
-        self.errors_control = config.getboolean('DEFAULT', 'check_errors')
+        self.check_errors = config.getboolean('DEFAULT', 'check_errors')
         self.type_dtw = config.get('DEFAULT', 'type_dtw')
         self.MTS = config.getboolean('DEFAULT', 'MTS')
         self.n_threads = config.getint('DEFAULT', 'n_threads')
