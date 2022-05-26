@@ -65,11 +65,11 @@ It is only necessary to indicate the x and y parameters, the rest, in case they 
  ```
 For Univariate Time Series: 
  ```
- dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, errors_control)
+ dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_erros)
  ```
 For Multivariate Time Series: 
  ```
- dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, sigma, errors_control, dtw_to_kernel)
+ dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, sigma, check_erros, dtw_to_kernel, sigma)
  ```
 
 
@@ -151,6 +151,22 @@ y = np.array([[2, 0,8],
 dtw_functions.dtw(x,y,"d", distance.euclidean, MTS=True)
 
  [out]: 7.548509256375962
+ ```
+ 
+ ```
+ from dtwParallel import dtw_functions
+ from scipy.spatial import distance
+ import numpy as np
+ x = np.load('X_train.npy')
+ y = np.load('X_test.npy')
+ 
+ dtw_functions.dtw_tensor_3d(x, y, "gower")
+
+ [out]: 
+ array([[2.47396197e+16, 6.12016408e+17, 4.75817098e+15, 1.02119724e+18],
+       [9.07388652e+17, 1.54414468e+18, 9.36886443e+17, 8.90689643e+16],
+       [2.23522660e+17, 8.60278687e+17, 2.53020450e+17, 7.72934957e+17],
+       [1.68210525e+18, 2.31886127e+18, 1.71160304e+18, 6.85647630e+17]])
  ```
 
 
