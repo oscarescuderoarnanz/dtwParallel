@@ -13,13 +13,24 @@ Multivariate Time Series:
 
 ![img_3.png](img_3.png)
 
+|_ dtwParallel
+|  |___main__.py
+|  |_dtw_functions.py
+|  |_error_control.py
+|  |_utils.py
+|
+|_ configuration.ini
+|_requirements.txt
+|_setup.py
+
+
 
 ## Installation
 
 dtwParallel can be installed using [pip](https://pip.pypa.io/en/stable/), a tool
 for installing Python packages. To do it, run the following command:
 ```
-pip install -i https://test.pypi.org/simple/ dtwParallel
+pip3 install -i https://test.pypi.org/simple/ dtwParallel
 ```
 
 ## Requirements
@@ -48,7 +59,7 @@ Based on the previous scheme, this package can be used in three different contex
     python3 dtwParallel.py -x 1 2 3 -y 1 1 1 -d "euclidean" -t "d" False False
    ```
     
-It is only necessary to indicate the x and y parameters. The rest, in case they are not set, will be selected from the default values defined in the `configuration.py` file. An example without the need to incorporate all parameters:
+It is only necessary to indicate the x and y parameters. The rest, in case they are not set, will be selected from the default values defined in the `configuration.ini` file. An example without the need to incorporate all parameters:
     
    ```
     python3 dtwParallel.py -x 1 2 3 -y 1 1 1

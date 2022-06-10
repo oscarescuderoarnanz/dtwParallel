@@ -7,7 +7,7 @@ import os.path
 from dtw_functions import dtw, dtw_tensor_3d
 import numpy as np
 import configparser
-from configuration import create_file_ini
+#from configuration import create_file_ini
 from error_control import possible_distances
 from utils import *
 
@@ -32,12 +32,12 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.10"""
+    """%(prog)s 0.0.11"""
 
 
 class Input:
     def __init__(self):
-        Input.execute_configuration(self)
+        #Input.execute_configuration(self)
         config = configparser.ConfigParser()
         config.read('./configuration.ini')
         self.check_errors = config.getboolean('DEFAULT', 'check_errors')
@@ -58,8 +58,8 @@ class Input:
         self.DTW_to_kernel = config.getboolean('DEFAULT', 'DTW_to_kernel')
         self.sigma = config.getint('DEFAULT', 'sigma')
 
-    def execute_configuration(self):
-        create_file_ini()
+    #def execute_configuration(self):
+    #    create_file_ini()
 
 
 def input_File(input_obj):
