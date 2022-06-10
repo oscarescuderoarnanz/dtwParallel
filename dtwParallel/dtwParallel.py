@@ -178,8 +178,14 @@ def main():
          input_obj.check_errors))
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "dtwParallel":
+
+   try:
+      main()
+   except KeyboardInterrupt:
+      s = "\n\nReceived Ctrl-C or other break signal. Exiting.\n"
+      sys.stderr.write(s)
+      sys.exit(0)
 
 
 

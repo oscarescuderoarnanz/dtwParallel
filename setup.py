@@ -23,12 +23,23 @@ setup(
     author="oscarescuderoarnanz",
     author_email="escuderoarnanzoscar@gmail.com",
     license="BSD 2-clauses",
-    packages=["dtwParallel"],
+    packages=[
+       "dtwParallel"
+    ],
+    namespace_packages=[
+      "dtwParallel",
+    ],
     keywords="Dynamic Time Warping Parallelization Visualisation Distance",
-    #classifiers=[
-    #    'Intended Audience :: Developers/Science/Reasearch',
-    #    'Topic :: Scientific/Engineering/Software Development',
-    #    'License :: OSI Approved :: BSD License',
-    #    'Programming Language :: Python :: 3'
-    #]
+    classifiers=[
+        'Intended Audience :: Developers/Science/Reasearch',
+        'Topic :: Scientific/Engineering/Software Development',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 3'
+    ]
+    entry_points={
+        'console_scripts': [
+        'dtwParallel=dtwParallel.dtwParalle:main'
+        ]
+    },
+    cmdclass=cmdclass
 )
