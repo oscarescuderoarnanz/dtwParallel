@@ -56,13 +56,13 @@ Based on the previous scheme, this package can be used in three different contex
 
    An example covering all possible input parameters would be the following:
    ```
-    python3 dtwParallel.py -x 1 2 3 -y 1 1 1 -d "euclidean" -t "d" False False
+      dtwParallel -x 1 2 3 -y 1 1 1 -d "euclidean" -t "d" False False
    ```
     
 It is only necessary to indicate the x and y parameters. The rest, in case they are not set, will be selected from the default values defined in the `configuration.ini` file. An example without the need to incorporate all parameters:
     
    ```
-    python3 dtwParallel.py -x 1 2 3 -y 1 1 1
+      dtwParallel -x 1 2 3 -y 1 1 1
    ```
    **Remarks:**
    The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding, due to the complexity of the terminal handling:
@@ -76,22 +76,22 @@ It is only necessary to indicate the x and y parameters. The rest, in case they 
    The file used incorporates the data for the univariate x and y time series.
    
    ```
-      python3 dtwParallel.py dtwParallel/Libro1.csv
+      dtwParallel exampleData/Libro1.csv
    ```
 
    The file used incorporates the data for the multivariate x and y time series. 
    ```
-      python3 dtwParallel.py dtwParallel/Libro2.csv
+      dtwParallel exampleData/Libro2.csv
    ```
 
    b)  Example of calculation for time series from a .npy file: 
 
    ```
-      python3 dtwParallel.py dtwParallel/X_train.npy dtwParallel/X_train.npy
+      dtwParallel exampleData/X_train.npy dtwParallel/X_train.npy
    ```
    
    ```
-      python3 dtwParallel.py dtwParallel/X_train.npy dtwParallel/X_test.npy
+      dtwParallel exampleData/X_train.npy dtwParallel/X_test.npy
    ```
 
 **3) Making use of the API** 

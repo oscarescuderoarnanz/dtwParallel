@@ -4,12 +4,12 @@ import sys
 import pandas as pd
 from scipy.spatial import distance
 import os.path
-from dtw_functions import dtw, dtw_tensor_3d
+from dtwParallel.dtw_functions import dtw, dtw_tensor_3d
 import numpy as np
 import configparser
 #from configuration import create_file_ini
-from error_control import possible_distances
-from utils import *
+from dtwParallel.error_control import possible_distances
+from dtwParallel.utils import *
 
 
 
@@ -32,14 +32,14 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.11"""
+    """%(prog)s 0.0.14"""
 
 
 class Input:
     def __init__(self):
         #Input.execute_configuration(self)
         config = configparser.ConfigParser()
-        config.read('./configuration.ini')
+        config.read('../configuration.ini')
         self.check_errors = config.getboolean('DEFAULT', 'check_errors')
         self.type_dtw = config.get('DEFAULT', 'type_dtw')
         self.MTS = config.getboolean('DEFAULT', 'MTS')
@@ -178,7 +178,7 @@ def main():
          input_obj.check_errors))
 
 
-if __name__ == "dtwParallel":
+if __name__ == "__main__":
 
    try:
       main()
