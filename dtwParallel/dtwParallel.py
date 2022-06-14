@@ -32,7 +32,7 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.14"""
+    """%(prog)s 0.0.15"""
 
 
 class Input:
