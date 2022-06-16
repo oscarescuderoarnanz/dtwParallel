@@ -32,7 +32,7 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.15"""
+    """%(prog)s 0.0.16"""
 
 
 class Input:
@@ -58,9 +58,6 @@ class Input:
         self.DTW_to_kernel = config.getboolean('DEFAULT', 'DTW_to_kernel')
         self.sigma = config.getint('DEFAULT', 'sigma')
 
-    #def execute_configuration(self):
-    #    create_file_ini()
-
 
 def input_File(input_obj):
 
@@ -83,7 +80,8 @@ def input_File(input_obj):
 
     input_obj.x = x
     input_obj.y = y
-    input_obj.distance = eval("distance."+input_obj.distance)
+    if not input_obj.distance == "gower":
+       input_obj.distance = eval("distance." + input_obj.distance)
 
     return dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance,
      input_obj.MTS, input_obj.visualization, input_obj.check_errors), input_obj.output_file
@@ -171,7 +169,9 @@ def main():
             if not input_obj.distance in test_distance:
                 raise ValueError('Distance introduced not allowed or incorrect.')
              
-        input_obj.distance = eval("distance." + input_obj.distance)
+        if not input_obj.distance == "gower":
+           input_obj.distance = eval("distance." + input_obj.distance)
+ 
 		
         return print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
          input_obj.distance, input_obj.MTS, input_obj.visualization,

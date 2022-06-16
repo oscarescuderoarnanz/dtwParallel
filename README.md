@@ -4,10 +4,13 @@ This package allows to measure the similarity between two time sequences, i.e., 
 
 Univariate Time Series:
 - It incorporates the possibility of visualising the cost matrix, as well as the path to reach the DTW distance value. This will allow it to be used in a didactic way, providing a better understanding of the method used.
+- It allows the calculation for regular and irregular univariate time series.
 
 Multivariate Time Series: 
 - The calculation of dependent DTW and independent DTW is available.
 - The calculation can be parallelised.
+- The computation can be CPU parallelised by selecting the number of threads. 
+
 
 ## Package structure 
 
@@ -22,6 +25,7 @@ Multivariate Time Series:
 |_configuration.ini  
 |_requirements.txt  
 |_setup.py  
+| pyproject.toml
 
 
 
