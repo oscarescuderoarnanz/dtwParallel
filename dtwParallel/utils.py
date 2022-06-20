@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import argparse
+from io import StringIO
 
 # Function to convert string to boolean
 def str_to_bool(a):
@@ -20,7 +21,7 @@ def string_to_float(data):
     
 
 def read_data(fname):
-    return pd.read_csv(fname, header=None)
+    return pd.read_csv(StringIO(fname.read()), header = None, sep=";")
     
 
 def read_npy(fname):

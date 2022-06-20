@@ -17,10 +17,10 @@ Multivariate Time Series:
 ![img_3.png](img_3.png)
 
 |_ dtwParallel  
-|  | dtwParallel.py  
-|  |_dtw_functions.py  
-|  |_error_control.py  
-|  |_utils.py  
+|___| dtwParallel.py  
+|___|_dtw_functions.py  
+|___|_error_control.py  
+|___|_utils.py  
 |  
 |_configuration.ini  
 |_requirements.txt  

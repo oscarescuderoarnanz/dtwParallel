@@ -4,12 +4,13 @@ import sys
 import pandas as pd
 from scipy.spatial import distance
 import os.path
-from dtw_functions import dtw, dtw_tensor_3d
 import numpy as np
 import configparser
 #from configuration import create_file_ini
-from error_control import possible_distances
-from utils import *
+
+from .error_control import possible_distances
+from .utils import *
+from .dtw_functions import dtw, dtw_tensor_3d
 
 
 
@@ -32,14 +33,16 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.18"""
+    """%(prog)s 0.0.20"""
 
 
 class Input:
     def __init__(self):
         #Input.execute_configuration(self)
         config = configparser.ConfigParser()
-        config.read('../configuration.ini')
+        here = os.path.abspath(os.path.dirname(__file__))
+        path_file_init = os.path.join(here, '../configuration.ini')
+        config.read(path_file_init)
         self.check_errors = config.getboolean('DEFAULT', 'check_errors')
         self.type_dtw = config.get('DEFAULT', 'type_dtw')
         self.MTS = config.getboolean('DEFAULT', 'MTS')
@@ -62,24 +65,24 @@ class Input:
 def input_File(input_obj):
 
     args = parse_args()
-    data = read_data(args.file)
-    
+    data = read_data(args.X)
+
     if (data.shape[0] == 2) and (data.shape[0] % 2 == 0):
         input_obj.MTS = False
-        x = string_to_float(data.iloc[0, :].values[0].split(';'))
-        y = string_to_float(data.iloc[1, :].values[0].split(';'))
+        input_obj.x = data.iloc[0,:].values
+        input_obj.y = data.iloc[1,:].values
 
     elif (data.shape[0] > 3) and (data.shape[0] % 2 == 0):
         input_obj.MTS = True
-        x = []
-        for i in range(int(data.shape[0] / 2)):
-            x.append(string_to_float(data.iloc[0:int(data.shape[0] / 2), :].values[i][0].split(';')))
-        y = []
-        for i in range(int(data.shape[0] / 2)):
-            y.append(string_to_float(data.iloc[int(data.shape[0] / 2):int(data.shape[0]), :].values[i][0].split(';')))
+        finalData = []
+        index = data.shape[0]/2
+        for i in range(2):
+            finalData.append(data.loc[(data.shape[0]/2)*i:index-1, :].values)
+            index+=int(data.shape[0] / 2)
 
-    input_obj.x = x
-    input_obj.y = y
+        input_obj.x = finalData[0]
+        input_obj.y = finalData[1]
+
     if not input_obj.distance == "gower":
        input_obj.distance = eval("distance." + input_obj.distance)
 
@@ -173,7 +176,7 @@ def main():
            input_obj.distance = eval("distance." + input_obj.distance)
  
         dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization, input_obj.check_errors)
-        sys.stdout.write(str(dtw_distance))
+        #sys.stdout.write(str(dtw_distance))
         print(dtw_distance)
 
 
