@@ -132,3 +132,4 @@ venv
 dist
 dtwParallel.egg-info
 .idea
+check

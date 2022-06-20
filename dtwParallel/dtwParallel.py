@@ -4,12 +4,12 @@ import sys
 import pandas as pd
 from scipy.spatial import distance
 import os.path
-from dtwParallel.dtw_functions import dtw, dtw_tensor_3d
+from dtw_functions import dtw, dtw_tensor_3d
 import numpy as np
 import configparser
 #from configuration import create_file_ini
-from dtwParallel.error_control import possible_distances
-from dtwParallel.utils import *
+from error_control import possible_distances
+from utils import *
 
 
 
@@ -32,7 +32,7 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.16"""
+    """%(prog)s 0.0.18"""
 
 
 class Input:
@@ -172,10 +172,9 @@ def main():
         if not input_obj.distance == "gower":
            input_obj.distance = eval("distance." + input_obj.distance)
  
-		
-        return print(dtw(input_obj.x, input_obj.y, input_obj.type_dtw,
-         input_obj.distance, input_obj.MTS, input_obj.visualization,
-         input_obj.check_errors))
+        dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization, input_obj.check_errors)
+        sys.stdout.write(str(dtw_distance))
+        print(dtw_distance)
 
 
 if __name__ == "__main__":
