@@ -14,18 +14,9 @@ Multivariate Time Series:
 
 ## Package structure 
 
-![img_3.png](img_3.png)
+![Architecture.png](./Images/Architecture.png)
 
-|_ dtwParallel  
-|___| dtwParallel.py  
-|___|_dtw_functions.py  
-|___|_error_control.py  
-|___|_utils.py  
-|  
-|_configuration.ini  
-|_requirements.txt  
-|_setup.py  
-| pyproject.toml
+![Schema_files.png](./Images/fileSchema.png)
 
 
 
@@ -72,6 +63,7 @@ It is only necessary to indicate the x and y parameters. The rest, in case they 
    The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding, due to the complexity of the terminal handling:
    - Univariate time series. 
    - Dependent DTW.
+   - You can run from any repository.
 
 **2) Calculation of the DTW distance with input from a file**
     
@@ -87,6 +79,8 @@ It is only necessary to indicate the x and y parameters. The rest, in case they 
    ```
       dtwParallel exampleData/Libro2.csv
    ```
+   **Remarks:**
+   - You can run from any repository, but be careful! The .csv file must be found. 
 
    b)  Example of calculation for time series from a .npy file: 
 
@@ -97,6 +91,10 @@ It is only necessary to indicate the x and y parameters. The rest, in case they 
    ```
       dtwParallel exampleData/X_train.npy dtwParallel/X_test.npy
    ```
+
+   **Remarks:**
+   - You can run from any repository, but be careful! The .npy file must be found. 
+
 
 **3) Making use of the API** 
  ```
@@ -166,7 +164,7 @@ For Univariate Time Series:
  
  [out]: 5.0
  ```
-![img.png](img.png)
+![Example_1.png](./Images/Example_1.png)
 
 For Multivariate Time Series: 
  ```

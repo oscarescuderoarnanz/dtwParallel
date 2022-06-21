@@ -33,7 +33,7 @@ DTW_DESC_MSG = \
 """
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.19"""
+    """%(prog)s 0.0.27"""
 
 
 class Input:
@@ -41,7 +41,12 @@ class Input:
         #Input.execute_configuration(self)
         config = configparser.ConfigParser()
         here = os.path.abspath(os.path.dirname(__file__))
-        path_file_init = os.path.join(here, '../configuration.ini')
+        path_file_init = os.path.join(here, 'configuration.ini')
+
+        # check if the path is to a valid file
+        if not os.path.isfile(path_file_init):
+            raise BadConfigError # not a standard python exception
+
         config.read(path_file_init)
         self.check_errors = config.getboolean('DEFAULT', 'check_errors')
         self.type_dtw = config.get('DEFAULT', 'type_dtw')
