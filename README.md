@@ -10,14 +10,14 @@ Multivariate Time Series:
 - The calculation of dependent DTW and independent DTW is available.
 - The calculation can be parallelised.
 - The computation can be CPU parallelised by selecting the number of threads. 
+- The distance matrix obtained can be transformed to a kernel.
 
 
 ## Package structure 
 
 ![Architecture.png](./Images/Architecture.png)
 
-![Schema_files.png](./Images/fileSchema.png)
-
+<p align="center"> <img src="./Images/fileSchema.png"> </p>
 
 
 ## Installation
@@ -82,15 +82,22 @@ It is only necessary to indicate the x and y parameters. The rest, in case they 
    **Remarks:**
    - You can run from any repository, but be careful! The .csv file must be found. 
 
-   b)  Example of calculation for time series from a .npy file: 
+   b)  Example of calculation for time series from a .npy file:
 
+   It computes the distance to itself.
    ```
-      dtwParallel exampleData/X_train.npy dtwParallel/X_train.npy
+      dtwParallel exampleData/X_train.npy 
    ```
-   
+   Compute the distance between X and Y.
+
    ```
       dtwParallel exampleData/X_train.npy dtwParallel/X_test.npy
    ```
+
+   c) In case we want the output by file instead of in terminal, we change the configuration to "True" of "output_file" in the configuration.ini file. 
+
+   d) To transform the obtained distance matrix into a kernel, we modify "dtw_to_kernel" setting to "True" of "output_file" in the configuration.ini file. 
+
 
    **Remarks:**
    - You can run from any repository, but be careful! The .npy file must be found. 
@@ -102,7 +109,7 @@ It is only necessary to indicate the x and y parameters. The rest, in case they 
  ```
 For Univariate Time Series: 
  ```
- dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_erros)
+ dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_errors)
  ```
 For Multivariate Time Series: 
  ```
@@ -117,14 +124,14 @@ The default values are:
 
 ```
 [DEFAULT]
-check_errors = True
+check_errors = False
 distance = euclidean
 type_dtw = d
 mts = False
 n_threads = -1
 visualization = False
 output_file = False
-dtw_to_kernel = True
+dtw_to_kernel = False
 sigma = 1
 ``` 
 

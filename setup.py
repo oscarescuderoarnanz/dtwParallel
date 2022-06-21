@@ -56,9 +56,11 @@ setup(
     # If any package contains *.ini files, include them
     '': ['*.ini'],
     },
-    #py_modules={
-
-    #},
+    py_modules={
+        "utils",
+        "dtw_functions",
+        "error_control" 
+    },
     entry_points={
         'console_scripts': [
         'dtwParallel=dtwParallel.dtwParallel:main'

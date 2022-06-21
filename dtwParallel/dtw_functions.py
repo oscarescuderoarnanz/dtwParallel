@@ -9,6 +9,7 @@ import gower
 from joblib import Parallel, delayed
 from scipy.spatial import distance
 
+import dtwParallel
 from .error_control import control_inputs
 
 

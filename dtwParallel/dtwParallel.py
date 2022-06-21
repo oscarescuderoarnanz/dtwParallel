@@ -1,3 +1,4 @@
+
 import argparse
 import csv
 import sys
@@ -6,34 +7,42 @@ from scipy.spatial import distance
 import os.path
 import numpy as np
 import configparser
-#from configuration import create_file_ini
-
+# Created functions
+import dtwParallel
 from .error_control import possible_distances
 from .utils import *
 from .dtw_functions import dtw, dtw_tensor_3d
 
 
 
-DTW_USAGE_MSG = \
-    """%(prog)s [<args>] | --help | --version | --list"""
 
 DTW_DESC_MSG = \
-    """
+"""
     Args:
-	   -x   Time series 1
-	   -y   Time series 2
-	   -ce  Check data for errors
-	   -d   Type of distance
-	   -t   Calculation type DTW
+        -x   Time series 1
+        -y   Time series 2
+        -ce  Check data for errors
+        -d   Type of distance
+        -t   Calculation type DTW
     
     Optional arguments:
-      -h, --help            show this help message and exit
-      -v, --version         show version
-      -l, --list            show available backends
+        -h, --help            show this help message and exit
+        -v, --version         show version
+        -l, --list            show available backends
+    \n
 """
+
+DTW_USAGE_MSG = \
+"""
+    %(prog)s [<args>] | --help | --version | --list \n   
+""" \
++ str(DTW_DESC_MSG)
+
     
 DTW_VERSION_MSG = \
-    """%(prog)s 0.0.27"""
+"""
+    %(prog)s 0.0.28
+"""
 
 
 class Input:
@@ -137,16 +146,18 @@ def main():
 
         parser.add_argument('-h', '--help', action='help',
                         help=argparse.SUPPRESS)
+
         parser.add_argument('-v', '--version', action='version',
                         version=DTW_VERSION_MSG,
                         help=argparse.SUPPRESS)
+
         parser.add_argument('-g', '--debug', dest='debug',
                         action='store_true',
                         help=argparse.SUPPRESS)
 
                         
-        parser.add_argument('-x', nargs='+', type=int, help="Temporal Serie 1")
-        parser.add_argument('-y', nargs='+', type=int, help="Temporal Serie 2")
+        parser.add_argument('-x', nargs='+', type=float, help="Temporal Serie 1")
+        parser.add_argument('-y', nargs='+', type=float, help="Temporal Serie 2")
         parser.add_argument("-ce", "--check_errors", nargs='?', default=input_obj.check_errors, type=str, help="Control whether or not check for errors.")
         parser.add_argument("-d", "--distance", nargs='?', default=input_obj.distance, type=str, help="Use a possible distance of scipy.spatial.distance.")
         parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str, help="d: dependient or i: independient.")

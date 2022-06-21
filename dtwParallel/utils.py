@@ -33,9 +33,11 @@ def parse_args():
     parser.add_argument('X',
                         type=argparse.FileType('r'),
                         help='POST file to be analyzed.')
+
     parser.add_argument('Y', nargs='?',
                         type=argparse.FileType('r'),
                         help='POST file to be analyzed.')
+    
     return parser.parse_args()
     
     
