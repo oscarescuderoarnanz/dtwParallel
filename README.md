@@ -150,7 +150,7 @@ For Univariate Time Series:
  x = [1,2,3]
  y = [0,0,1]
  distance = distance.euclidean
- dtw_functions.dtw(x,y,type_dtw)
+ dtw_functions.dtw(x,y,distance)
  
  [out]: 5.0
  ```
@@ -160,7 +160,7 @@ For Univariate Time Series:
  y = [0,0,1]
  distance = distance.euclidean
  get_visualization=True
- dtw_functions.dtw(x,y,type_dtw, get_visualization)
+ dtw_functions.dtw(x,y,distance, get_visualization)
  
  [out]: 5.0
  ```
