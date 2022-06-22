@@ -60,17 +60,23 @@ def dtw_ind(x, y, dist, dtw_distance=0):
         # 3) D(0,j) = inf
         D = defaultdict(lambda: (float('inf'),))
         D[0, 0] = (0, 0, 0)
-        for i, j in iter_object:
-            # Given the function distance as input parameter the distance between x and y is calculated.
-            # In case of using gower distance we fit the data.
-            if dist == "gower":
+        if dist == "gower":
+            for i, j in iter_object:
+                # Given the function distance as input parameter the distance between x and y is calculated.
+                # In case of using gower distance we fit the data.
                 df = pd.DataFrame(np.array([x_aux, y_aux]))
                 dt = gower.gower_matrix(df)[1][0]
-            else:
+                D[i, j] = min((D[i - 1, j][0] + dt, i - 1, j),
+                              (D[i, j - 1][0] + dt, i, j - 1),
+                              (D[i - 1, j - 1][0] + dt, i - 1, j - 1))
+        else:
+            for i, j in iter_object:
+                # Given the function distance as input parameter the distance between x and y is calculated.
+                # In case of using gower distance we fit the data.
                 dt = dist(x_aux, y_aux)
-            D[i, j] = min((D[i - 1, j][0] + dt, i - 1, j),
-                          (D[i, j - 1][0] + dt, i, j - 1),
-                          (D[i - 1, j - 1][0] + dt, i - 1, j - 1))
+                D[i, j] = min((D[i - 1, j][0] + dt, i - 1, j),
+                              (D[i, j - 1][0] + dt, i, j - 1),
+                              (D[i - 1, j - 1][0] + dt, i - 1, j - 1))
 
         dtw_distance += D[x_aux.ndim, y_aux.ndim][0]
 
@@ -102,19 +108,23 @@ def dtw_dep(x, y, dist):
     # 3) D(0,j) = inf
     D = defaultdict(lambda: (float('inf'),))
     D[0, 0] = (0, 0, 0)
-    dist_matrix = np.zeros((len(x), len(y)))
-    for i, j in iter_object:
-        # Given the function distance as input parameter the distance between x and y is calculated.
-        # In case of using gower distance we fit the data.
-        if dist == "gower":
+    #dist_matrix = np.zeros((len(x), len(y)))ç
+    if dist == "gower":
+        for i, j in iter_object:
+            # Given the function distance as input parameter the distance between x and y is calculated.
+            # In case of using gower distance we fit the data.
             df = pd.DataFrame(np.array([x[i - 1], y[j - 1]]))
             dt = gower.gower_matrix(df)[1][0]
-        else:
+            D[i, j] = min((D[i - 1, j][0] + dt, i - 1, j),
+                          (D[i, j - 1][0] + dt, i, j - 1),
+                          (D[i - 1, j - 1][0] + dt, i - 1, j - 1))
+    else:
+        for i, j in iter_object:
+            # Given the function distance as input parameter the distance between x and y is calculated.
             dt = dist(x[i - 1], y[j - 1])
-        dist_matrix[i - 1, j - 1] = dt
-        D[i, j] = min((D[i - 1, j][0] + dt, i - 1, j),
-                      (D[i, j - 1][0] + dt, i, j - 1),
-                      (D[i - 1, j - 1][0] + dt, i - 1, j - 1))
+            D[i, j] = min((D[i - 1, j][0] + dt, i - 1, j),
+                          (D[i, j - 1][0] + dt, i, j - 1),
+                          (D[i - 1, j - 1][0] + dt, i - 1, j - 1))
 
     return D[len(x), len(y)][0], D
 
@@ -122,8 +132,8 @@ def dtw_dep(x, y, dist):
 
 
 
-def dtw(x, y, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualization=False, check_errors=False):
-    
+def dtw(x, y, type_dtw, dist, MTS, get_visualization, check_errors):
+
     if check_errors:
         x, y = control_inputs(x, y, type_dtw, MTS)
 
@@ -148,23 +158,24 @@ def dtw(x, y, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualizatio
 
 
 # We transform the DTW matrix to an exponential kernel. 
-def transform_DTW_to_kernel(data_train, sigma):
+def transform_DTW_to_kernel(data, sigma):
 	
-	return np.exp(-X_pre_train/(2*sigma[index_sigma]**2))
+	return np.exp(-data/(2*sigma**2))
 	
 	
 # Function to obtain the calculation of the DTW distance at a high level. Parallelization is included.
-def dtw_tensor_3d(X_1, X_2, type_dtw="d", dist=distance.euclidean, n_threads=-1, check_errors=False, dtw_to_kernel=False, sigma=1):
-	
-    dtw_matrix_train = Parallel(n_jobs=n_threads)(
-        delayed(dtw)(X_1[i], X_2[j], type_dtw, dist, MTS=True, check_errors=check_errors) 
+def dtw_tensor_3d(X_1, X_2, input_obj):
+
+    dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
+        delayed(dtw)(X_1[i], X_2[j], input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization, input_obj.check_errors) 
         for i in range(X_1.shape[0]) 
         for j in range(X_2.shape[0])
     )
     
-    data_train = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
+    data = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
     
-    if dtw_to_kernel:
-	     return transform_DTW_to_kernel(data_train, sigma)
+    if input_obj.DTW_to_kernel:
+        print("Entro")
+        return transform_DTW_to_kernel(data, input_obj.sigma)
 
-    return data_train
+    return data
