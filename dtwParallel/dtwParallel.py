@@ -21,9 +21,13 @@ DTW_DESC_MSG = \
     Args:
         -x   Time series 1
         -y   Time series 2
-        -ce  Check data for errors
-        -d   Type of distance
         -t   Calculation type DTW
+        -d   Type of distance
+        -ce  Check data for errors
+
+    Others args:
+        MTS  Bool value
+        visualization  Bool value 
     
     Optional arguments:
         -h, --help            show this help message and exit
@@ -155,14 +159,18 @@ def main():
                         action='store_true',
                         help=argparse.SUPPRESS)
 
-                        
         parser.add_argument('-x', nargs='+', type=float, help="Temporal Serie 1")
         parser.add_argument('-y', nargs='+', type=float, help="Temporal Serie 2")
-        parser.add_argument("-ce", "--check_errors", nargs='?', default=input_obj.check_errors, type=str, help="Control whether or not check for errors.")
-        parser.add_argument("-d", "--distance", nargs='?', default=input_obj.distance, type=str, help="Use a possible distance of scipy.spatial.distance.")
-        parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str, help="d: dependient or i: independient.")
-        parser.add_argument("MTS", nargs='?', default=input_obj.type_dtw, type=bool, help="Indicates whether the data are multivariate time series or not.")
-        parser.add_argument("visualization", nargs='?', default=input_obj.visualization, type=bool, help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
+        parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str,
+                            help="d: dependient or i: independient.")
+        parser.add_argument("-d", "--distance", nargs='?', default=input_obj.distance, type=str,
+                            help="Use a possible distance of scipy.spatial.distance.")
+        parser.add_argument("-ce", "--check_errors", nargs='?', default=input_obj.check_errors, type=str,
+                            help="Control whether or not check for errors.")
+        parser.add_argument("MTS", nargs='?', default=input_obj.type_dtw, type=bool,
+                            help="Indicates whether the data are multivariate time series or not.")
+        parser.add_argument("visualization", nargs='?', default=input_obj.visualization, type=bool,
+                            help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
         
         # Save de input arguments
         args = parser.parse_args()
@@ -182,7 +190,7 @@ def main():
         input_obj.visualization = str_to_bool(args.visualization)
     
       
-		# If the distance introduced is not correct, the execution is terminated.
+        # If the distance introduced is not correct, the execution is terminated.
         if input_obj.check_errors:
             test_distance = possible_distances()
             if not input_obj.distance in test_distance:
@@ -190,8 +198,9 @@ def main():
              
         if not input_obj.distance == "gower":
            input_obj.distance = eval("distance." + input_obj.distance)
- 
-        dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization, input_obj.check_errors)
+
+        dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS,
+                           input_obj.visualization, input_obj.check_errors)
         #sys.stdout.write(str(dtw_distance))
         print(dtw_distance)
 
