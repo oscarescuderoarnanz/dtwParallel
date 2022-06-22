@@ -62,27 +62,27 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    dtwParallel -x 1 2 3 -y 1 1 1
    ```
-
-      [out]: 3.0
-
+   ```
+   [out]: 3.0
+   ```
 
    **b) Example 2.** Setting all values.
    
    ```
    dtwParallel -x 1 2 3 -y 1 1 1 -t "d" -d "euclidean" -ce True False False
    ```
-   
-      [out]: 3.0
-   
+   ```
+   [out]: 3.0
+   ```
 
    **c) Example 3.** By setting all values, modifying the distance used.
    
    ```
    dtwParallel -x 1.5 2 3.7 -y 1.4 1 1.05 -t "d" -d "gower" -ce True False False
    ```
-      
-      [out]: 3.0000000596046448
-      
+   ```
+   [out]: 3.0000000596046448
+   ```   
 
    **Remarks:**
    The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding, due to the complexity of the terminal handling:
@@ -93,9 +93,9 @@ Based on the previous scheme, this package can be used in three different contex
 ### 2) Calculation of the DTW distance with input from a file, haciendo uso de terminal.
 
    The generic example for ``csv files`` is shown below:
-
-      dtwParallel <file_X>
-   
+   ```
+   dtwParallel <file_X>
+   ```
    In case you want to modify any of the possible values, it is necessary to carry out the modification in the configuration.ini file. The possible values are those shown in [Configuration](#item1).
    
    **a) Example 1.** Calculation of univariate time series taking as input a csv file containing x and y. 
@@ -103,52 +103,53 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    dtwParallel exampleData/Libro1.csv
    ```
+   ```
+   x = [1,2,3] 
+   y = [0,1,0]
       
-      x = [1,2,3] 
-      y = [0,1,0]
-      
-      [out]: 5.0
+   [out]: 5.0
+   ```
       
 
    **b) Example 2.** Multivariate time series computation using a csv file containing x and y as input.
    ```
    dtwParallel exampleData/Libro2.csv
    ```
-      
-      x = [[1,2,3], [0,1,0], [8,8,5]] 
-      y = [[2,3,3], [1,1,1], [0,0,0]]
-      
-      [out]: 15.19774400159917
-      
+   ```      
+   x = [[1,2,3], [0,1,0], [8,8,5]] 
+   y = [[2,3,3], [1,1,1], [0,0,0]]
+   
+   [out]: 15.19774400159917
+   ```   
 
    The generic example for ``npy files`` is shown below:
 
    ```
-      dtwParallel <file_X> <file_Y>
+   dtwParallel <file_X> <file_Y>
    ```
 
    **a) Example 1.** It computes the distance to itself.
    ```
    dtwParallel exampleData/X_train.npy 
    ```
-    
-      [out]: [[0.00000000e+00 6.36756028e+17 2.94977907e+16 9.96457616e+17]
-             [6.36756028e+17 0.00000000e+00 6.07258237e+17 1.63321364e+18]
-             [2.94977907e+16 6.07258237e+17 0.00000000e+00 1.02595541e+18]
-             [9.96457616e+17 1.63321364e+18 1.02595541e+18 0.00000000e+00]]
-   
+   ```
+   [out]: [[0.00000000e+00 6.36756028e+17 2.94977907e+16 9.96457616e+17]
+          [6.36756028e+17 0.00000000e+00 6.07258237e+17 1.63321364e+18]
+          [2.94977907e+16 6.07258237e+17 0.00000000e+00 1.02595541e+18]
+          [9.96457616e+17 1.63321364e+18 1.02595541e+18 0.00000000e+00]]
+   ```
    
    **b) Example 2.** Compute the distance between X and Y.
 
    ```
    dtwParallel exampleData/X_train.npy exampleData/X_test.npy
    ```
-     
-      [out]: [[2.47396197e+16 9.07388652e+17 2.23522660e+17 1.68210525e+18]
-             [6.12016408e+17 1.54414468e+18 8.60278687e+17 2.31886127e+18]
-             [4.75817098e+15 9.36886443e+17 2.53020450e+17 1.71160304e+18]
-             [1.02119724e+18 8.90689643e+16 7.72934957e+17 6.85647630e+17]]
-
+   ```
+   [out]: [[2.47396197e+16 9.07388652e+17 2.23522660e+17 1.68210525e+18]
+          [6.12016408e+17 1.54414468e+18 8.60278687e+17 2.31886127e+18]
+          [4.75817098e+15 9.36886443e+17 2.53020450e+17 1.71160304e+18]
+          [1.02119724e+18 8.90689643e+16 7.72934957e+17 6.85647630e+17]]
+   ```
 
    **c) Example 3.** In case we want the output by file instead of in terminal, we change the configuration to ``True`` of ``output_file`` in the ``configuration.ini`` file. 
 
@@ -163,15 +164,15 @@ Based on the previous scheme, this package can be used in three different contex
    
    The generic example is shown below:
 
-    
-       from dtwParallel import dtw_functions
+    ```
+    from dtwParallel import dtw_functions
        
-       # For Univariate Time Series
-       dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_errors)
-       
-       # For Multivariate Time Series
-       dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, sigma, check_erros, dtw_to_kernel, sigma)
+    # For Univariate Time Series
+    dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_errors)
     
+    # For Multivariate Time Series
+    dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, sigma, check_erros, dtw_to_kernel, sigma)
+    ```
 
    The examples shown below are executed in jupyter-notebook. These examples can be executed in any Integrated Development Environment.
 
@@ -187,7 +188,9 @@ Based on the previous scheme, this package can be used in three different contex
    distance = d.euclidean
    dtw_functions.dtw(x,y,distance)
    ```
-      [out]: 5.0
+   ```
+   [out]: 5.0
+   ```
 
    **Example 2.** For univariate time series with visualization.
    ```
@@ -202,7 +205,9 @@ Based on the previous scheme, this package can be used in three different contex
    visualization=True
    dtw_functions.dtw(x,y,distance, get_visualization=visualization)
    ```
-      [out]: 15.0
+   ```
+   [out]: 15.0
+   ```
 
    ![Example_1.png](./Images/Example_1.png)
 
@@ -221,9 +226,9 @@ Based on the previous scheme, this package can be used in three different contex
                
    dtw_functions.dtw(x,y,"d", d.euclidean, MTS=True)
    ```
-
-      [out]: 7.548509256375962
- 
+   ```
+   [out]: 7.548509256375962
+   ```
    **Example 4.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics.
     
    ```
@@ -234,13 +239,14 @@ Based on the previous scheme, this package can be used in three different contex
    y = np.load('X_test.npy')
    
    dtw_functions.dtw_tensor_3d(x, y, "gower")
-   ```   
-       [out]: 
-       array([[2.47396197e+16, 6.12016408e+17, 4.75817098e+15, 1.02119724e+18],
-             [9.07388652e+17, 1.54414468e+18, 9.36886443e+17, 8.90689643e+16],
-             [2.23522660e+17, 8.60278687e+17, 2.53020450e+17, 7.72934957e+17],
-             [1.68210525e+18, 2.31886127e+18, 1.71160304e+18, 6.85647630e+17]])
-
+   ```
+   ```
+   [out]: 
+   array([[2.47396197e+16, 6.12016408e+17, 4.75817098e+15, 1.02119724e+18],
+       [9.07388652e+17, 1.54414468e+18, 9.36886443e+17, 8.90689643e+16],
+       [2.23522660e+17, 8.60278687e+17, 2.53020450e+17, 7.72934957e+17],
+       [1.68210525e+18, 2.31886127e+18, 1.71160304e+18, 6.85647630e+17]])
+   ```
 
 
 ## Configuration
