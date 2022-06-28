@@ -36,7 +36,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.0.29
+    %(prog)s 0.0.32
 """
 
 # Function to convert string to boolean
@@ -141,6 +141,8 @@ def parse_args(isEntryFile):
                         help="Indicates whether the data are multivariate time series or not.")
     parser.add_argument("visualization", nargs='?', default=input_obj.visualization, type=bool,
                         help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
+    parser.add_argument("-of", "--output_file", nargs='?', default=input_obj.output_file, type=bool,
+                        help="Output by file instead of terminal.")
 
     # In case of working with files containing N multivariate time series, we give the possibility 
     # to determine the number of threads and whether to transform the output into a kernel.
@@ -158,11 +160,12 @@ def parse_args(isEntryFile):
     input_obj.distance = args.distance
     input_obj.n_threads = args.n_threads
     input_obj.sigma = args.sigma
-        
+
     # Convert boolean parameters introduced by terminal
     input_obj.MTS = str_to_bool(args.MTS)
     input_obj.visualization = str_to_bool(args.visualization)
     input_obj.DTW_to_kernel = str_to_bool(args.DTW_to_kernel)
+    input_obj.output_file = str_to_bool(args.output_file)
 
     # If the distance introduced is not correct, the execution is terminated.
     if input_obj.check_errors:

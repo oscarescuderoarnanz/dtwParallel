@@ -5,7 +5,6 @@ import os.path
 import numpy as np
 
 # Created functions
-import dtwParallel
 from .error_control import possible_distances
 from .utils import *
 from .dtw_functions import dtw, dtw_tensor_3d
@@ -58,8 +57,7 @@ def main():
         elif sys.argv[1].endswith('.npy'):
 
             args, input_obj = parse_args(True)
-
-            if sys.argv[2].endswith('.npy'):
+            if len(sys.argv) > 2 and sys.argv[2].endswith('.npy'):
                 X, Y = read_npy(args.X), read_npy(args.Y)
             else:
                 X = read_npy(args.X)

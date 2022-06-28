@@ -9,7 +9,6 @@ import gower
 from joblib import Parallel, delayed
 from scipy.spatial import distance
 
-import dtwParallel
 from .error_control import control_inputs
 
 
@@ -173,9 +172,8 @@ def dtw_tensor_3d(X_1, X_2, input_obj):
     )
     
     data = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
-    
+    print(data)
     if input_obj.DTW_to_kernel:
-        print("Entro")
         return transform_DTW_to_kernel(data, input_obj.sigma)
 
     return data

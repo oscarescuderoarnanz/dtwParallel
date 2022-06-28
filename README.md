@@ -41,6 +41,7 @@ Note that you should have also the following packages installed in your system:
 - gower
 - setuptools
 - scipy
+- joblib
 
 
 ## Usage
@@ -94,33 +95,61 @@ Based on the previous scheme, this package can be used in three different contex
 
    The generic example for ``csv files`` is shown below:
    ```
-   dtwParallel <file_X>
+   dtwParallel <file_X> -t <type_dtw> -d <distance> -ce <value> <MTS value> <get_visualization value>
    ```
    In case you want to modify any of the possible values, it is necessary to carry out the modification in the configuration.ini file. The possible values are those shown in [Configuration](#item1).
    
    **a) Example 1.** Calculation of univariate time series taking as input a csv file containing x and y. 
 
    ```
-   dtwParallel exampleData/Libro1.csv
+   dtwParallel exampleData/example_1.csv
    ```
    ```
-   x = [1,2,3] 
-   y = [0,1,0]
+   x = [1.0, 2.0, 3.0] 
+   y = [0.0, 1.5, 0.0]
       
    [out]: 5.0
+   ```
+
+   ```
+   dtwParallel exampleData/example_1.csv -d "gower"
+   ```
+   ```
+   x = [1.0, 2.0, 3.0] 
+   y = [0.0, 1.5, 0.0]
+      
+   [out]: 3.0
    ```
       
 
    **b) Example 2.** Multivariate time series computation using a csv file containing x and y as input.
    ```
-   dtwParallel exampleData/Libro2.csv
+   dtwParallel exampleData/example_2.csv
+   ```
+   ```         
+   x = [[1.0, 1.1, 3.3],
+        [0.0, 4.5, 0.0],
+        [8.0, 8.0, 5.5]]
+   y = [[2.5, 3.0, 3.3],
+        [1.0, 2.0, 1.1],
+        [0.0, 0.0, 0.0]]
+
+   [out]: 17.909097227240963
+   ```   
+
+   ```
+   dtwParallel exampleData/example_2.csv
    ```
    ```      
-   x = [[1,2,3], [0,1,0], [8,8,5]] 
-   y = [[2,3,3], [1,1,1], [0,0,0]]
-   
-   [out]: 15.19774400159917
-   ```   
+   x = [[1.0, 1.1, 3.3],
+        [0.0, 4.5, 0.0],
+        [8.0, 8.0, 5.5]]
+   y = [[2.5, 3.0, 3.3],
+        [1.0, 2.0, 1.1],
+        [0.0, 0.0, 0.0]]
+        
+   [out]: 2.6666666865348816
+   ``` 
 
    The generic example for ``npy files`` is shown below:
 
@@ -151,10 +180,50 @@ Based on the previous scheme, this package can be used in three different contex
           [1.02119724e+18 8.90689643e+16 7.72934957e+17 6.85647630e+17]]
    ```
 
-   **c) Example 3.** In case we want the output by file instead of in terminal, we change the configuration to ``True`` of ``output_file`` in the ``configuration.ini`` file. 
+   **c) Example 3.** Compute the gower distance between X and Y.
 
-   **d) Example 4.** To transform the obtained distance matrix into a kernel, we modify ``dtw_to_kernel`` setting to ``True`` of ``output_file`` in the ``configuration.ini`` file. 
+   ```
+   dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower"
+   ```
+   ```
+   [out]: [[1.7200027  2.16000016 1.92000033 2.53999992]
+          [1.59999973 1.79999978 1.83999987 2.27999987]
+          [0.5399895  1.52000002 1.04000024 1.66      ]
+          [0.70000006 1.57999993 1.10000018 1.69999999]]
+   ```
 
+   **c) Example 4.** Compute the gower distance between X and Y and we vary the number of threads.
+
+   ```
+   dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower" -n 12
+   ```
+   ```
+   [out]: [[1.7200027  2.16000016 1.92000033 2.53999992]
+          [1.59999973 1.79999978 1.83999987 2.27999987]
+          [0.5399895  1.52000002 1.04000024 1.66      ]
+          [0.70000006 1.57999993 1.10000018 1.69999999]]
+   ```
+
+   **d) Example 5.** Compute the gower distance between X and Y and we obtain the output per file.
+
+   ```
+   dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower" -n 12 -of True
+   ```
+   ```
+   [out]: output.csv
+   ```
+
+
+   **d) Example 6.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma=0.5. 
+   ```
+   dtwParallel exampleData/X_train.npy -k True -s 1000000000
+   ```
+   ```
+   [out]: [[1.         0.7273278  0.98535934 0.60760589]
+          [0.7273278  1.         0.73813458 0.44192866]
+          [0.98535934 0.73813458 1.         0.59871014]
+          [0.60760589 0.44192866 0.59871014 1.        ]]
+   ```
 
    **Remarks:**
    - You can run from any repository, but be careful! The .npy file must be found. 
@@ -164,15 +233,15 @@ Based on the previous scheme, this package can be used in three different contex
    
    The generic example is shown below:
 
-    ```
-    from dtwParallel import dtw_functions
-       
-    # For Univariate Time Series
-    dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_errors)
+   ```
+   from dtwParallel import dtw_functions
     
-    # For Multivariate Time Series
-    dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, sigma, check_erros, dtw_to_kernel, sigma)
-    ```
+   # For Univariate Time Series
+   dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_errors)
+   
+   # For Multivariate Time Series
+   dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, check_erros, dtw_to_kernel, sigma)
+   ```
 
    The examples shown below are executed in jupyter-notebook. These examples can be executed in any Integrated Development Environment.
 
@@ -248,9 +317,8 @@ Based on the previous scheme, this package can be used in three different contex
        [1.68210525e+18, 2.31886127e+18, 1.71160304e+18, 6.85647630e+17]])
    ```
 
-
+<a name="item1"></a>
 ## Configuration
-<a name=»item1″></a>
 For any modification of the default parameters, the ``configuration.ini`` file can be edited.
 
 The default values are:
@@ -267,6 +335,8 @@ output_file = False
 dtw_to_kernel = False
 sigma = 1
 ``` 
+
+## Examples with public data
 
 
 ## Reference 
