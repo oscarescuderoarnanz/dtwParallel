@@ -34,6 +34,14 @@ def input_File(input_obj):
 
     return input_obj
 
+def control_Output(input_obj, dtw_distance):
+
+    if input_obj.output_file:
+        sys.stdout.write("Output to file.")
+        print(dtw_distance)
+        pd.DataFrame(np.array([dtw_distance])).to_csv("output.csv", float_format='%g', index=False)
+    else:
+        sys.stdout.write(str(dtw_distance))
 
 def main():
     # If you only make use of the library you will get an error.
@@ -65,11 +73,7 @@ def main():
 
             dtw_distance = dtw_tensor_3d(X, Y, input_obj)
             
-        if input_obj.output_file:
-            print("output to file.")
-            pd.DataFrame(np.array([dtw_distance])).to_csv("output.csv", index=False)
-        else:
-            sys.stdout.write(str(dtw_distance))   
+        control_Output(input_obj, dtw_distance)
             
     # Input type 2: input by terminal
     elif sys.argv[1] == "-x":        
@@ -81,7 +85,7 @@ def main():
         dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS,
                            input_obj.visualization, input_obj.check_errors)
         
-        sys.stdout.write(str(dtw_distance))
+        control_Output(input_obj, dtw_distance)
         
     else:
         s = "\nError in input arguments.\n"

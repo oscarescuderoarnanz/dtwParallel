@@ -6,15 +6,22 @@ import configparser
 import os.path
 import sys
 from scipy.spatial import distance
+from .error_control import possible_distances
 
 DTW_DESC_MSG = \
 """
     Args:
-        -x   Time series 1
-        -y   Time series 2
-        -t   Calculation type DTW
-        -d   Type of distance
-        -ce  Check data for errors
+        -x   Time series 1 (float values)
+        -y   Time series 2 (float values)
+        -t   Calculation type DTW (string value)
+        -d   Type of distance (string value)
+        -ce  Check data for errors (bool value)
+        -of  Output file (bool value)
+    
+    If we have multivariate Time Series (MTS):
+        -n  Determine the number of threads (int value)
+        -k  Distance matrix to kernel transformation (bool value)
+        -s  In the case of calculating the kernel, we can set the value of sigma (float value) 
 
     Others args:
         MTS  Bool value
@@ -36,12 +43,12 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.0.32
+    %(prog)s 0.0.36
 """
 
 # Function to convert string to boolean
 def str_to_bool(a):
-    if a == "True":
+    if str(a) == "True":
         return True
         
     return False
@@ -131,13 +138,13 @@ def parse_args(isEntryFile):
                     help=argparse.SUPPRESS)
 
    
-    parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str,
+    parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.type_dtw, type=str,
                         help="d: dependient or i: independient.")
     parser.add_argument("-d", "--distance", nargs='?', default=input_obj.distance, type=str,
                         help="Use a possible distance of scipy.spatial.distance.")
     parser.add_argument("-ce", "--check_errors", nargs='?', default=input_obj.check_errors, type=str,
                         help="Control whether or not check for errors.")
-    parser.add_argument("MTS", nargs='?', default=input_obj.type_dtw, type=bool,
+    parser.add_argument("MTS", nargs='?', default=input_obj.MTS, type=bool,
                         help="Indicates whether the data are multivariate time series or not.")
     parser.add_argument("visualization", nargs='?', default=input_obj.visualization, type=bool,
                         help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
@@ -161,11 +168,13 @@ def parse_args(isEntryFile):
     input_obj.n_threads = args.n_threads
     input_obj.sigma = args.sigma
 
+
     # Convert boolean parameters introduced by terminal
     input_obj.MTS = str_to_bool(args.MTS)
     input_obj.visualization = str_to_bool(args.visualization)
     input_obj.DTW_to_kernel = str_to_bool(args.DTW_to_kernel)
     input_obj.output_file = str_to_bool(args.output_file)
+
 
     # If the distance introduced is not correct, the execution is terminated.
     if input_obj.check_errors:

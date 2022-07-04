@@ -131,7 +131,7 @@ def dtw_dep(x, y, dist):
 
 
 
-def dtw(x, y, type_dtw, dist, MTS, get_visualization, check_errors):
+def dtw(x, y, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualization=False, check_errors=False):
 
     if check_errors:
         x, y = control_inputs(x, y, type_dtw, MTS)
@@ -166,13 +166,14 @@ def transform_DTW_to_kernel(data, sigma):
 def dtw_tensor_3d(X_1, X_2, input_obj):
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
-        delayed(dtw)(X_1[i], X_2[j], input_obj.type_dtw, input_obj.distance, input_obj.MTS, input_obj.visualization, input_obj.check_errors) 
+        delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, distance=input_obj.distance,
+                     MTS=input_obj.MTS, visualization=input_obj.visualization, check_errors=input_obj.check_errors)
         for i in range(X_1.shape[0]) 
         for j in range(X_2.shape[0])
     )
     
     data = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
-    print(data)
+
     if input_obj.DTW_to_kernel:
         return transform_DTW_to_kernel(data, input_obj.sigma)
 

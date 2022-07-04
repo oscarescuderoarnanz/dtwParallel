@@ -52,7 +52,7 @@ Based on the previous scheme, this package can be used in three different contex
    
    The generic example is shown below:
       
-      dtwParallel -x <values> -y <values> -t <type_dtw> -d <distance> -ce <value> <MTS value> <get_visualization value> 
+      dtwParallel -x <floats> -y <floats> -d <str> -ce <bool> -of <bool>
       
    Note that only the x and y values need to be set. The rest of the values, if not indicated, will be selected from the file containing the default values, ``configuration.ini``.
 
@@ -70,7 +70,7 @@ Based on the previous scheme, this package can be used in three different contex
    **b) Example 2.** Setting all values.
    
    ```
-   dtwParallel -x 1 2 3 -y 1 1 1 -t "d" -d "euclidean" -ce True False False
+   dtwParallel -x 1 2 3 -y 1 1 1 -d euclidean -ce True
    ```
    ```
    [out]: 3.0
@@ -79,7 +79,7 @@ Based on the previous scheme, this package can be used in three different contex
    **c) Example 3.** By setting all values, modifying the distance used.
    
    ```
-   dtwParallel -x 1.5 2 3.7 -y 1.4 1 1.05 -t "d" -d "gower" -ce True False False
+   dtwParallel -x 1.5 2 3.7 -y 1.4 1 1.05 -d gower -ce True
    ```
    ```
    [out]: 3.0000000596046448
@@ -93,9 +93,10 @@ Based on the previous scheme, this package can be used in three different contex
 
 ### 2) Calculation of the DTW distance with input from a file, haciendo uso de terminal.
 
-   The generic example for ``csv files`` is shown below:
+
+   #### The generic example of univariate time series entered by means of ``csv files`` is shown below:
    ```
-   dtwParallel <file_X> -t <type_dtw> -d <distance> -ce <value> <MTS value> <get_visualization value>
+   dtwParallel <file_X> -d <str> -ce <bool> -of <bool>
    ```
    In case you want to modify any of the possible values, it is necessary to carry out the modification in the configuration.ini file. The possible values are those shown in [Configuration](#item1).
    
@@ -104,60 +105,45 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    dtwParallel exampleData/example_1.csv
    ```
-   ```
-   x = [1.0, 2.0, 3.0] 
-   y = [0.0, 1.5, 0.0]
-      
-   [out]: 5.0
+   ```      
+   [out]: 40.6
    ```
 
    ```
    dtwParallel exampleData/example_1.csv -d "gower"
    ```
-   ```
-   x = [1.0, 2.0, 3.0] 
-   y = [0.0, 1.5, 0.0]
-      
-   [out]: 3.0
+   ```      
+   [out]: 10.000000178813934
    ```
       
+   #### The generic example of multivariate time series entered by means of ``csv files`` is shown below:
+
+   ```
+   dtwParallel <file_X> -d <str> -t <str> -ce <bool> -of <bool> -n <int> -k <bool> -s <float>
+   ```
 
    **b) Example 2.** Multivariate time series computation using a csv file containing x and y as input.
    ```
    dtwParallel exampleData/example_2.csv
    ```
    ```         
-   x = [[1.0, 1.1, 3.3],
-        [0.0, 4.5, 0.0],
-        [8.0, 8.0, 5.5]]
-   y = [[2.5, 3.0, 3.3],
-        [1.0, 2.0, 1.1],
-        [0.0, 0.0, 0.0]]
-
-   [out]: 17.909097227240963
+   [out]: 81.99196512684249
    ```   
 
    ```
-   dtwParallel exampleData/example_2.csv
+   dtwParallel exampleData/example_2.csv -d gower -t i 
    ```
-   ```      
-   x = [[1.0, 1.1, 3.3],
-        [0.0, 4.5, 0.0],
-        [8.0, 8.0, 5.5]]
-   y = [[2.5, 3.0, 3.3],
-        [1.0, 2.0, 1.1],
-        [0.0, 0.0, 0.0]]
-        
-   [out]: 2.6666666865348816
+   ```              
+   [out]: 9.666666567325592
    ``` 
 
-   The generic example for ``npy files`` is shown below:
+   #### The generic example for ``npy files`` is shown below:
 
    ```
-   dtwParallel <file_X> <file_Y>
+   dtwParallel <file_X> <file_Y> -d <str> -t <str> -ce <bool> -of <bool> -n <int> -k <bool> -s <float>
    ```
 
-   **a) Example 1.** It computes the distance to itself.
+   **c) Example 3.** It computes the distance to itself.
    ```
    dtwParallel exampleData/X_train.npy 
    ```
@@ -168,7 +154,7 @@ Based on the previous scheme, this package can be used in three different contex
           [9.96457616e+17 1.63321364e+18 1.02595541e+18 0.00000000e+00]]
    ```
    
-   **b) Example 2.** Compute the distance between X and Y.
+   **d) Example 4.** Compute the distance between X and Y.
 
    ```
    dtwParallel exampleData/X_train.npy exampleData/X_test.npy
@@ -180,7 +166,7 @@ Based on the previous scheme, this package can be used in three different contex
           [1.02119724e+18 8.90689643e+16 7.72934957e+17 6.85647630e+17]]
    ```
 
-   **c) Example 3.** Compute the gower distance between X and Y.
+   **e) Example 5.** Compute the gower distance between X and Y.
 
    ```
    dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower"
@@ -192,7 +178,7 @@ Based on the previous scheme, this package can be used in three different contex
           [0.70000006 1.57999993 1.10000018 1.69999999]]
    ```
 
-   **c) Example 4.** Compute the gower distance between X and Y and we vary the number of threads.
+   **f) Example 6.** Compute the gower distance between X and Y and we vary the number of threads.
 
    ```
    dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower" -n 12
@@ -204,7 +190,7 @@ Based on the previous scheme, this package can be used in three different contex
           [0.70000006 1.57999993 1.10000018 1.69999999]]
    ```
 
-   **d) Example 5.** Compute the gower distance between X and Y and we obtain the output per file.
+   **g) Example 7.** Compute the gower distance between X and Y and we obtain the output per file.
 
    ```
    dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower" -n 12 -of True
@@ -214,7 +200,7 @@ Based on the previous scheme, this package can be used in three different contex
    ```
 
 
-   **d) Example 6.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma=0.5. 
+   **h) Example 8.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma=0.5. 
    ```
    dtwParallel exampleData/X_train.npy -k True -s 1000000000
    ```
