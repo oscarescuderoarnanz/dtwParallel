@@ -166,8 +166,8 @@ def transform_DTW_to_kernel(data, sigma):
 def dtw_tensor_3d(X_1, X_2, input_obj):
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
-        delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, distance=input_obj.distance,
-                     MTS=input_obj.MTS, visualization=input_obj.visualization, check_errors=input_obj.check_errors)
+        delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, dist=input_obj.distance,
+                     MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors)
         for i in range(X_1.shape[0]) 
         for j in range(X_2.shape[0])
     )
