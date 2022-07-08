@@ -25,7 +25,7 @@ Multivariate Time Series:
 dtwParallel can be installed using [pip](https://pip.pypa.io/en/stable/), a tool
 for installing Python packages. To do it, run the following command:
 ```
-pip3 install -i https://test.pypi.org/simple/ dtwParallel
+pip install dtwParallel
 ```
 
 ## Requirements
