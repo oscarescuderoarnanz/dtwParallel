@@ -215,7 +215,7 @@ Based on the previous scheme, this package can be used in three different contex
    - You can run from any repository, but be careful! The .npy file must be found. 
 
 
-**3) Making use of the API** 
+### 3) Making use of the API  
    
    The generic example is shown below:
 
