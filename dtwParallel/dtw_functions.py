@@ -107,7 +107,6 @@ def dtw_dep(x, y, dist):
     # 3) D(0,j) = inf
     D = defaultdict(lambda: (float('inf'),))
     D[0, 0] = (0, 0, 0)
-    #dist_matrix = np.zeros((len(x), len(y)))ç
     if dist == "gower":
         for i, j in iter_object:
             # Given the function distance as input parameter the distance between x and y is calculated.
