@@ -230,7 +230,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, check_erros, dtw_to_kernel, sigma)
    ```
 
-   The examples shown below are executed in jupyter-notebook. Code available in exampleData/CodeExamples/E1_SyntheticData (). These examples can be executed in any Integrated Development Environment.
+   The examples shown below are executed in jupyter-notebook. Code available in exampleData/CodeExamples/E1_SyntheticData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E1_SyntheticData). These examples can be executed in any Integrated Development Environment.
 
    **Example 1.** For univariate time series.
    ```
@@ -340,10 +340,10 @@ sigma = 1
 
 ## Examples with public data
 
-I have used data obtained from yahoo finance (https://finance.yahoo.com/) of 505 companies, available in a .zip file. The folder where the data is located is exampleData/Data/E2_FinanceData (). The code needed to process the information of each of the 505 companies, obtaining the tensor input to the package is located in exampleData/Data/E2_FinanceData/tensorGenerator ().
+I have used data obtained from yahoo finance (https://finance.yahoo.com/) of 505 companies, available in a .zip file. The folder where the data is located is exampleData/Data/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/Data/E2_FinanceData). The code needed to process the information of each of the 505 companies, obtaining the tensor input to the package is located in exampleData/CodeExamples/E2_FinanceData/tensorGenerator (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
 
 ### Experiment 1. Computational time as a function of the number of threads. 
-The computation of the distance matrix has been carried out by means of dependent and independent DTW varying the number of threads.  Code of this example is available at exampleData/Code/E2_FinanceData ().
+The computation of the distance matrix has been carried out by means of dependent and independent DTW varying the number of threads.  Code of this example is available at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
 
 **DTW dependent**
 ![dtwParallel_dtw_D.png](./exampleData/Figures/dtwParallel_dtw_D.png)
@@ -352,7 +352,7 @@ The computation of the distance matrix has been carried out by means of dependen
 ![dtwParallel_dtw_I.png](./exampleData/Figures/dtwParallel_dtw_I.png)
 
 ### Experiment 2. Comparison of computational time with other packages to calculate dependent DTW. 
-Code available for this example at exampleData/Code/E2_FinanceData ().
+Code available for this example at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
 
 ![schema.png.png](./exampleData/Figures/comparativeTime.png)
 
