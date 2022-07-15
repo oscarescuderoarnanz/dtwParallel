@@ -1,6 +1,6 @@
 # Dynamic Time Warping 
 
-This package allows to measure the similarity between two time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It allows the calculation for univariate and multivariate time series. Any distance available in `scipy.spatial.distance` can be used. An extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel.
+This package allows to measure the similarity between two time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It allows the calculation for univariate and multivariate time series. Any distance available in `scipy.spatial.distance` and `gower` distance can be used. An extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel.
 
 Univariate Time Series:
 - It incorporates the possibility of visualising the cost matrix, as well as the path to reach the DTW distance value. This will allow it to be used in a didactic way, providing a better understanding of the method used.
@@ -8,14 +8,13 @@ Univariate Time Series:
 
 Multivariate Time Series: 
 - The calculation of dependent DTW and independent DTW is available.
-- The calculation can be parallelised.
 - The computation can be CPU parallelised by selecting the number of threads. 
 - The distance matrix obtained can be transformed to a kernel.
 
 
 ## Package structure 
 
-<p align="center"> <img src="./Images/Architecture.png"> </p>
+<p align="center"> <img src="./Images/schema.png"> </p>
 
 <p align="center"> <img src="./Images/fileSchema.png"> </p>
 
@@ -30,7 +29,9 @@ pip install dtwParallel
 
 ## Requirements
 
-* Python >= 3.6.1
+Perceval requires Python >= 3.6.1 or later to run. For other Python
+dependencies, please check the `pyproject.toml` file included
+on this repository.
 
 
 Note that you should have also the following packages installed in your system:
@@ -103,14 +104,14 @@ Based on the previous scheme, this package can be used in three different contex
    **a) Example 1.** Calculation of univariate time series taking as input a csv file containing x and y. 
 
    ```
-   dtwParallel exampleData/example_1.csv
+   dtwParallel exampleData/Data/E1_SyntheticData/example_1.csv
    ```
    ```      
    [out]: 40.6
    ```
 
    ```
-   dtwParallel exampleData/example_1.csv -d "gower"
+   dtwParallel exampleData/Data/E1_SyntheticData/example_1.csv -d "gower"
    ```
    ```      
    [out]: 10.000000178813934
@@ -124,14 +125,14 @@ Based on the previous scheme, this package can be used in three different contex
 
    **b) Example 2.** Multivariate time series computation using a csv file containing x and y as input.
    ```
-   dtwParallel exampleData/example_2.csv
+   dtwParallel exampleData/Data/E1_SyntheticData/example_2.csv
    ```
    ```         
    [out]: 81.99196512684249
    ```   
 
    ```
-   dtwParallel exampleData/example_2.csv -d gower -t i 
+   dtwParallel exampleData/Data/E1_SyntheticData/example_2.csv -d gower -t i 
    ```
    ```              
    [out]: 9.666666567325592
@@ -145,7 +146,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    **c) Example 3.** It computes the distance to itself.
    ```
-   dtwParallel exampleData/X_train.npy 
+   dtwParallel exampleData/Data/E0/X_train.npy 
    ```
    ```
    [out]: [[0.00000000e+00 6.36756028e+17 2.94977907e+16 9.96457616e+17]
@@ -157,7 +158,7 @@ Based on the previous scheme, this package can be used in three different contex
    **d) Example 4.** Compute the distance between X and Y.
 
    ```
-   dtwParallel exampleData/X_train.npy exampleData/X_test.npy
+   dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy
    ```
    ```
    [out]: [[2.47396197e+16 9.07388652e+17 2.23522660e+17 1.68210525e+18]
@@ -169,7 +170,7 @@ Based on the previous scheme, this package can be used in three different contex
    **e) Example 5.** Compute the gower distance between X and Y.
 
    ```
-   dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower"
+   dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy -d "gower"
    ```
    ```
    [out]: [[1.7200027  2.16000016 1.92000033 2.53999992]
@@ -181,7 +182,7 @@ Based on the previous scheme, this package can be used in three different contex
    **f) Example 6.** Compute the gower distance between X and Y and we vary the number of threads.
 
    ```
-   dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower" -n 12
+   dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy -d "gower" -n 12
    ```
    ```
    [out]: [[1.7200027  2.16000016 1.92000033 2.53999992]
@@ -193,7 +194,7 @@ Based on the previous scheme, this package can be used in three different contex
    **g) Example 7.** Compute the gower distance between X and Y and we obtain the output per file.
 
    ```
-   dtwParallel exampleData/X_train.npy exampleData/X_test.npy -d "gower" -n 12 -of True
+   dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy -d "gower" -n 12 -of True
    ```
    ```
    [out]: output.csv
@@ -202,7 +203,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    **h) Example 8.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma=0.5. 
    ```
-   dtwParallel exampleData/X_train.npy -k True -s 1000000000
+   dtwParallel exampleData/Data/E0/X_train.npy -k True -s 1000000000
    ```
    ```
    [out]: [[1.         0.7273278  0.98535934 0.60760589]
@@ -229,7 +230,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, check_erros, dtw_to_kernel, sigma)
    ```
 
-   The examples shown below are executed in jupyter-notebook. These examples can be executed in any Integrated Development Environment.
+   The examples shown below are executed in jupyter-notebook. Code available in exampleData/CodeExamples/E1_SyntheticData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E1_SyntheticData). These examples can be executed in any Integrated Development Environment.
 
    **Example 1.** For univariate time series.
    ```
@@ -289,11 +290,26 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    from dtwParallel import dtw_functions
    import numpy as np
+   from dtwParallel import dtw_functions as dtw
    
-   x = np.load('X_train.npy')
-   y = np.load('X_test.npy')
+   x = np.load('../../Data/E0/X_train.npy')
+   y = np.load('../../Data/E0/X_test.npy')
    
-   dtw_functions.dtw_tensor_3d(x, y, "gower")
+   class Input:
+       def __init__(self):
+           self.check_errors = False 
+           self.type_dtw = "d"
+           self.MTS = True
+           self.n_threads = -1
+           self.distance = "gower"
+           self.visualization = False
+           self.output_file = True
+           self.DTW_to_kernel = False
+           self.sigma = 1
+   
+   input_obj = Input()
+   # API call. 
+   dtw.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
@@ -323,6 +339,22 @@ sigma = 1
 ``` 
 
 ## Examples with public data
+
+I have used data obtained from yahoo finance (https://finance.yahoo.com/) of 505 companies, available in a .zip file. The folder where the data is located is exampleData/Data/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/Data/E2_FinanceData). The code needed to process the information of each of the 505 companies, obtaining the tensor input to the package is located in exampleData/CodeExamples/E2_FinanceData/tensorGenerator (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+
+### Experiment 1. Computational time as a function of the number of threads. 
+The computation of the distance matrix has been carried out by means of dependent and independent DTW varying the number of threads.  Code of this example is available at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+
+**DTW dependent**
+![dtwParallel_dtw_D.png](./exampleData/Figures/dtwParallel_dtw_D.png)
+
+**DTW independent**
+![dtwParallel_dtw_I.png](./exampleData/Figures/dtwParallel_dtw_I.png)
+
+### Experiment 2. Comparison of computational time with other packages to calculate dependent DTW. 
+Code available for this example at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+
+![schema.png.png](./exampleData/Figures/comparativeTime.png)
 
 
 ## Reference 
