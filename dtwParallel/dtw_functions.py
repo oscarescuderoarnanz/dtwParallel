@@ -9,7 +9,7 @@ import gower
 from joblib import Parallel, delayed
 from scipy.spatial import distance
 
-from .error_control import control_inputs
+from error_control import control_inputs
 
 
 # Functions that allow the display of the cost matrix together with the

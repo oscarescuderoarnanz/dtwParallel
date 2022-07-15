@@ -6,6 +6,7 @@ import configparser
 import os.path
 import sys
 from scipy.spatial import distance
+from error_control import possible_distances
 
 DTW_DESC_MSG = \
 """
@@ -39,7 +40,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.1
+    %(prog)s 0.8
 """
 
 # Function to convert string to boolean
