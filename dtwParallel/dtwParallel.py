@@ -4,10 +4,12 @@ import pandas as pd
 import os.path
 import numpy as np
 
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
 # Created functions
-from .error_control import possible_distances
-from .utils import *
-from .dtw_functions import dtw, dtw_tensor_3d
+from error_control import possible_distances
+from utils import *
+from dtw_functions import dtw, dtw_tensor_3d
 
 
 
