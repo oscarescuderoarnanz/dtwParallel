@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dtwParallel"
-version = "0.8"
+version = "0.9.1"
 description = "Python implementation of Dynamic Time Warping (DTW), which allows computing the dtw distance between one-dimensional and multidimensional time series, with the possibility of visualisation (one-dimensional case) and parallelisation (multidimensional case)."
 readme = "README.md"
 authors = [{ name = "Óscar", email = "escuderoarnanzoscar@gmail.com" }]

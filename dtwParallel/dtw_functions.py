@@ -9,6 +9,10 @@ import gower
 from joblib import Parallel, delayed
 from scipy.spatial import distance
 
+import sys
+import os.path
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
 from error_control import control_inputs
 
 
