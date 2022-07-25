@@ -40,7 +40,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.1
+    %(prog)s 0.9.2
 """
 
 # Function to convert string to boolean

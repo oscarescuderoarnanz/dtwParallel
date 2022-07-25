@@ -1,16 +1,17 @@
 # Dynamic Time Warping 
 
-This package allows to measure the similarity between two time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It allows the calculation for univariate and multivariate time series. Any distance available in `scipy.spatial.distance` and `gower` distance can be used. An extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel.
+This package allows to measure the similarity between two-time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It will enable the calculation of univariate and multivariate time series. Any distance available in `scipy.spatial.distance` and `gower` distance can be used. Extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel.
 
 Univariate Time Series:
-- It incorporates the possibility of visualising the cost matrix, as well as the path to reach the DTW distance value. This will allow it to be used in a didactic way, providing a better understanding of the method used.
-- It allows the calculation for regular and irregular univariate time series.
+- It incorporates the possibility of visualizing the cost matrix and the path to reach the DTW distance value. This will allow it to be used in a didactic way, providing a better understanding of the method used.
+- It allows the calculation of regular and irregular univariate time series.
 
 Multivariate Time Series: 
 - The calculation of dependent DTW and independent DTW is available.
-- The computation can be CPU parallelised by selecting the number of threads. 
-- The distance matrix obtained can be transformed to a kernel.
+- The computation can be CPU parallelized by selecting the number of threads. 
+- The distance matrix obtained can be transformed into a kernel.
 
+Code is designed to allow working with regular and irregular time series. *Note*: for multivariate time series, only the calculation of the dependent DTW distance is available.
 
 ## Package structure 
 
@@ -55,7 +56,7 @@ Based on the previous scheme, this package can be used in three different contex
       
       dtwParallel -x <floats> -y <floats> -d <str> -ce <bool> -of <bool>
       
-   Note that only the x and y values need to be set. The rest of the values, if not indicated, will be selected from the file containing the default values, ``configuration.ini``.
+   Note that only the x and y values need to be set. If not indicated, the rest of the values will be selected from the file containing the default values, ``configuration.ini``.
 
    Next, different uses are shown by modifying the parameters of the function:
    
@@ -87,10 +88,10 @@ Based on the previous scheme, this package can be used in three different contex
    ```   
 
    **Remarks:**
-   The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding, due to the complexity of the terminal handling:
+   The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding due to the complexity of the terminal handling:
    - Univariate time series.
    - Dependent DTW.
-   - To carry out the visualization of the cost matrix and the routing it will be necessary to make use of an integrated development environment.
+   - To visualize the cost matrix and the routing, it will be necessary to use an integrated development environment.
 
 ### 2) Calculation of the DTW distance with input from a file, haciendo uso de terminal.
 
@@ -99,7 +100,7 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    dtwParallel <file_X> -d <str> -ce <bool> -of <bool>
    ```
-   In case you want to modify any of the possible values, it is necessary to carry out the modification in the configuration.ini file. The possible values are those shown in [Configuration](#item1).
+   If you want to modify any of the possible values, it is necessary to modify the configuration.ini file. The possible values are those shown in [Configuration](#item1).
    
    **a) Example 1.** Calculation of univariate time series taking as input a csv file containing x and y. 
 
@@ -340,10 +341,10 @@ sigma = 1
 
 ## Examples with public data
 
-I have used data obtained from yahoo finance (https://finance.yahoo.com/) of 505 companies, available in a .zip file. The folder where the data is located is exampleData/Data/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/Data/E2_FinanceData). The code needed to process the information of each of the 505 companies, obtaining the tensor input to the package is located in exampleData/CodeExamples/E2_FinanceData/tensorGenerator (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+I have used data from yahoo finance (https://finance.yahoo.com/) of 505 companies, available in a .zip file. The folder where the data is located is exampleData/Data/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/Data/E2_FinanceData). The code needed to process the information of each of the 505 companies, obtaining the tensor input to the package is located in exampleData/CodeExamples/E2_FinanceData/tensorGenerator (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
 
 ### Experiment 1. Computational time as a function of the number of threads. 
-The computation of the distance matrix has been carried out by means of dependent and independent DTW varying the number of threads.  Code of this example is available at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+The computation of the distance matrix has been carried out using dependent and independent DTW varying the number of threads. Code of this example is available at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
 
 **DTW dependent**
 ![dtwParallel_dtw_D.png](./exampleData/Figures/dtwParallel_dtw_D.png)
