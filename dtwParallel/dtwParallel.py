@@ -39,9 +39,8 @@ def input_File(input_obj):
 def control_Output(input_obj, dtw_distance):
 
     if input_obj.output_file:
-        sys.stdout.write("Output to file.")
-        print(dtw_distance)
-        pd.DataFrame(np.array([dtw_distance])).to_csv("output.csv", float_format='%g', index=False)
+        sys.stdout.write("Output to "  + input_obj.name_file + ".csv")
+        pd.DataFrame(np.array([dtw_distance])).to_csv(input_obj.name_file + ".csv", float_format='%g', index=False)
     else:
         sys.stdout.write(str(dtw_distance))
 

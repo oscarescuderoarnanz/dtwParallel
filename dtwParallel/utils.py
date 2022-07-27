@@ -13,16 +13,18 @@ DTW_DESC_MSG = \
     Args:
         -x   Time series 1
         -y   Time series 2
-        -t   Calculation type DTW
-        -d   Type of distance
-        -ce  Check data for errors
+        -t   Calculation type DTW (str)
+        -d   Type of distance (function or gower)
+        -ce  Check data for errors (bool)
+        -of Output to File (bool)
+        -nf Name of file (str)
+        -n Numero de hilos empleados para la paralelización (int)
+        -k Transformación de la matriz de distancia a kernel (bool)
+        -s Valor de sigma para la transformación a kernel exponencial aplicada (float)
 
     Others args:
         MTS  Bool value
-        visualization  Bool value
-        output file  Bool value 
-        DTW_to_kernel Bool value 
-        sigma float
+        get_visualization  Bool value
     
     Optional arguments:
         -h, --help            show this help message and exit
@@ -40,24 +42,8 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.2
+    %(prog)s 0.9.3
 """
-
-# Function to convert string to boolean
-def str_to_bool(a):
-    if a == "True":
-        return True
-        
-    return False
-    
-# Function to convert string to float
-def string_to_float(data):
-    arr_float = []
-
-    for i in range(len(data)):
-        arr_float.append(float(data[i]))
-
-    return arr_float
     
 
 def read_data(fname):
@@ -95,6 +81,7 @@ class Input:
         self.distance = config.get('DEFAULT', 'distance')
         self.visualization = config.getboolean('DEFAULT', 'visualization')
         self.output_file = config.getboolean('DEFAULT', 'output_file')
+        self.name_file = config['DEFAULT']['name_file']
         self.DTW_to_kernel = config.getboolean('DEFAULT', 'DTW_to_kernel')
         self.sigma = config.getint('DEFAULT', 'sigma')
 
@@ -122,18 +109,6 @@ def parse_args(isEntryFile):
         parser.add_argument('-x', nargs='+', type=float, help="Temporal Serie 1")
         parser.add_argument('-y', nargs='+', type=float, help="Temporal Serie 2")
 
-
-    parser.add_argument('-h', '--help', action='help',
-                    help=argparse.SUPPRESS)
-
-    parser.add_argument('-v', '--version', action='version',
-                    version=DTW_VERSION_MSG,
-                    help=argparse.SUPPRESS)
-
-    parser.add_argument('-g', '--debug', dest='debug',
-                    action='store_true',
-                    help=argparse.SUPPRESS)
-
    
     parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str,
                         help="d: dependient or i: independient.")
@@ -147,6 +122,9 @@ def parse_args(isEntryFile):
                         help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
     parser.add_argument("-of", "--output_file", nargs='?', default=input_obj.output_file, type=bool,
                         help="Output by file instead of terminal.")
+    parser.add_argument("-nf", "--name_file", nargs='?', default=input_obj.name_file, type=str,
+                        help="Name file.")
+
 
     # In case of working with files containing N multivariate time series, we give the possibility 
     # to determine the number of threads and whether to transform the output into a kernel.
@@ -157,6 +135,18 @@ def parse_args(isEntryFile):
     parser.add_argument("-s", "--sigma", nargs='?', default=input_obj.sigma, type=float,
                         help="Use a possible distance of scipy.spatial.distance.")
     
+
+    parser.add_argument('-h', '--help', action='help',
+                    help=argparse.SUPPRESS)
+
+    parser.add_argument('-v', '--version', action='version',
+                    version=DTW_VERSION_MSG,
+                    help=argparse.SUPPRESS)
+
+    parser.add_argument('-g', '--debug', dest='debug',
+                    action='store_true',
+                    help=argparse.SUPPRESS)
+
     # Save de input arguments
     args = parser.parse_args()
     input_obj.check_errors = args.check_errors
@@ -164,12 +154,12 @@ def parse_args(isEntryFile):
     input_obj.distance = args.distance
     input_obj.n_threads = args.n_threads
     input_obj.sigma = args.sigma
-
-    # Convert boolean parameters introduced by terminal
-    input_obj.MTS = str_to_bool(args.MTS)
-    input_obj.visualization = str_to_bool(args.visualization)
-    input_obj.DTW_to_kernel = str_to_bool(args.DTW_to_kernel)
-    input_obj.output_file = str_to_bool(args.output_file)
+    input_obj.name_file = args.name_file
+    input_obj.MTS = args.MTS
+    input_obj.visualization = args.visualization
+    input_obj.DTW_to_kernel = args.DTW_to_kernel
+    input_obj.output_file = args.output_file
+    
 
     # If the distance introduced is not correct, the execution is terminated.
     if input_obj.check_errors:
