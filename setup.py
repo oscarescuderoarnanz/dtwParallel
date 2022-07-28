@@ -44,12 +44,12 @@ setup(
       "dtwParallel",
     ],
     keywords="Dynamic Time Warping Parallelization Visualisation Distance",
-    #classifiers=[
-    #    'Intended Audience :: Developers/Science/Reasearch',
-    #    'Topic :: Scientific/Engineering/Software Development',
-    #    'License :: OSI Approved :: BSD License',
-    #    'Programming Language :: Python :: 3'
-    #],
+    classifiers=[
+        'Intended Audience :: Developers/Science/Research',
+        'Topic :: Scientific/Engineering',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 3'
+    ],
 
     include_package_data = True,
     package_data = {

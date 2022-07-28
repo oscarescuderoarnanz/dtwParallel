@@ -89,8 +89,9 @@ def main():
         control_Output(input_obj, dtw_distance)
         
     else:
-        s = "\nError in input arguments.\n"
-        sys.stderr.write(s)
+        args, input_obj = parse_args(False)
+        #s = "\nError in input arguments.\n"
+        #sys.stderr.write(s)
         sys.exit(0)
 
 
