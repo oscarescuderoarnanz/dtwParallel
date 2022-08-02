@@ -45,7 +45,7 @@ setup(
     ],
     keywords="Dynamic Time Warping Parallelization Visualisation Distance",
     classifiers=[
-        'Intended Audience :: Developers/Science/Research',
+        'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 3'

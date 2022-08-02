@@ -103,7 +103,7 @@ def plot_cost_matrix(warp_path, cost):
 
 
 # Function for the calculation of the dependent DTW distance.
-def dtw_dep(x, y, dist):
+def dtw_dep(x, y, dist, mult_UTS=False):
     iter_object = [(i + 1, j + 1) for i in range(len(x)) for j in range(len(y))]
     # Starting conditions:
     # 1) D(0,0) = 0
@@ -128,25 +128,54 @@ def dtw_dep(x, y, dist):
                           (D[i, j - 1][0] + dt, i, j - 1),
                           (D[i - 1, j - 1][0] + dt, i - 1, j - 1))
 
-    return D[len(x), len(y)][0], D
+    if mult_UTS:
+        return D[len(x), len(y)][0]
+    else:
+        return D[len(x), len(y)][0], D
 
 
 
-
-
-def dtw(x, y, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualization=False, check_errors=False):
+def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, n_threads=-1):
 
     if check_errors:
         x, y = control_inputs(x, y, type_dtw, MTS)
-
-    if MTS:
+    
+    if MTS:        
         if type_dtw == "i":
             dtw_distance = dtw_ind(x, y, dist)
         else:
             dtw_distance, _ = dtw_dep(x, y, dist)
     else:
-        dtw_distance, D = dtw_dep(x, y, dist)
+        # Data matrix (UTS) introduced in dataframe format
+        if isinstance(x, pd.DataFrame):
+            if y is None:
+                y = x.copy()
+            dtw_matrix_train = Parallel(n_jobs=n_threads)(
+                delayed(dtw_dep)(x.loc[index_1,:].values, y.loc[index_2, :], dist, mult_UTS=True)
+                for index_1 in range(x.shape[0]) 
+                for index_2 in range(y.shape[0])
+            )
+            dtw_distance = np.array(dtw_matrix_train).reshape((len(x), len(y)))
+        # Data matrix (UTS) introduced in array format
+        else:
+            # En caso de tener N UTS. Paralelizamos
+            if np.asanyarray(x, dtype='float').ndim > 1:
 
+                if y == None:
+                    y = x
+                dtw_matrix_train = Parallel(n_jobs=n_threads)(
+                    delayed(dtw_dep)(x[index_1], y[index_2], dist, mult_UTS=True)
+                    for index_1 in range(len(x)) 
+                    for index_2 in range(len(y))
+                )
+                dtw_distance = np.array(dtw_matrix_train).reshape((len(x), len(y)))
+            # In case of having 2 UTS.
+            else:
+                if y is None:
+                    sys.stderr.write("You need introduce a vector -y")
+                    sys.exit(0)
+                dtw_distance, D = dtw_dep(x, y, dist)
+                
     if get_visualization:
         if type_dtw != "i" and not MTS:
             path = []
@@ -169,7 +198,7 @@ def transform_DTW_to_kernel(data, sigma):
 def dtw_tensor_3d(X_1, X_2, input_obj):
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
-        delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, dist=input_obj.distance,
+        delayed(dtw)(X_1[i], y=X_2[j], type_dtw=input_obj.type_dtw, dist=input_obj.distance,
                      MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors)
         for i in range(X_1.shape[0]) 
         for j in range(X_2.shape[0])

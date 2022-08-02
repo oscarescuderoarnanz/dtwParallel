@@ -66,6 +66,7 @@ def main():
         elif sys.argv[1].endswith('.npy'):
 
             args, input_obj = parse_args(True)
+            input_obj.MTS = True
             if len(sys.argv) > 2 and sys.argv[2].endswith('.npy'):
                 X, Y = read_npy(args.X), read_npy(args.Y)
             else:
@@ -82,7 +83,12 @@ def main():
 
         input_obj.x = args.x
         input_obj.y = args.y
+        
+        if args.y == None:
+            sys.stderr.write("You need introduce a vector -y")
+            sys.exit(0)
        
+        
         dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS,
                            input_obj.visualization, input_obj.check_errors)
         

@@ -42,7 +42,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.5
+    %(prog)s 0.9.7
 """
     
 
@@ -116,7 +116,7 @@ def parse_args(isEntryFile):
                         help="Use a possible distance of scipy.spatial.distance.")
     parser.add_argument("-ce", "--check_errors", nargs='?', default=input_obj.check_errors, type=str,
                         help="Control whether or not check for errors.")
-    parser.add_argument("MTS", nargs='?', default=input_obj.type_dtw, type=bool,
+    parser.add_argument("MTS", nargs='?', default=input_obj.MTS, type=bool,
                         help="Indicates whether the data are multivariate time series or not.")
     parser.add_argument("visualization", nargs='?', default=input_obj.visualization, type=bool,
                         help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
