@@ -18,13 +18,13 @@ DTW_DESC_MSG = \
         -ce  Check data for errors (bool)
         -of Output to File (bool)
         -nf Name of file (str)
+        -vis Visualization of Time Series. only available when using dtwParallel with an API. (bool)
         -n Numero de hilos empleados para la paralelización (int)
         -k Transformación de la matriz de distancia a kernel (bool)
         -s Valor de sigma para la transformación a kernel exponencial aplicada (float)
 
     Others args:
         MTS  Bool value
-        get_visualization  Bool value
     
     Optional arguments:
         -h, --help            show this help message and exit
@@ -42,7 +42,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.7
+    %(prog)s 0.9.10 
 """
     
 
@@ -83,7 +83,7 @@ class Input:
         self.output_file = config.getboolean('DEFAULT', 'output_file')
         self.name_file = config['DEFAULT']['name_file']
         self.DTW_to_kernel = config.getboolean('DEFAULT', 'DTW_to_kernel')
-        self.sigma = config.getint('DEFAULT', 'sigma')
+        self.sigma_kernel = config.getint('DEFAULT', 'sigma_kernel')
 
 
 def parse_args(isEntryFile):
@@ -118,8 +118,8 @@ def parse_args(isEntryFile):
                         help="Control whether or not check for errors.")
     parser.add_argument("MTS", nargs='?', default=input_obj.MTS, type=bool,
                         help="Indicates whether the data are multivariate time series or not.")
-    parser.add_argument("visualization", nargs='?', default=input_obj.visualization, type=bool,
-                        help="Allows you to indicate whether to display the results or not. Only for the one-dimensional case.")
+    parser.add_argument("-vis", '--visualization', nargs='?', default=input_obj.visualization, type=bool,
+                        help="Allows you to indicate whether to display the results or not. Only for API case.")
     parser.add_argument("-of", "--output_file", nargs='?', default=input_obj.output_file, type=bool,
                         help="Output by file instead of terminal.")
     parser.add_argument("-nf", "--name_file", nargs='?', default=input_obj.name_file, type=str,
@@ -132,7 +132,7 @@ def parse_args(isEntryFile):
                         help="d: dependient or i: independient.")
     parser.add_argument("-k", "--DTW_to_kernel", nargs='?', default=input_obj.DTW_to_kernel, type=str,
                         help="Use a possible distance of scipy.spatial.distance.")
-    parser.add_argument("-s", "--sigma", nargs='?', default=input_obj.sigma, type=float,
+    parser.add_argument("-s", "--sigma_kernel", nargs='?', default=input_obj.sigma_kernel, type=float,
                         help="Use a possible distance of scipy.spatial.distance.")
     
 
@@ -153,7 +153,7 @@ def parse_args(isEntryFile):
     input_obj.type_dtw = args.type_dtw
     input_obj.distance = args.distance
     input_obj.n_threads = args.n_threads
-    input_obj.sigma = args.sigma
+    input_obj.sigma_kernel = args.sigma_kernel
     input_obj.name_file = args.name_file
     input_obj.MTS = args.MTS
     input_obj.visualization = args.visualization

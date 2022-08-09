@@ -2,16 +2,17 @@
 
 This package allows to measure the similarity between two-time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It will enable the calculation of univariate and multivariate time series. Any distance available in `scipy.spatial.distance` and `gower` distance can be used. Extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel.
 
-Univariate Time Series:
-- It incorporates the possibility of visualizing the cost matrix and the path to reach the DTW distance value. This will allow it to be used in a didactic way, providing a better understanding of the method used.
-- It allows the calculation of regular and irregular univariate time series.
+Common functionalities for 2-time series (TS):
+- It incorporates the possibility of visualizing the cost matrix and the path to reach the DTW distance value between two TS. This will allow its use in a didactic way, providing a better understanding of the method used.
+- It is possible to calculate TS with the same and different lengths. 
 
-Multivariate Time Series: 
-- The calculation of dependent DTW and independent DTW is available.
-- The computation can be CPU parallelized by selecting the number of threads. 
-- The distance matrix obtained can be transformed into a kernel.
+Common functionalities for N (> 2) time series (TS):
+- The calculation can be parallelized by the CPU by selecting the number of threads. As a result, we will obtain the distance matrix. 
+- It is possible to perform not only the calculation of distances but also similarities (based on an exponential kernel).
 
-Code is designed to allow working with regular and irregular time series. *Note*: for multivariate time series, only the calculation of the dependent DTW distance is available.
+Multivariate TS functionalities: 
+- Calculation of dependent DTW and independent DTW is available.
+
 
 ## Package structure 
 
@@ -30,7 +31,7 @@ pip install dtwParallel
 
 ## Requirements
 
-Perceval requires Python >= 3.6.1 or later to run. For other Python
+dtwParallel requires Python >= 3.6.1 or later to run. For other Python
 dependencies, please check the `pyproject.toml` file included
 on this repository.
 
@@ -136,7 +137,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtwParallel exampleData/Data/E1_SyntheticData/example_2.csv -d gower -t i 
    ```
    ```              
-   [out]: 9.666666567325592
+   [out]: 28.999999701976776
    ``` 
 
    #### The generic example for ``npy files`` is shown below:
@@ -202,7 +203,7 @@ Based on the previous scheme, this package can be used in three different contex
    ```
 
 
-   **h) Example 8.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma=0.5. 
+   **h) Example 8.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma_kernel=0.5. 
    ```
    dtwParallel exampleData/Data/E0/X_train.npy -k True -s 1000000000
    ```
@@ -228,7 +229,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtw_functions.dtw(x,y,type_dtw, distance, MTS, get_visualization, check_errors)
    
    # For Multivariate Time Series
-   dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, check_erros, dtw_to_kernel, sigma)
+   dtw_functions.dtw_tensor(X_1, X_2, type_dtw, dist, n_threads, check_erros, dtw_to_kernel, sigma_kernel)
    ```
 
    The examples shown below are executed in jupyter-notebook. Code available in exampleData/CodeExamples/E1_SyntheticData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E1_SyntheticData). These examples can be executed in any Integrated Development Environment.
@@ -249,7 +250,23 @@ Based on the previous scheme, this package can be used in three different contex
    [out]: 5.0
    ```
 
-   **Example 2.** For univariate time series with visualization.
+   **Example 2.** For univariate time series with different lengths.
+   ```
+   from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   
+   # For Univariate Time Series
+   x = [1,2,3,5,8,9,5,4,2]
+   y = [1,0,1,0,1,1]
+   
+   distance = d.euclidean
+   dtw_functions.dtw(x, y, distance)
+   ```
+   ```
+   [out]: 32.0
+   ```
+
+   **Example 3.** For univariate time series with visualization.
    ```
    from dtwParallel import dtw_functions
    from scipy.spatial import distance as d
@@ -260,7 +277,7 @@ Based on the previous scheme, this package can be used in three different contex
    
    distance = d.euclidean
    visualization=True
-   dtw_functions.dtw(x,y,distance, get_visualization=visualization)
+   dtw_functions.dtw(x, y, distance, get_visualization=visualization)
    ```
    ```
    [out]: 15.0
@@ -268,33 +285,77 @@ Based on the previous scheme, this package can be used in three different contex
 
    ![Example_1.png](./Images/Example_1.png)
 
-   **Example 3.** For multivariate time series.
+   **Example 4.** For multivariate time series.
    
    ```
    from dtwParallel import dtw_functions
    from scipy.spatial import distance as d
    import numpy as np
    
-   x = np.array([[3,5,8], 
+   X = np.array([[3,5,8], 
                 [5, 1,9]])
    
-   y = np.array([[2, 0,8],
+   Y = np.array([[2, 0,8],
                 [4, 3,8]])
                
-   dtw_functions.dtw(x,y,"d", d.euclidean, MTS=True)
+   dtw_functions.dtw(X, Y, "d", d.euclidean, MTS=True)
    ```
    ```
    [out]: 7.548509256375962
    ```
-   **Example 4.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics.
-    
+
+   **Example 5.** For multivariate time series with different lengths.
+   
    ```
    from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   import numpy as np
+
+   X = np.array([[3, 5, 8], 
+                 [5, 1, 9],
+                 [0, 1, 1], 
+                 [1, 4, 2]])
+
+   Y = np.array([[2, 0,8],
+                 [4, 3,8]])
+
+   dtw_functions.dtw(X, Y, "d", d.euclidean, MTS=True)
+   ```
+   ```
+   [out]: 22.546443515422986
+   ```
+
+   **Example 5.** For multivariate time series with visualization.
+   
+   ```
+   from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   import numpy as np
+
+   X = np.array([[3, 5, 8], 
+                 [0, 1, 3],
+                 [1, 2, 3]])
+
+   Y = np.array([[2, 0, 8],
+                 [1, 3, 8],
+                 [4, 8, 12]])
+
+   dtw_functions.dtw(X, Y, "d", d.euclidean, MTS=True)
+   ```
+   ![Example_2.png](./Images/Example_2.png)
+
+   ```
+   [out]: 22.546443515422986
+   ```
+
+   **Example 7.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics.
+    
+   ```
    import numpy as np
    from dtwParallel import dtw_functions as dtw
    
-   x = np.load('../../Data/E0/X_train.npy')
-   y = np.load('../../Data/E0/X_test.npy')
+   X = np.load('../../Data/E0/X_train.npy')
+   Y = np.load('../../Data/E0/X_test.npy')
    
    class Input:
        def __init__(self):
@@ -306,11 +367,11 @@ Based on the previous scheme, this package can be used in three different contex
            self.visualization = False
            self.output_file = True
            self.DTW_to_kernel = False
-           self.sigma = 1
+           self.sigma_kernel = 1
    
    input_obj = Input()
    # API call. 
-   dtw.dtw_tensor_3d(x, y, input_obj)
+   dtw.dtw_tensor_3d(X, Y, input_obj)
    ```
    ```
    [out]: 
@@ -336,7 +397,7 @@ n_threads = -1
 visualization = False
 output_file = False
 dtw_to_kernel = False
-sigma = 1
+sigma_kernel = 1
 ``` 
 
 ## Examples with public data
