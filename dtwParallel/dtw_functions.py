@@ -149,7 +149,6 @@ def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visuali
             dtw_distance, D = dtw_ind(x, y, dist, get_visualization=get_visualization)
         else:
             dtw_distance, D = dtw_dep(x, y, dist)
-            print(dtw_distance)
     else:
         # In case of having N UTS. We parallelize
         ## Data matrix (UTS) introduced in dataframe format
@@ -163,7 +162,7 @@ def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visuali
             )
             dtw_distance = np.array(dtw_matrix_train).reshape((len(x), len(y)))
             if DTW_to_kernel:
-                return transform_DTW_to_kernel(dtw_distance, sigma_kernel)
+                return dtw_distance, transform_DTW_to_kernel(dtw_distance, sigma_kernel)
         # Data matrix (UTS) introduced in array format
         else:
             if np.asanyarray(x, dtype='float').ndim > 1:
@@ -176,7 +175,7 @@ def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visuali
                 )
                 dtw_distance = np.array(dtw_matrix_train).reshape((len(x), len(y)))
                 if DTW_to_kernel:
-                    return transform_DTW_to_kernel(dtw_distance, sigma_kernel)
+                    return dtw_distance, transform_DTW_to_kernel(dtw_distance, sigma_kernel)
             # In case of having 2 UTS.
             else:
                 if y is None:
@@ -219,6 +218,6 @@ def dtw_tensor_3d(X_1, X_2, input_obj):
     data = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
 
     if input_obj.DTW_to_kernel:
-        return transform_DTW_to_kernel(data, input_obj.sigma_kernel)
+        return data, transform_DTW_to_kernel(data, input_obj.sigma_kernel)
 
     return data
