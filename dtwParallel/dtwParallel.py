@@ -96,8 +96,6 @@ def main():
         
     else:
         args, input_obj = parse_args(False)
-        #s = "\nError in input arguments.\n"
-        #sys.stderr.write(s)
         sys.exit(0)
 
 
