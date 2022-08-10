@@ -61,31 +61,39 @@ Based on the previous scheme, this package can be used in three different contex
 
    Next, different uses are shown by modifying the parameters of the function:
    
-   **a) Example 1.** Setting only the mandatory values.
+   **a) Example 1.** Considers the Euclidean distance, activates the option -ce to check for errors, and uses as input two UTS (denoted as $x$ and $y$) with the same length ($T=10$). 
+   Firstly, the input TS and distance are checked as valid entries. Secondly, the \texttt{dtwParallel} package computes the DTW distance. Thirdly, the output is shown in the terminal (while in most cases, the outputs are forwarded to a file, we selected this option to facilitate exposition).
    
    ```
-   dtwParallel -x 1 2 3 -y 1 1 1
+   dtwParallel -x 2 4 6 8 5 3 6 8 9 15 -y 12 0 0 3 5 6 30 1 2 4 -ce True
+
    ```
    ```
-   [out]: 3.0
+   [out]: 65,0
    ```
 
-   **b) Example 2.** Setting all values.
+   **b) Example 2.** Considering the CityBlock distance.
    
    ```
-   dtwParallel -x 1 2 3 -y 1 1 1 -d euclidean -ce True
+   dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2  -y 12.1 0 0 1 1 6.4 3.5 1 0 0  -d cityblock
    ```
    ```
-   [out]: 3.0
+   [out]: 45,4
    ```
 
-   **c) Example 3.** By setting all values, modifying the distance used.
+   **c) Example 3.** This examples are , respectively, counterparts to **Example 1** and **Example 2**.
    
    ```
-   dtwParallel -x 1.5 2 3.7 -y 1.4 1 1.05 -d gower -ce True
+   dtwParallel -x 2 4 6 8 5 3 -y 12 0 0 3 5 6 30 1 2 4 
    ```
    ```
-   [out]: 3.0000000596046448
+   [out]: 44,0
+   ```   
+   ```
+   dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2 -y 1 0 0 1 -d cityblock
+   ```
+   ```
+   [out]: 36,1
    ```   
 
    **Remarks:**
