@@ -353,7 +353,7 @@ Based on the previous scheme, this package can be used in three different contex
    ![Example_2.png](./Images/Example_2.png)
 
    ```
-   [out]: 22.546443515422986
+   [out]: 21.801217248966267
    ```
 
    **Example 7.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics.

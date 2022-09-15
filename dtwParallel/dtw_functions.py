@@ -55,8 +55,8 @@ def plot_cost_matrix(warp_path, cost):
     ax = sbn.heatmap(cost, annot=True, square=True, linewidths=0.1, cmap="YlGnBu", ax=ax)
 
     # Get the warp path in x and y directions
-    path_x = [p[0] for p in warp_path]
-    path_y = [p[1] for p in warp_path]
+    path_x = [p[1] for p in warp_path]
+    path_y = [p[0] for p in warp_path]
 
     # Align the path from the center of each cell
     path_xx = [x + 0.5 for x in path_x]
