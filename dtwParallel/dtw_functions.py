@@ -135,11 +135,15 @@ def dtw_dep(x, y, dist, mult_UTS=False):
     if mult_UTS:
         return D[len(x), len(y)][0]
     else:
+        # irregular time series
+        if len(x) != len(y):
+            return D[len(x), len(y)][0] / np.sqrt(len(x)*len(y)), D
+
         return D[len(x), len(y)][0], D
 
 
 
-def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, n_threads=-1, DTW_to_kernel=False, sigma_kernel=1):
+def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, DTW_to_kernel=False, sigma_kernel=1):
 
     if check_errors:
         x, y = control_inputs(x, y, type_dtw, MTS)
@@ -148,6 +152,10 @@ def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visuali
         if type_dtw == "i":
             dtw_distance, D = dtw_ind(x, y, dist, get_visualization=get_visualization)
         else:
+            if regular_flag != 0:
+                x = x[0:len(np.unique(np.where(x != 666)[0]))]
+                y = y[0:len(np.unique(np.where(y != 666)[0]))]
+
             dtw_distance, D = dtw_dep(x, y, dist)
     else:
         # In case of having N UTS. We parallelize
@@ -181,6 +189,12 @@ def dtw(x, y=None, type_dtw="d", dist=distance.euclidean, MTS=False, get_visuali
                 if y is None:
                     sys.stderr.write("You need introduce a vector -y")
                     sys.exit(0)
+                if isinstance(x, pd.Series):
+                    x = x.to_numpy().tolist()
+                    y = y.to_numpy().tolist()
+                #print(x)
+                #print(type(x))
+                #print(y)
                 dtw_distance, D = dtw_dep(x, y, dist)
 
                 
@@ -210,12 +224,19 @@ def dtw_tensor_3d(X_1, X_2, input_obj):
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
         delayed(dtw)(X_1[i], y=X_2[j], type_dtw=input_obj.type_dtw, dist=input_obj.distance,
-                     MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors)
+                     MTS=input_obj.MTS, get_visualization=input_obj.visualization, 
+                     check_errors=input_obj.check_errors, regular_flag=input_obj.regular_flag)
         for i in range(X_1.shape[0]) 
         for j in range(X_2.shape[0])
     )
-    
+    #dtw_matrix_train = np.zeros((X_1.shape[0]))
+    #for i in range(X_1.shape[0]): 
+    #    for j in range(X_2.shape[0]):
+    #        print(dtw(X_1[i], y=X_2[j], type_dtw=input_obj.type_dtw, dist=input_obj.distance,
+    #                 MTS=input_obj.MTS, get_visualization=input_obj.visualization, 
+    #                 check_errors=input_obj.check_errors, regular_flag=input_obj.regular_flag))
     data = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
+    #data = 0
 
     if input_obj.DTW_to_kernel:
         return data, transform_DTW_to_kernel(data, input_obj.sigma_kernel)
