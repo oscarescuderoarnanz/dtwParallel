@@ -14,8 +14,11 @@ Multivariate TS functionalities:
 - Calculation of dependent DTW and independent DTW is available.
 
 Novelties:
-- Se ha incluido dos variantes de DTW: the Itakura parallelogram and the Sakoe-Chiba band.
-- 
+- Two variants of DTW have been included: the Itakura parallelogram and the Sakoe-Chiba band.
+- Calculation of DTW for irregular time series, both for the case of dependent and independent DTW.
+- Visualization of the alignment of two time series. 
+- Computational time optimization for norm 1 and norm 2. 
+- Availability of input data format: numpy, pandas and tensors. 
 
 
 ## Package structure 
