@@ -14,7 +14,12 @@ from dtw_functions import dtw, dtw_tensor_3d
 
 
 def input_File(input_obj):
-
+    """
+    Para terminal. Controla el fichero introducido. 
+    En caso de tener 2 filas, calculamos DTW entre 2 UTS. 
+    En caso de tener N filas (pares), asociamos N/2 a cada MTS, calculando la distancia DTW entre 2 MTS.
+    En caso de tener N filas (impares)
+    """
     args, input_obj = parse_args(True)
     data = read_data(args.X)
 
@@ -33,6 +38,7 @@ def input_File(input_obj):
 
         input_obj.x = finalData[0]
         input_obj.y = finalData[1]
+        
 
     return input_obj
 
