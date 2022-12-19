@@ -17,7 +17,7 @@ Novelties:
 - Two variants of DTW have been included: the Itakura parallelogram and the Sakoe-Chiba band.
 - Calculation of DTW for irregular time series, both for the case of dependent and independent DTW.
 - Visualization of the alignment of two time series. 
-- Computational time optimization for norm 1 and norm 2. 
+- Computational time optimization for norm 1, norm 2 and square_euclidean_distance. 
 - Availability of input data format: numpy, pandas and tensors. 
 
 
@@ -107,32 +107,58 @@ Based on the previous scheme, this package can be used in three different contex
    **d) Example 4.** **Novelty**: It has been included the possibility to calculate the Itakura parallelogram and the Sakoe-Chiba band.
    
    ```
-   dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2 -y 1 0 0 1 -t "sakoe_chiba"
+   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 -t "sakoe_chiba"
    ```
    ```
-   [out]: 22.38
+   [out]: 17.20
    ```   
    ```
-   dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2 -y 1 0 0 1 -t "itakura"
+   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 2 4 7 1 9 10 -t "itakura"
    ```
    ```
-   [out]: 21.53
+   [out]: 13.0
    ```   
 
-   **e) Example e.** **Novelty**: A straightforward and optimal way to calculate norm 1 and norm 2 is included.
+   **e) Example e.** **Novelty**: A straightforward and optimal way to calculate norm 1, norm 2 and square euclidean distance is included.
 
    ```
-   dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2 -y 1 0 0 1 -d "norm1"
+   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 5 6 1 0 9 11 -d "norm1"
    ```
    ```
-   [out]: 19.11
+   [out]: 12.24
    ```   
    ```
-   dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2 -y 1 0 0 1 -d "norm2"
+   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 5 6 1 0 9 11 -d "norm2"
    ```
    ```
-   [out]: 45.4
+   [out]: 18.0
    ```   
+   ```
+   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 5 6 1 0 9 11 -d "square_euclidean_distance"
+   ```
+   ```
+   [out]: 
+   ```   
+   **We include another example with differents lengths of the time series:**
+   ```
+   dtwParallel -x 2 4 6 8 1 0 0 -y 1 0 0 1 5 6 1 0 9 11 -d "norm1"
+   ```
+   ```
+   [out]: 13.55
+   ```   
+   ```
+   dtwParallel -x 2 4 6 8 1 0 0 -y 1 0 0 1 5 6 1 0 9 11 -d "norm2"
+   ```
+   ```
+   [out]: 29.0
+   ```   
+   ```
+   dtwParallel -x 2 4 6 8 1 0 0 -y 1 0 0 1 5 6 1 0 9 11 -d "square_euclidean_distance"
+   ```
+   ```
+   [out]: 
+   ```   
+
 
    **Remarks:**
    The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding due to the complexity of the terminal handling:
@@ -190,7 +216,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtwParallel exampleData/Data/E1_SyntheticData/example_2.csv -d gower -t i 
    ```
    ```              
-   [out]: 26.99
+   [out]: 28.99
    ``` 
 
    #### The generic example for ``npy files`` is shown below:
@@ -287,15 +313,19 @@ Based on the previous scheme, this package can be used in three different contex
    ```
 
 
-   **h) Example 8.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma_kernel=0.5. 
+   **h) Example 8.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma_kernel=0.5. We return the distance matrix and the kernel.  
    ```
    dtwParallel exampleData/Data/E0/X_train.npy -k True -s 1000000000
    ```
    ```
-   [out]: [[1.         0.7273278  0.98535934 0.60760589]
-          [0.7273278  1.         0.73813458 0.44192866]
-          [0.98535934 0.73813458 1.         0.59871014]
-          [0.60760589 0.44192866 0.59871014 1.        ]]
+   [out]: (array([[0.00000000e+00, 6.36756028e+17, 2.94977907e+16, 9.96457616e+17],
+                  [6.36756028e+17, 0.00000000e+00, 6.07258237e+17, 1.63321364e+18],
+                  [2.94977907e+16, 6.07258237e+17, 0.00000000e+00, 1.02595541e+18],
+                  [9.96457616e+17, 1.63321364e+18, 1.02595541e+18, 0.00000000e+00]]),
+           array([[1.        , 0.7273278 , 0.98535934, 0.60760589],
+                  [0.7273278 , 1.        , 0.73813458, 0.44192866],
+                  [0.98535934, 0.73813458, 1.        , 0.59871014],
+                  [0.60760589, 0.44192866, 0.59871014, 1.        ]]))
    ```
 
    **Remarks:**
@@ -310,7 +340,7 @@ Based on the previous scheme, this package can be used in three different contex
    from dtwParallel import dtw_functions
     
    # For Univariate Time Series
-   dtw_functions.dtw(x, y, type_dtw, distance, MTS, get_visualization, check_errors)
+   dtw_functions.dtw(x, y, type_dtw, local_dissimilarity, MTS, get_visualization, check_errors)
    
    # For Multivariate Time Series
    dtw_functions.dtw_tensor_3d(X_1, X_2, object)
@@ -327,12 +357,25 @@ Based on the previous scheme, this package can be used in three different contex
    x = [1,2,3]
    y = [0,0,1]
    
-   dtw_functions.dtw(x,y,dist=d.euclidean)
+   dtw_functions.dtw(x,y,local_dissimilarity=d.euclidean)
    ```
    ```
    [out]: 5.0
    ```
 
+   ```
+   import pandas as pd
+   import numpy as np
+   from dtwParallel import dtw_functions 
+
+   # Use of dataframes with 1D (UTS) as entry data
+   x = pd.DataFrame(np.random.randint(0,10, size=(1,8)))
+   y = pd.DataFrame(np.random.randint(0,10, size=(1,8)))
+   dtw_functions.dtw(x, y, n_threads=8)
+   ```
+   ```
+   [out]: dependence with random.
+   ```
    ```
    import pandas as pd
    import numpy as np
@@ -344,7 +387,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtw_functions.dtw(x, y, MTS=True, n_threads=8)
    ```
    ```
-   [out]: dependence with random
+   [out]: matrix with 2x2 dimensiones. Result with random dependency.
    ```
 
    ```
@@ -371,7 +414,7 @@ Based on the previous scheme, this package can be used in three different contex
    x = pd.Series(np.random.randn(10))
    y = pd.Series(np.random.randn(10))
 
-   dtw_functions.dtw(x,y,dist="norm2")
+   dtw_functions.dtw(x,y,local_dissimilarity="norm2")
    ```
    ```
    [out]: dependence with random
@@ -387,8 +430,7 @@ Based on the previous scheme, this package can be used in three different contex
    x = [1,2,3,5,8,9,5,4,2]
    y = [1,0,1,0,1,1]
    
-   distance = d.euclidean
-   dtw_functions.dtw(x, y, distance)
+   dtw_functions.dtw(x, y, local_dissimilarity=d.euclidean)
    ```
    ```
    [out]: 32.0
@@ -403,9 +445,7 @@ Based on the previous scheme, this package can be used in three different contex
    x = [4,2,8,4,5]
    y = [0,1,0,8,9]
    
-   distance = d.euclidean
-   visualization=True
-   dtw_functions.dtw(x, y, distance, get_visualization=visualization)
+   dtw_functions.dtw(x, y, local_dissimilarity=d.euclidean, get_visualization=True)
    ```
    ```
    [out]: 15.0
@@ -427,7 +467,7 @@ Based on the previous scheme, this package can be used in three different contex
    Y = np.array([[2, 0,8],
                 [4, 3,8]])
                
-   dtw_functions.dtw(X, Y, "d", d.euclidean, MTS=True)
+   dtw_functions.dtw(X, Y, type_dtw="d", local_dissimilarity=d.euclidean, MTS=True)
    ```
    ```
    [out]: 7.548509256375962
@@ -448,7 +488,7 @@ Based on the previous scheme, this package can be used in three different contex
    Y = np.array([[2, 0,8],
                  [4, 3,8]])
 
-   dtw_functions.dtw(X, Y, "d", d.euclidean, MTS=True)
+   dtw_functions.dtw(X, Y, type_dtw="d", local_dissimilarity=d.euclidean, MTS=True)
    ```
    ```
    [out]: 22.546443515422986
@@ -469,7 +509,7 @@ Based on the previous scheme, this package can be used in three different contex
                  [1, 3, 8],
                  [4, 8, 12]])
 
-   dtw_functions.dtw(X, Y, "d", d.euclidean, MTS=True)
+   dtw_functions.dtw(X, Y, type_dtw="d", local_dissimilarity=d.euclidean, MTS=True)
    ```
    ![Example_2.png](./Images/Example_2.png)
 
@@ -493,7 +533,7 @@ Based on the previous scheme, this package can be used in three different contex
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
-            self.distance = "gower"
+            self.local_dissimilarity = "gower"
             self.visualization = False
             self.output_file = True
             self.DTW_to_kernel = False
@@ -527,7 +567,7 @@ Based on the previous scheme, this package can be used in three different contex
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
-            self.distance = "gower"
+            self.local_dissimilarity = "gower"
             self.visualization = False
             self.output_file = True
             self.DTW_to_kernel = False
@@ -562,7 +602,7 @@ Based on the previous scheme, this package can be used in three different contex
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
-            self.distance = "gower"
+            self.local_dissimilarity = "gower"
             self.visualization = False
             self.output_file = True
             self.DTW_to_kernel = False
@@ -597,7 +637,7 @@ Based on the previous scheme, this package can be used in three different contex
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
-            self.distance = None
+            self.local_dissimilarity = None
             self.visualization = False
             self.output_file = True
             self.DTW_to_kernel = False
@@ -633,7 +673,7 @@ Based on the previous scheme, this package can be used in three different contex
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
-            self.distance = None
+            self.local_dissimilarity = None
             self.visualization = False
             self.output_file = True
             self.DTW_to_kernel = False
@@ -658,7 +698,7 @@ check_errors = False
 type_dtw = d
 mts = False
 regular_flag = 0
-distance = euclidean
+local_dissimilarity = euclidean
 n_threads = -1
 visualization = False
 output_file = False

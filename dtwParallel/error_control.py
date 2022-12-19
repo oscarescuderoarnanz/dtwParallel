@@ -61,7 +61,8 @@ def possible_distances():
    possible_distance.append("gower")
    # I include the computation of norm 1 and norm 2 optimized in terms of computational time. 
    possible_distance.append("norm1")
-   possible_distance.append("norm2")	  
+   possible_distance.append("norm2")
+   possible_distance.append("square_euclidean_distance")	  
     
    return possible_distance
    

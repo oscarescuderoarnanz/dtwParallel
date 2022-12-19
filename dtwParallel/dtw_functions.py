@@ -273,7 +273,7 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
     else:
         # In case of having N UTS. We parallelize
         ## Data matrix (UTS) introduced in dataframe format
-        if isinstance(ts1, pd.DataFrame) and ts1.shape[1] > 1:
+        if isinstance(ts1, pd.DataFrame) and ts1.shape[0] > 1:
             if ts2 is None:
                 ts2 = ts1.copy()
 
@@ -288,7 +288,11 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
             if DTW_to_kernel:
                 return dtw_distance, transform_DTW_to_kernel(dtw_distance, sigma_kernel)
 
-        # Data matrix (UTS) introduced in array format
+        # In case we have a unidimensional UTS with dataframe format.
+        elif isinstance(ts1, pd.DataFrame) and ts1.shape[0] == 1:
+            dtw_distance, cost_matrix = dtw_dep(ts1, ts2, local_dissimilarity)
+        
+        # If we hace a data matrix (UTS) introduced in array format with N UTS >= 2.
         else:
             if np.asanyarray(ts1, dtype='float').ndim > 1 and not(isinstance(ts1, pd.DataFrame)):
                 if ts2 == None:
@@ -310,12 +314,6 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
 
             # In case of having 2 UTS.
             else:
-                # Esta parte del código debe ser arreglada!!! Considerar todo tipo de datos de entrada
-                # REVISAR!!!!!!
-                
-                #if np.isnan(ts2):
-                #    raise ValueError('You need introduce a UTS -y.')
-
                 dtw_distance, cost_matrix = dtw_dep(ts1, ts2, local_dissimilarity)
 
 
@@ -346,7 +344,7 @@ def transform_DTW_to_kernel(data, sigma_kernel):
 def dtw_tensor_3d(X_1, X_2, input_obj):
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
-        delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.distance,
+        delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity,
                       MTS=input_obj.MTS, get_visualization=input_obj.visualization, 
                       check_errors=input_obj.check_errors, regular_flag=input_obj.regular_flag,
                       itakura_max_slope=input_obj.itakura_max_slope, sakoe_chiba_radius=input_obj.sakoe_chiba_radius)

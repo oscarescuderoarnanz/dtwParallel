@@ -14,7 +14,7 @@ DTW_DESC_MSG = \
         -x   Time series 1
         -y   Time series 2
         -t   Calculation type DTW (str)
-        -d   Type of distance (function or gower)
+        -d   Type of distance (function, norm1, norm2, square_euclidean_distance or gower)
         -ce  Check data for errors (bool)
         -of Output to File (bool)
         -nf Name of file (str)
@@ -75,11 +75,11 @@ class Input:
         # If the distance introduced is not correct, the execution is terminated.
         if self.check_errors:
             test_distance = possible_distances()
-            if not config.get('DEFAULT', 'distance') in test_distance:
+            if not config.get('DEFAULT', 'local_dissimilarity') in test_distance:
                 raise ValueError('Distance introduced not allowed or incorrect.')
              
         #self.distance = eval("distance." + config.get('DEFAULT', 'distance'))
-        self.distance = config.get('DEFAULT', 'distance')
+        self.local_dissimilarity = config.get('DEFAULT', 'local_dissimilarity')
         self.visualization = config.getboolean('DEFAULT', 'visualization')
         self.output_file = config.getboolean('DEFAULT', 'output_file')
         self.name_file = config['DEFAULT']['name_file']
@@ -116,8 +116,8 @@ def parse_args(isEntryFile):
     parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str,
                         help="d: dependient or i: independient.")
     
-    parser.add_argument("-d", "--distance", nargs='?', default=input_obj.distance, type=str,
-                        help="Use a possible distance of scipy.spatial.distance.")
+    parser.add_argument("-d", "--local_dissimilarity", nargs='?', default=input_obj.local_dissimilarity, type=str,
+                        help="Use a possible distance of scipy.spatial.distance, norm1, norm2, square_euclidean_distance or gower.")
    
     parser.add_argument("-ce", "--check_errors", nargs='?', default=input_obj.check_errors, type=str,
                         help="Control whether or not check for errors.")
@@ -143,11 +143,11 @@ def parse_args(isEntryFile):
     parser.add_argument('-n', '--n_threads', nargs='?', default=input_obj.n_threads, type=int,
                         help="d: dependient or i: independient.")
 
-    parser.add_argument("-k", "--DTW_to_kernel", nargs='?', default=input_obj.DTW_to_kernel, type=str,
-                        help="Use a possible distance of scipy.spatial.distance.")
+    parser.add_argument("-k", "--DTW_to_kernel", nargs='?', default=input_obj.DTW_to_kernel, type=bool,
+                        help="In case of DTW_to_kernel=True a transformation of the distance matrix to an exponential kernel with default sigma value equal to 1 is performed.")
 
     parser.add_argument("-s", "--sigma_kernel", nargs='?', default=input_obj.sigma_kernel, type=float,
-                        help="Use a possible distance of scipy.spatial.distance.")
+                        help="Sigma value for kernel transformation.")
 
     # Novelties
     parser.add_argument("-imx", "--itakura_max_slope", nargs='?', default=input_obj.itakura_max_slope, type=str,
@@ -172,7 +172,7 @@ def parse_args(isEntryFile):
     args = parser.parse_args()
     
     input_obj.type_dtw = args.type_dtw
-    input_obj.distance = args.distance
+    input_obj.local_dissimilarity = args.local_dissimilarity
     input_obj.check_errors = args.check_errors
     input_obj.MTS = args.MTS
     input_obj.regular_flag = args.regular_flag
@@ -196,11 +196,11 @@ def parse_args(isEntryFile):
     # If the distance introduced is not correct, the execution is terminated.
     if input_obj.check_errors:
         test_distance = possible_distances()
-        if not input_obj.distance in test_distance:
+        if not input_obj.local_dissimilarity in test_distance:
             raise ValueError('Distance introduced not allowed or incorrect.')
          
-    if not input_obj.distance in ["gower", "norm1", "norm2"]:
-       input_obj.distance = eval("distance." + input_obj.distance)
+    if not input_obj.local_dissimilarity in ["gower", "norm1", "norm2", "square_euclidean_distance"]:
+       input_obj.local_dissimilarity = eval("distance." + input_obj.local_dissimilarity)
 
 
     return parser.parse_args(), input_obj

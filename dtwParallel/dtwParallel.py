@@ -67,7 +67,7 @@ def main():
         # input 2D file
         if sys.argv[1].endswith('.csv'):
             input_obj = input_File(input_obj)
-            dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance,
+            dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.local_dissimilarity,
                                input_obj.MTS, input_obj.visualization, input_obj.check_errors)
 
         # input 3D file. We include the possibility to parallelise.
@@ -97,7 +97,7 @@ def main():
             sys.exit(0)
        
         
-        dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.distance, input_obj.MTS,
+        dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.local_dissimilarity, input_obj.MTS,
                            input_obj.visualization, input_obj.check_errors)
         
         control_Output(input_obj, dtw_distance)
