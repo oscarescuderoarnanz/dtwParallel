@@ -69,8 +69,8 @@ Based on the previous scheme, this package can be used in three different contex
 
    Next, different uses are shown by modifying the parameters of the function:
    
-   **a) Example 1.** Considers the Euclidean distance, activates the option -ce to check for errors, and uses as input two UTS (denoted as $x$ and $y$) with the same length ($T=10$). 
-   Firstly, the input TS and distance are checked as valid entries. Secondly, the \texttt{dtwParallel} package computes the DTW distance. Thirdly, the output is shown in the terminal (while in most cases, the outputs are forwarded to a file, we selected this option to facilitate exposition).
+   **a) Example 1.** Considers the Euclidean distance, activates the option -ce to check for errors, and uses as input two UTS (denoted as x and y) with the same length (T=10). 
+   Firstly, the input TS and distance are checked as valid entries. Secondly, the dtwParallel package computes the DTW distance. Thirdly, the output is shown in the terminal (while in most cases, the outputs are forwarded to a file, we selected this option to facilitate exposition).
    
    ```
    dtwParallel -x 2 4 6 8 5 3 6 8 9 15 -y 12 0 0 3 5 6 30 1 2 4 -ce True
@@ -617,7 +617,7 @@ Based on the previous scheme, this package can be used in three different contex
        [3.85976275e+17, 3.36649042e+16, 2.92141954e+17, 2.59150445e+17]])
    ```
 
-  **Example 8.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics. Novelty: irregular multivariate time series. You indicate the value of the flag. This value will be searched and removed from each of the MTS entered (this process is carried out transparently to the user). For the case of DTW (d), we normalize the value of the distance dtw obtained by the square root of the product of the length of the time series 1 by the time series 2. For the case of DTW (i), we replicate the values of the last time instant until completing the time series.
+  **Example 8.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics. **Novelty:** irregular multivariate time series. You indicate the value of the flag. This value will be searched and removed from each of the MTS entered (this process is carried out transparently to the user). For the case of DTW (d), we normalize the value of the distance dtw obtained by the square root of the product of the length of the time series 1 by the time series 2. For the case of DTW (i), we replicate the values of the last time instant until completing the time series.
 
   ```
     import numpy as np

@@ -15,10 +15,10 @@ from dtw_functions import dtw, dtw_tensor_3d
 
 def input_File(input_obj):
     """
-    Para terminal. Controla el fichero introducido. 
-    En caso de tener 2 filas, calculamos DTW entre 2 UTS. 
-    En caso de tener N filas (pares), asociamos N/2 a cada MTS, calculando la distancia DTW entre 2 MTS.
-    En caso de tener N filas (impares)
+    For terminal. Controls the file entered. 
+    In case of having 2 rows, we calculate DTW between 2 MTS. 
+    In case of having N rows (pairs), we associate N/2 to each MTS, calculating the DTW distance between 2 MTS.
+    In case of having N rows not contemplated
     """
     args, input_obj = parse_args(True)
     data = read_data(args.X)
@@ -42,6 +42,7 @@ def input_File(input_obj):
 
     return input_obj
 
+
 def control_Output(input_obj, dtw_distance):
 
     if input_obj.output_file:
@@ -49,6 +50,7 @@ def control_Output(input_obj, dtw_distance):
         pd.DataFrame(np.array([dtw_distance])).to_csv(input_obj.name_file + ".csv", float_format='%g', index=False)
     else:
         sys.stdout.write(str(dtw_distance))
+
 
 def main():
     # If you only make use of the library you will get an error.

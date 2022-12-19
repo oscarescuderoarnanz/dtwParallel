@@ -42,7 +42,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.14
+    %(prog)s 0.9.16
 """
     
 
@@ -196,7 +196,6 @@ def parse_args(isEntryFile):
     # If the distance introduced is not correct, the execution is terminated.
     if input_obj.check_errors:
         test_distance = possible_distances()
-        print(test_distance)
         if not input_obj.distance in test_distance:
             raise ValueError('Distance introduced not allowed or incorrect.')
          

@@ -8,11 +8,13 @@ from numba import njit
 # a new function has been implemented to visualize the alignment 
 # between time series. 
 
-# Function that allows to obtain the path, that is, the route to
-# reach the DTW distance value.
+
 
 @njit()
 def get_path(D):
+    '''
+    Function that allows to obtain the path, that is, the route to reach the DTW distance value.
+    '''
     path = [(D.shape[0] - 1, D.shape[1] - 1)]
     while path[-1] != (0, 0):
         i, j = path[-1]
@@ -35,9 +37,11 @@ def get_path(D):
     return path[::-1]
 
 
-
-# Function to paint the cost matrix.
+ 
 def plot_cost_matrix(warp_path, cost):
+    '''
+    Function to paint the cost matrix.
+    '''
     fig, ax = plt.subplots(figsize=(12, 10))
     ax = sbn.heatmap(cost[1:,1:], annot=True, square=True, linewidths=0.1, cmap="YlGnBu", ax=ax)
 
@@ -53,8 +57,10 @@ def plot_cost_matrix(warp_path, cost):
 
 
 
-# Function to paint the alignment between time series
 def plot_alignment(x, y, warp_path):
+    '''
+    Function to paint the alignment between time series.
+    '''
 
     linewidths =[3.5, 3.5, 0.5]
 
