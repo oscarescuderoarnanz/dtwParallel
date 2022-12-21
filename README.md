@@ -374,7 +374,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtw_functions.dtw(x, y, n_threads=8)
    ```
    ```
-   [out]: dependence with random.
+   [out]: Result with random dependency.
    ```
    ```
    import pandas as pd
@@ -387,7 +387,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtw_functions.dtw(x, y, MTS=True, n_threads=8)
    ```
    ```
-   [out]: matrix with 2x2 dimensiones. Result with random dependency.
+   [out]: Result with random dependency.
    ```
 
    ```
@@ -396,13 +396,13 @@ Based on the previous scheme, this package can be used in three different contex
    from dtwParallel import dtw_functions 
 
    # Use of dataframes with 1D (UTS) as entry data
-   x = pd.DataFrame(np.random.randn(10))
-   y = pd.DataFrame(np.random.randn(10))
+   x = pd.DataFrame(np.random.randn(10)).T
+   y = pd.DataFrame(np.random.randn(10)).T
 
    dtw_functions.dtw(x,y,n_threads=8)
    ```
    ```
-   [out]: dependence with random
+   [out]: Result with random dependency.
    ```
 
    ```
@@ -410,14 +410,14 @@ Based on the previous scheme, this package can be used in three different contex
    import numpy as np
    from dtwParallel import dtw_functions 
 
-   # Use of pd.Seres as entry data
+   # Use of pd.Series as entry data
    x = pd.Series(np.random.randn(10))
    y = pd.Series(np.random.randn(10))
 
    dtw_functions.dtw(x,y,local_dissimilarity="norm2")
    ```
    ```
-   [out]: dependence with random
+   [out]: Result with random dependency.
    ```
 
 
