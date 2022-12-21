@@ -34,7 +34,7 @@ def get_path(D):
             else:
                 path.append((i, j - 1))
 
-    return path[::-1]
+    return path[::-1][1:]
 
 
  
@@ -50,8 +50,8 @@ def plot_cost_matrix(warp_path, cost):
     path_y = [p[0] for p in warp_path]
 
     # Align the path from the center of each cell
-    path_xx = [x + 0.5 for x in path_x]
-    path_yy = [y + 0.5 for y in path_y]
+    path_xx = [x - 0.5 for x in path_x]
+    path_yy = [y - 0.5 for y in path_y]
 
     ax.plot(path_xx, path_yy, color='blue', linewidth=3, alpha=0.2)
 

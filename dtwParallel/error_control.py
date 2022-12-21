@@ -16,8 +16,8 @@ def control_inputs(x, y, type_dtw, MTS):
 
 
     # Irregular multivariate time series are not allowed.
-    if x.ndim == y.ndim > 1 and x.shape[1] != y.shape[1]:
-        raise ValueError('Irregular multivariate time series are not allowed.')
+    #if x.ndim == y.ndim > 1 and x.shape[1] != y.shape[1]:
+    #    raise ValueError('Irregular multivariate time series are not allowed.')
 
     if x.ndim == 1 and MTS:
         raise ValueError('The data entered are not Multivariate Time Series.')

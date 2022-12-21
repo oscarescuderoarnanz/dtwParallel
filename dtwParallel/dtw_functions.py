@@ -79,16 +79,6 @@ def general_dtw_ind(typeDistance, len_ts1, len_ts2, ts1, ts2, cost_matrix):
     return cost_matrix
 
 
-#@njit()
-#def optimize_distances_dtw_ind(ts1, ts2, len_ts1, len_ts2, cost_matrix, local_dissimilarity):
-
-    #if local_dissimilarity == "norm1":
-    #    cost_matrix = general_dtw_ind(norm1, len_ts1, len_ts2, ts1, ts2, cost_matrix)
-    #else:
-    #    cost_matrix = general_dtw_ind(norm2, len_ts1, len_ts2, ts1, ts2, cost_matrix)
-
-    #return cost_matrix
-
 
 def dtw_ind(ts1, ts2, local_dissimilarity, dtw_distance=0, get_visualization=False, regular_flag=0):
     
@@ -127,9 +117,7 @@ def dtw_ind(ts1, ts2, local_dissimilarity, dtw_distance=0, get_visualization=Fal
         if get_visualization:
             arr_cost_matrix.append(cost_matrix)
         
-        #if regular_flag != 0:
-        #    dtw_distance += cost_matrix[-1,-1] / np.sqrt(len_ts1*len_ts2)
-        #else:
+
         dtw_distance += cost_matrix[-1,-1]
 
     return dtw_distance, arr_cost_matrix
@@ -146,21 +134,6 @@ def general_dtw_dep(local_dissimilarity, len_ts1, len_ts2, ts1, ts2, cost_matrix
                                          cost_matrix[i + 1, j],
                                          cost_matrix[i, j])
     return cost_matrix
-
-
-#@njit()
-#def optimize_distances_dtw_dep(ts1, ts2, cost_matrix, local_dissimilarity):
-
- #   len_ts1 = ts1.shape[0]
- #   len_ts2 = ts2.shape[0]
-
-  #  general_dtw_dep(eval(local_dissimilarity), len_ts1, len_ts2, ts1, ts2, cost_matrix)
-    #if local_dissimilarity == "norm1":
-    #    cost_matrix = general_dtw_dep(norm1, len_ts1, len_ts2, ts1, ts2, cost_matrix)
-    #else:
-    #    cost_matrix = general_dtw_dep(norm2, len_ts1, len_ts2, ts1, ts2, cost_matrix)
-
-   # return cost_matrix
 
 
 
@@ -206,18 +179,7 @@ def dtw_dep(ts1, ts2, local_dissimilarity, mult_UTS=False, regular_flag=0):
         return cost_matrix[-1,-1] / np.sqrt(len(ts1)*len(ts2)), cost_matrix
 
     return cost_matrix[-1,-1], cost_matrix
-    #return np.sqrt(cost_matrix[-1,-1]) , cost_matrix
 
-
-
-#def transform_pandas_to_ts(ts):
-#    ts_out = np.array(ts, copy=True)
-#    if ts_out.ndim >= 1:
-#        ts_out = ts_out.reshape((1, -1))
-#    if ts_out.dtype != float:
-#        ts_out = ts_out.astype('float64')
-#    
-#    return ts_out
 
 
 def process_irregular_ts_dtw_ind(ts1, ts2):
@@ -266,8 +228,8 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
             dtw_distance, cost_matrix = dtw_ind(ts1, ts2, local_dissimilarity, get_visualization=get_visualization, regular_flag=regular_flag)
         else:
             if regular_flag != 0:
-                ts1 = ts1[0:len(np.unique(np.where(ts1 != 666)[0]))]
-                ts2 = ts2[0:len(np.unique(np.where(ts2 != 666)[0]))]
+                ts1 = ts1[0:len(np.unique(np.where(ts1 != regular_flag)[0]))]
+                ts2 = ts2[0:len(np.unique(np.where(ts2 != regular_flag)[0]))]
 
             dtw_distance, cost_matrix = dtw_dep(ts1, ts2, local_dissimilarity, regular_flag=regular_flag)
     else:
@@ -340,9 +302,10 @@ def transform_DTW_to_kernel(data, sigma_kernel):
 	
 
 #@timing_val
-# Function to obtain the calculation of the DTW distance at a high level. Parallelization is included.
 def dtw_tensor_3d(X_1, X_2, input_obj):
-
+    '''
+    Function to obtain the calculation of the DTW distance at a high level. Parallelization is included.
+    '''
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
         delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity,
                       MTS=input_obj.MTS, get_visualization=input_obj.visualization, 
@@ -352,18 +315,7 @@ def dtw_tensor_3d(X_1, X_2, input_obj):
         for j in range(X_2.shape[0])
     )
     
-    #dtw_matrix_train = np.zeros((X_1.shape[0], X_2.shape[0]))
-    
-    #for i in range(X_1.shape[0]): 
-    #    for j in range(X_2.shape[0]):
-    #        dtw_matrix_train[i,j] = dtw(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.distance,
-    #                  MTS=input_obj.MTS, get_visualization=input_obj.visualization, 
-    #                  check_errors=input_obj.check_errors, regular_flag=input_obj.regular_flag,
-    #                  itakura_max_slope=input_obj.itakura_max_slope, sakoe_chiba_radius=input_obj.sakoe_chiba_radius)
-    #
-    
     data = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
-    #print(data.shape)
 
     if input_obj.DTW_to_kernel:
         return data, transform_DTW_to_kernel(data, input_obj.sigma_kernel)
