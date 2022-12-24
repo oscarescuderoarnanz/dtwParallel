@@ -85,7 +85,7 @@ The different parameters available with their possible values are listed below:
 | Type of DTW variant | --type_dtw or -t | type_dtw | "d", "i", "itakura" or "sakoe_chiba" |
 | Time series introduced: univariate or multivariate | MTS | MTS | True or False |
 | Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int |
-| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance` |
+| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, "norm1", "norm2", "gower" or "square_euclidean_distance" |
 | Number of threads used for multiple MTS parallelization | --n_threads or -n | n_threads | int |
 | Visualization | --visualization or -vis | get_visualization | True or False |
 | Obtain the result in a file | --output_file or -of | not possible | True or False |
