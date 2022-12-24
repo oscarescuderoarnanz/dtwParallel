@@ -1,31 +1,47 @@
 # Dynamic Time Warping 
 
-This package allows to measure the similarity between two-time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It will enable the calculation of univariate and multivariate time series. Any distance available in `scipy.spatial.distance` and `gower` distance can be used. Extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel.
+This package allows to measurement of the similarity between two-time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It allows working with univariate (UTS) and multivariate (MTS) time series, regular (same time length), or irregular (different time length). 
 
-Common functionalities for 2-time series (TS):
-- It incorporates the possibility of visualizing the cost matrix and the path to reach the DTW distance value between two TS. This will allow its use in a didactic way, providing a better understanding of the method used.
-- It is possible to calculate TS with the same and different lengths. 
+One of the parameters available for this method is the method used to calculate the local similarity. For this case, it is possible to use any distance available in `scipy.spatial.distance` (it does not allow to work with variables of different nature, i.e., discrete, continuous, and categorical), `gower` distance (it allows to work with variables of different nature). 
+
+At this point, using local dissimilarities such as norma1, norma2, or square euclidean distance provides optimization in terms of computational time with respect to the rest of the available local dissimilarities.
+
+The available variants of DTW are detailed below: 
+1) dependent DTW ("d").
+2) Independent DTW ("i").
+3) Itakura parallelogram.
+4) Sakoe-Chiba.
+
+Extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel, given the sigma value (default 1).
+
+Display for 2-time series (TS):
+- It incorporates the possibility of visualizing the cost matrix, the optimal path to reach the DTW distance value between two TS, and the alignment between two TS. This will allow its use in a didactic way, providing a better understanding of the method used.
 
 Common functionalities for N (> 2) time series (TS):
 - The calculation can be parallelized by the CPU by selecting the number of threads. As a result, we will obtain the distance matrix. 
-- It is possible to perform not only the calculation of distances but also similarities (based on an exponential kernel).
+- It is possible to perform distance computation and similarity computation (based on an exponential kernel).
 
-Multivariate TS functionalities: 
-- Calculation of dependent DTW and independent DTW is available.
+ The input data types via API are (1) CSV; (2) array; (3) pandas (pd.DataFrame or pd.Series); (4) npy (for tensors).
 
-Novelties:
-- Two variants of DTW have been included: the Itakura parallelogram and the Sakoe-Chiba band.
-- Calculation of DTW for irregular time series, both for the case of dependent and independent DTW.
-- Visualization of the alignment of two time series. 
-- Computational time optimization for norm 1, norm 2 and square_euclidean_distance. 
-- Availability of input data format: numpy, pandas and tensors. 
+ <!-- Table of content -->
 
+| Section | Description |
+|-|-|
+| [Installation](#installation) | Installing the dependencies and dtwParallel |
+| [Getting started](#requirements) | Packages necessary to work with dtwParallel |
+| [Available parameters](#parameters) | Modifiable parameters in terminal and API with their possible values |
+| [Usage](#usage) | Different examples for terminal and API |
+| [Configuration](#configuration) | Composition of configuration.ini file |
+| [Examples with public data](#realexamples) | Examples with real financial data |
+| [Reference](#reference) | References to cite |
+| [License](#license) | Package license |
+ 
 
 ## Package structure 
 
 <p align="center"> <img src="./Images/schema.png"> </p>
 
-<p align="center"> <img src="./Images/fileSchema.png"> </p>
+ <!-- <p align="center"> <img src="./Images/fileSchema.png"> </p> -->
 
 
 ## Installation
@@ -35,6 +51,9 @@ for installing Python packages. To do it, run the following command:
 ```
 pip install dtwParallel
 ```
+
+Current version: 0.9.20
+
 
 ## Requirements
 
@@ -53,6 +72,28 @@ Note that you should have also the following packages installed in your system:
 - scipy
 - joblib
 - numba
+- tslearn*
+- h5py*
+
+## Available parameters
+
+The different parameters available with their possible values are listed below. The parameters are presented as follows: (1) descriptive name; (2) terminal usage, (3) API usage and (4) possible values.
+
+1. (1) Check errors; (2) --check_errors or -ce; (3) check_errors; (4) Possible values: True or False. 
+2. (1) Type of DTW variant; (2) --type_dtw or -t; (3) type_dtw; (4) Possible values: "d", "i", "itakura" and "sakoe_chiba". 
+3. (1) Time series introduced: univariate or multivariate; (2) MTS; (3) MTS; (4) Possible values: True or False.
+4. (1) Value used to complete irregular MTS. This value is removed transparently to the user; (2) --regular_flag or -rf; (3) regular_flag; (4) Possible values: int value.
+5. (1) We indicate for the time series entered whether we want to treat it as univariate or multivariate; (2) MTS; (3) MTS; (4) Possible values: True or False.
+6. (1) Local dissimilarity value; (2) --local_dissimilarity or -d; (3) local_dissimilarity; (4) Possible values: any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance`.
+7. (1) Number of threads used for multiple MTS parallelization; (2) --n_threads or -n; (3) n_threads; (4) Possible values: int value.
+8. (1) Visualization; (2) --visualization or -vis; (3) get_visualization; (4) Possible values: True or False.
+9. (1) Obtain the result in a file; (2) --output_file or -of; (3) not possible; (4) Possible values: True or False.
+9. (1) Name for the output file; (2) --name_file or -nf; (3) not possible; (4) Possible values: string.
+10. (1) Transformation of the DTW distance matrix to an exponential kernel; (2) --DTW_to_kernel or -k; (3) DTW_to_kernel; (4) Possible values: True or False.
+11. (1) Sigma value for kernel transformation; (2) --sigma_kernel or -s; (3) sigma_kernel; (4) Possible values: float value.
+12. (1) Maximum slope for the Itakura parallelogram; (2) --itakura_max_slope or -imx; (3) itakura_max_slope; (4) Possible values: float or None value.
+13. (1) Radius to be used for Sakoe-Chiba band; (2) --sakoe_chiba_radius or -scr; (3) sakoe_chiba_radius; (4) Possible values: int or None value.
+
 
 
 ## Usage
@@ -137,7 +178,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 5 6 1 0 9 11 -d "square_euclidean_distance"
    ```
    ```
-   [out]: 
+   [out]: 48.0
    ```   
    **We include another example with differents lengths of the time series:**
    ```
@@ -711,10 +752,10 @@ sakoe_chiba_radius = None
 
 ## Examples with public data
 
-I have used data from yahoo finance (https://finance.yahoo.com/) of 505 companies, available in a .zip file. The folder where the data is located is exampleData/Data/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/Data/E2_FinanceData). The code needed to process the information of each of the 505 companies, obtaining the tensor input to the package is located in exampleData/CodeExamples/E2_FinanceData/tensorGenerator (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+I have used data from yahoo finance (https://finance.yahoo.com/) of 505 companies, available in a .zip file. The folder where the data is located is exampleData/Data/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/Data/E2_FinanceData). The code needed to process the information of each of the 505 companies, obtaining the tensor input to the package is located in exampleData/CodeExamples/E2_FinanceData/tensorGenerator (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples_new/E2_FinanceData).
 
 ### Experiment 1. Computational time as a function of the number of threads. 
-The computation of the distance matrix has been carried out using dependent and independent DTW varying the number of threads. Code of this example is available at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+The computation of the distance matrix has been carried out using dependent and independent DTW varying the number of threads. Code of this example is available at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples_new/E2_FinanceData).
 
 **DTW dependent**
 ![dtwParallel_dtw_D.png](./exampleData/Figures/dtwParallel_dtw_D.png)
@@ -723,7 +764,7 @@ The computation of the distance matrix has been carried out using dependent and 
 ![dtwParallel_dtw_I.png](./exampleData/Figures/dtwParallel_dtw_I.png)
 
 ### Experiment 2. Comparison of computational time with other packages to calculate dependent DTW. 
-Code available for this example at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E2_FinanceData).
+Code available for this example at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples_new/E2_FinanceData).
 
 ![schema.png.png](./exampleData/Figures/comparativeTime.png)
 
@@ -733,6 +774,23 @@ Code available for this example at exampleData/Code/E2_FinanceData (https://gith
 If you use dtwParallel in your research papers, please refer to ...
 
 [To be done]
+
+In case of using the variants itakura parrallelogram or sakoe_chiba band refer to the following work:
+```bibtex
+@article{JMLR:v21:20-091,
+  author  = {Romain Tavenard and Johann Faouzi and Gilles Vandewiele and 
+             Felix Divo and Guillaume Androz and Chester Holtz and 
+             Marie Payne and Roman Yurchak and Marc Ru{\ss}wurm and 
+             Kushal Kolar and Eli Woods},
+  title   = {Tslearn, A Machine Learning Toolkit for Time Series Data},
+  journal = {Journal of Machine Learning Research},
+  year    = {2020},
+  volume  = {21},
+  number  = {118},
+  pages   = {1-6},
+  url     = {http://jmlr.org/papers/v21/20-091.html}
+}
+```
 
 ## License
 
