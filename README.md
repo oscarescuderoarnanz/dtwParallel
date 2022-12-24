@@ -194,10 +194,10 @@ Based on the previous scheme, this package can be used in three different contex
    [out]: 29.0
    ```   
    ```
-   dtwParallel -x 2 4 6 8 1 0 0 -y 1 0 0 1 5 6 1 0 9 11 -d "square_euclidean_distance"
+   dtwParallel -x 2 4 6 8 1 0 0 -y 1 0 0 1 5 6 1 0 -d "square_euclidean_distance"
    ```
    ```
-   [out]: 
+   [out]: 15
    ```   
 
 
