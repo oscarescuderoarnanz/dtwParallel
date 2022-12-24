@@ -82,7 +82,7 @@ The different parameters available with their possible values are listed below:
 | Parameter description | Terminal usage | API usage | Possible values |
 |-|-|-|-|
 | Check errors | --check_errors or -ce | check_errors | True or False |
-| Type of DTW variant | --type_dtw or -t | type_dtw | "d", "i", "itakura" and "sakoe_chiba" |
+| Type of DTW variant | --type_dtw or -t | type_dtw | "d", "i", "itakura" or "sakoe_chiba" |
 | Time series introduced: univariate or multivariate | MTS | MTS | True or False |
 | Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int |
 | Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance` |
