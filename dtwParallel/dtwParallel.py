@@ -25,8 +25,10 @@ def input_File(input_obj):
 
     if (data.shape[0] == 2) and (data.shape[0] % 2 == 0):
         input_obj.MTS = False
-        input_obj.x = data.iloc[0,:].values
-        input_obj.y = data.iloc[1,:].values
+        x = data.iloc[0,:].values
+        y = data.iloc[1,:].values
+        input_obj.x = [[value] for value in x]
+        input_obj.y = [[value] for value in y]
 
     elif (data.shape[0] > 3) and (data.shape[0] % 2 == 0):
         input_obj.MTS = True
@@ -49,7 +51,7 @@ def control_Output(input_obj, dtw_distance):
         sys.stdout.write("Output to "  + input_obj.name_file + ".csv")
         pd.DataFrame(np.array([dtw_distance])).to_csv(input_obj.name_file + ".csv", float_format='%g', index=False)
     else:
-        sys.stdout.write(str(dtw_distance))
+        sys.stdout.write(str(dtw_distance)+"\n")
 
 
 def main():
@@ -67,8 +69,8 @@ def main():
         # input 2D file
         if sys.argv[1].endswith('.csv'):
             input_obj = input_File(input_obj)
-            dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.local_dissimilarity,
-                               input_obj.MTS, input_obj.visualization, input_obj.check_errors)
+            
+            dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
 
         # input 3D file. We include the possibility to parallelise.
         elif sys.argv[1].endswith('.npy'):
@@ -88,17 +90,16 @@ def main():
     # Input type 2: input by terminal
     elif sys.argv[1] == "-x":        
         args, input_obj = parse_args(False)
-
-        input_obj.x = args.x
-        input_obj.y = args.y
         
         if args.y == None:
             sys.stderr.write("You need introduce a vector -y")
             sys.exit(0)
-       
+      
+        input_obj.x = [[value] for value in args.x]
+        input_obj.y = [[value] for value in args.y]
         
-        dtw_distance = dtw(input_obj.x, input_obj.y, input_obj.type_dtw, input_obj.local_dissimilarity, input_obj.MTS,
-                           input_obj.visualization, input_obj.check_errors)
+       
+        dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
         
         control_Output(input_obj, dtw_distance)
         

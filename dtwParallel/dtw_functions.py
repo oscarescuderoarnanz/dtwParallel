@@ -209,7 +209,7 @@ def process_irregular_ts_dtw_ind(ts1, ts2):
 
 
 #@timing_val
-def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, DTW_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None):
+def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, DTW_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None, term_exec=False):
 
     if type_dtw == "itakura":
         return dtw_tslearn(ts1, ts2, global_constraint="itakura", itakura_max_slope=itakura_max_slope)
@@ -217,7 +217,7 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
         return dtw_tslearn(ts1, ts2, global_constraint="sakoe_chiba", sakoe_chiba_radius=sakoe_chiba_radius)
 
     if check_errors:
-        x, y = control_inputs(ts1, ts2, type_dtw, MTS)
+        x, y = control_inputs(ts1, ts2, type_dtw, MTS, term_exec)
     
     if MTS:        
         if type_dtw == "i":
@@ -256,7 +256,7 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
         
         # If we hace a data matrix (UTS) introduced in array format with N UTS >= 2.
         else:
-            if np.asanyarray(ts1, dtype='float').ndim > 1 and not(isinstance(ts1, pd.DataFrame)):
+            if np.asanyarray(ts1, dtype='float').ndim > 1 and not(isinstance(ts1, pd.DataFrame)) and not term_exec:
                 if ts2 == None:
                     ts2 = ts1
                 

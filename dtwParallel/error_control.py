@@ -4,16 +4,20 @@ from scipy.spatial import distance
 import io
 from contextlib import redirect_stdout
 
-def control_inputs(x, y, type_dtw, MTS):
+def control_inputs(x, y, type_dtw, MTS, term_exec):
     '''
     Revisar este control de entradas......
     '''
     if type_dtw == "i" and not MTS:
         raise ValueError('Get independent dtw distance only valid for MTS.')
 
+    if term_exec:
+        x = [i[0] for i in x]
+        y = [i[0] for i in y]
+        
     x = np.asanyarray(x, dtype='float')
     y = np.asanyarray(y, dtype='float')
-
+    
 
     # Irregular multivariate time series are not allowed.
     #if x.ndim == y.ndim > 1 and x.shape[1] != y.shape[1]:
