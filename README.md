@@ -23,7 +23,7 @@ Common functionalities for N (> 2) time series (TS):
 
  The input data types via API are (1) CSV; (2) array; (3) pandas (pd.DataFrame or pd.Series); (4) npy (for tensors).
 
- <!-- Table of content -->
+## Table of content 
 
 | Section | Description |
 |-|-|
@@ -83,11 +83,10 @@ The different parameters available with their possible values are listed below. 
 2. (1) Type of DTW variant; (2) --type_dtw or -t; (3) type_dtw; (4) Possible values: "d", "i", "itakura" and "sakoe_chiba". 
 3. (1) Time series introduced: univariate or multivariate; (2) MTS; (3) MTS; (4) Possible values: True or False.
 4. (1) Value used to complete irregular MTS. This value is removed transparently to the user; (2) --regular_flag or -rf; (3) regular_flag; (4) Possible values: int value.
-5. (1) We indicate for the time series entered whether we want to treat it as univariate or multivariate; (2) MTS; (3) MTS; (4) Possible values: True or False.
-6. (1) Local dissimilarity value; (2) --local_dissimilarity or -d; (3) local_dissimilarity; (4) Possible values: any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance`.
-7. (1) Number of threads used for multiple MTS parallelization; (2) --n_threads or -n; (3) n_threads; (4) Possible values: int value.
-8. (1) Visualization; (2) --visualization or -vis; (3) get_visualization; (4) Possible values: True or False.
-9. (1) Obtain the result in a file; (2) --output_file or -of; (3) not possible; (4) Possible values: True or False.
+5. (1) Local dissimilarity value; (2) --local_dissimilarity or -d; (3) local_dissimilarity; (4) Possible values: any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance`.
+6. (1) Number of threads used for multiple MTS parallelization; (2) --n_threads or -n; (3) n_threads; (4) Possible values: int value.
+7. (1) Visualization; (2) --visualization or -vis; (3) get_visualization; (4) Possible values: True or False.
+8. (1) Obtain the result in a file; (2) --output_file or -of; (3) not possible; (4) Possible values: True or False.
 9. (1) Name for the output file; (2) --name_file or -nf; (3) not possible; (4) Possible values: string.
 10. (1) Transformation of the DTW distance matrix to an exponential kernel; (2) --DTW_to_kernel or -k; (3) DTW_to_kernel; (4) Possible values: True or False.
 11. (1) Sigma value for kernel transformation; (2) --sigma_kernel or -s; (3) sigma_kernel; (4) Possible values: float value.
@@ -95,6 +94,14 @@ The different parameters available with their possible values are listed below. 
 13. (1) Radius to be used for Sakoe-Chiba band; (2) --sakoe_chiba_radius or -scr; (3) sakoe_chiba_radius; (4) Possible values: int or None value.
 
 
+| Parameter description | Terminal usage | API usage | Possible values |
+|-|-|-|-|
+| Check errors | --check_errors or -ce | check_errors | True or False |
+| Type of DTW variant | --type_dtw or -t | type_dtw | "d", "i", "itakura" and "sakoe_chiba" |
+| Time series introduced: univariate or multivariate | MTS | MTS | True or False |
+| Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int
+| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance`
+| Number of threads used for multiple MTS parallelization | --n_threads or -n | n_threads | int
 
 ## Usage
 
