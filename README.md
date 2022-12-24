@@ -77,31 +77,24 @@ Note that you should have also the following packages installed in your system:
 
 ## Available parameters
 
-The different parameters available with their possible values are listed below. The parameters are presented as follows: (1) descriptive name; (2) terminal usage, (3) API usage and (4) possible values.
-
-1. (1) Check errors; (2) --check_errors or -ce; (3) check_errors; (4) Possible values: True or False. 
-2. (1) Type of DTW variant; (2) --type_dtw or -t; (3) type_dtw; (4) Possible values: "d", "i", "itakura" and "sakoe_chiba". 
-3. (1) Time series introduced: univariate or multivariate; (2) MTS; (3) MTS; (4) Possible values: True or False.
-4. (1) Value used to complete irregular MTS. This value is removed transparently to the user; (2) --regular_flag or -rf; (3) regular_flag; (4) Possible values: int value.
-5. (1) Local dissimilarity value; (2) --local_dissimilarity or -d; (3) local_dissimilarity; (4) Possible values: any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance`.
-6. (1) Number of threads used for multiple MTS parallelization; (2) --n_threads or -n; (3) n_threads; (4) Possible values: int value.
-7. (1) Visualization; (2) --visualization or -vis; (3) get_visualization; (4) Possible values: True or False.
-8. (1) Obtain the result in a file; (2) --output_file or -of; (3) not possible; (4) Possible values: True or False.
-9. (1) Name for the output file; (2) --name_file or -nf; (3) not possible; (4) Possible values: string.
-10. (1) Transformation of the DTW distance matrix to an exponential kernel; (2) --DTW_to_kernel or -k; (3) DTW_to_kernel; (4) Possible values: True or False.
-11. (1) Sigma value for kernel transformation; (2) --sigma_kernel or -s; (3) sigma_kernel; (4) Possible values: float value.
-12. (1) Maximum slope for the Itakura parallelogram; (2) --itakura_max_slope or -imx; (3) itakura_max_slope; (4) Possible values: float or None value.
-13. (1) Radius to be used for Sakoe-Chiba band; (2) --sakoe_chiba_radius or -scr; (3) sakoe_chiba_radius; (4) Possible values: int or None value.
-
+The different parameters available with their possible values are listed below:
 
 | Parameter description | Terminal usage | API usage | Possible values |
 |-|-|-|-|
 | Check errors | --check_errors or -ce | check_errors | True or False |
 | Type of DTW variant | --type_dtw or -t | type_dtw | "d", "i", "itakura" and "sakoe_chiba" |
 | Time series introduced: univariate or multivariate | MTS | MTS | True or False |
-| Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int
-| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance`
-| Number of threads used for multiple MTS parallelization | --n_threads or -n | n_threads | int
+| Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int |
+| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, `norm1`, `norm2`, `gower` or `square_euclidean_distance` |
+| Number of threads used for multiple MTS parallelization | --n_threads or -n | n_threads | int |
+| Visualization | --visualization or -vis | get_visualization | True or False |
+| Obtain the result in a file | --output_file or -of | not possible | True or False |
+| Name for the output file | --name_file or -nf | not possible | string |
+| Transformation of the DTW distance matrix to an exponential kernel | --DTW_to_kernel or -k | True or False |
+| Sigma value for kernel transformation | --sigma_kernel or -s | float |
+| Maximum slope for the Itakura parallelogram | --itakura_max_slope or -imx | float or None |
+| Radius to be used for Sakoe-Chiba band | --itakura_max_slope or -imx | int or None |
+
 
 ## Usage
 
@@ -394,7 +387,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtw_functions.dtw_tensor_3d(X_1, X_2, object)
    ```
 
-   The examples shown below are executed in jupyter-notebook. Code available in exampleData/CodeExamples/E1_SyntheticData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples/E1_SyntheticData). These examples can be executed in any Integrated Development Environment.
+   The examples shown below are executed in jupyter-notebook. Code available in exampleData/CodeExamples/E1_SyntheticData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples_new/E1_SyntheticData). These examples can be executed in any Integrated Development Environment.
 
    **Example 1.** For univariate time series.
    ```
