@@ -72,8 +72,6 @@ Note that you should have also the following packages installed in your system:
 - scipy
 - joblib
 - numba
-- tslearn*
-- h5py*
 
 ## Available parameters
 

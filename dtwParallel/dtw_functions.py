@@ -392,10 +392,20 @@ def dtw_dep(ts1, ts2, local_dissimilarity, mask, mult_UTS=False, regular_flag=0)
 
 
 
-def process_irregular_ts_dtw_ind(ts1, ts2):
+def process_irregular_ts_dtw_ind(ts1, ts2, regular_flag):
+    """
+    This function eliminates the values indicated in the flag, obtaining irregular multivariate time series. After this, we replicate the last value of the time series (TS) until we obtain a regular TS.
 
-    ts1 = ts1[0:len(np.unique(np.where(ts1 != 666)[0]))]
-    ts2 = ts2[0:len(np.unique(np.where(ts2 != 666)[0]))]
+    Parameters
+    ------------
+    :param ts1: time serie 1
+    :param ts2: time serie 2
+
+    :return: time serie 1 and time serie 2
+    """
+
+    ts1 = ts1[0:len(np.unique(np.where(ts1 != regular_flag)[0]))]
+    ts2 = ts2[0:len(np.unique(np.where(ts2 != regular_flag)[0]))]
 
     if ts1.shape[0] < ts2.shape[0]:
         ts1_aux = ts1.copy()
@@ -460,7 +470,7 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
         if type_dtw == "i":
 
             if regular_flag != 0:
-                ts1, ts2 = process_irregular_ts_dtw_ind(ts1, ts2)
+                ts1, ts2 = process_irregular_ts_dtw_ind(ts1, ts2, regular_flag)
 
             dtw_distance, cost_matrix = dtw_ind(ts1, ts2, local_dissimilarity, get_visualization=get_visualization)
         else:
@@ -532,8 +542,19 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
     return dtw_distance
 
 
-# We transform the DTW matrix to an exponential kernel. 
 def transform_DTW_to_kernel(data, sigma_kernel):
+    """
+    We transform the DTW matrix to an exponential kernel.
+
+    Parameters
+    ------------
+    :param data: numpy.ndarray
+        DTW distance matrix
+    :param sigma_kernel: float
+
+    :return: numpy.ndarray
+        Transformation of the DTW distance matrix to exponential kernel.
+    """
 	
     return np.exp(-data/(2*sigma_kernel**2))
 	

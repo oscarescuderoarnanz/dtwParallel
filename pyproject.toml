@@ -31,9 +31,7 @@ dependencies = [
     "scipy",
     "tslearn",
     "joblib",
-    "numba",
-    "tslearn",
-    "h5py"
+    "numba"
 ]
 
 requires-python = ">=3.6.1"
