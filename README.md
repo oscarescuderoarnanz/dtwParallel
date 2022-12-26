@@ -33,7 +33,7 @@ Common functionalities for N (> 2) time series (TS):
 | [Usage](#usage) | Different examples for terminal and API |
 | [Configuration](#configuration) | Composition of configuration.ini file |
 | [Examples with public data](#realexamples) | Examples with real financial data |
-| [Reference](#reference) | References to cite |
+| [References](#reference) | References to cite |
 | [License](#license) | Package license |
  
 
@@ -774,11 +774,11 @@ Note that the distances used in dtwParallel and tslearn are the same.
 
 ## Reference 
 
-If you use dtwParallel in your research papers, please refer to ...
+If you use `dtwParallel` in your research papers, please refer to it using following reference:
 
-[To be done]
+[To be done, paper under review]
 
-In case of using the variants itakura parrallelogram or sakoe_chiba band refer to the following work:
+In case of using the `itakura parrallelogram` or `sakoe_chiba band` variants, we ask you to cite as well the following work, as we have taken this functionality granted from [tslearn](https://github.com/tslearn-team/tslearn):
 ```bibtex
 @article{JMLR:v21:20-091,
   author  = {Romain Tavenard and Johann Faouzi and Gilles Vandewiele and 
@@ -797,4 +797,4 @@ In case of using the variants itakura parrallelogram or sakoe_chiba band refer t
 
 ## License
 
-Licensed under the BSD 2-Clause License.
+`dtwParallel` is released under the terms of the BSD 2-Clause license.
