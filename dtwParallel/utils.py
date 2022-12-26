@@ -42,7 +42,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.27
+    %(prog)s 0.9.28
 """
     
 
@@ -80,6 +80,7 @@ class Input:
              
         #self.distance = eval("distance." + config.get('DEFAULT', 'distance'))
         self.local_dissimilarity = config.get('DEFAULT', 'local_dissimilarity')
+        self.constraint = config.get('DEFAULT', 'constraint')
         self.visualization = config.getboolean('DEFAULT', 'visualization')
         self.output_file = config.getboolean('DEFAULT', 'output_file')
         self.name_file = config['DEFAULT']['name_file']
@@ -113,8 +114,11 @@ def parse_args(is_entry_file):
         parser.add_argument('-y', nargs='+', type=float, help="Temporal Serie 2")
 
    
-    parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.MTS, type=str,
+    parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.type_dtw, type=str,
                         help="d: dependient or i: independient.")
+
+    parser.add_argument('-c', '--constraint', nargs='?', default=input_obj.constraint, type=str,
+                        help="d: itakura parallelogram or sakoe-chiba.")
     
     parser.add_argument("-d", "--local_dissimilarity", nargs='?', default=input_obj.local_dissimilarity, type=str,
                         help="Use a possible distance of scipy.spatial.distance, norm1, norm2, square_euclidean_distance or gower.")
@@ -172,6 +176,7 @@ def parse_args(is_entry_file):
     args = parser.parse_args()
     
     input_obj.type_dtw = args.type_dtw
+    input_obj.constraint = args.constraint
     input_obj.local_dissimilarity = args.local_dissimilarity
     input_obj.check_errors = args.check_errors
     input_obj.MTS = args.MTS
@@ -192,6 +197,9 @@ def parse_args(is_entry_file):
         input_obj.sakoe_chiba_radius = None
     else:
         input_obj.sakoe_chiba_radius = float(args.sakoe_chiba_radius)
+
+    if args.constraint == "None":
+        input_obj.constraint = None
 
     # If the distance introduced is not correct, the execution is terminated.
     if input_obj.check_errors:

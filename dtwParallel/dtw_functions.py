@@ -276,19 +276,20 @@ def square_euclidean_distance(s1, s2):
 
 
 @njit()
-def general_dtw_ind(type_distance, len_ts1, len_ts2, ts1, ts2, cost_matrix):
+def general_dtw_ind(type_distance, mask, len_ts1, len_ts2, ts1, ts2, cost_matrix):
 
     for i in range(len_ts1):
         for j in range(len_ts2):
-            cost_matrix[i + 1, j + 1] = type_distance(ts1, ts2)
-            cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
-                                         cost_matrix[i + 1, j],
-                                         cost_matrix[i, j])
+            if np.isfinite(mask[i, j]):
+                cost_matrix[i + 1, j + 1] = type_distance(ts1, ts2)
+                cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
+                                             cost_matrix[i + 1, j],
+                                             cost_matrix[i, j])
     return cost_matrix
 
 
 
-def dtw_ind(ts1, ts2, local_dissimilarity, dtw_distance=0, get_visualization=False):
+def dtw_ind(ts1, ts2, local_dissimilarity, mask, dtw_distance=0, get_visualization=False):
     
     dim_m = ts1.shape[1]
     arr_cost_matrix = []
@@ -303,23 +304,25 @@ def dtw_ind(ts1, ts2, local_dissimilarity, dtw_distance=0, get_visualization=Fal
         cost_matrix[0, 0] = 0.
 
         if local_dissimilarity in ["norm1", "norm2", "square_euclidean_distance"]:
-            cost_matrix = general_dtw_ind(eval(local_dissimilarity), len_ts1, len_ts2, ts1_aux, ts2_aux, cost_matrix)
+            cost_matrix = general_dtw_ind(eval(local_dissimilarity), mask, len_ts1, len_ts2, ts1_aux, ts2_aux, cost_matrix)
 
         elif local_dissimilarity == "gower":
             for i in range(len_ts1):
                 for j in range(len_ts2):
-                    df = pd.DataFrame(np.array([ts1_aux, ts2_aux]))
-                    cost_matrix[i + 1, j + 1] = gower.gower_matrix(df)[1][0]
-                    cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
-                                           cost_matrix[i + 1, j],
-                                           cost_matrix[i, j])
+                    if np.isfinite(mask[i, j]):
+                        df = pd.DataFrame(np.array([ts1_aux, ts2_aux]))
+                        cost_matrix[i + 1, j + 1] = gower.gower_matrix(df)[1][0]
+                        cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
+                                               cost_matrix[i + 1, j],
+                                               cost_matrix[i, j])
         else:
             for i in range(len_ts1):
                 for j in range(len_ts2):
-                    cost_matrix[i + 1, j + 1] = local_dissimilarity(ts1_aux, ts2_aux)
-                    cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
-                                                     cost_matrix[i + 1, j],
-                                                     cost_matrix[i, j])
+                    if np.isfinite(mask[i, j]):
+                        cost_matrix[i + 1, j + 1] = local_dissimilarity(ts1_aux, ts2_aux)
+                        cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
+                                                         cost_matrix[i + 1, j],
+                                                         cost_matrix[i, j])
 
         if get_visualization:
             arr_cost_matrix.append(cost_matrix)
@@ -426,7 +429,7 @@ def process_irregular_ts_dtw_ind(ts1, ts2, regular_flag):
 
 
 
-def get_mask(ts1, ts2, global_constraint, sakoe_chiba_radius, itakura_max_slope):
+def get_mask(ts1, ts2, constraint, sakoe_chiba_radius, itakura_max_slope):
     """
     Compute the mask (region constraint)
 
@@ -434,7 +437,7 @@ def get_mask(ts1, ts2, global_constraint, sakoe_chiba_radius, itakura_max_slope)
     ------------
     :param ts1: A time series or integer
     :param ts2: Another time series or integer
-    :param global_constraint: type of DTW
+    :param constraint: type constraint (None, sakoe-chiba o itakura)
     :param sakoe_chiba_radius: int or None
     :param itakura_max_slope: float or None
 
@@ -445,12 +448,9 @@ def get_mask(ts1, ts2, global_constraint, sakoe_chiba_radius, itakura_max_slope)
     ts1 = to_time_series(ts1)
     ts2 = to_time_series(ts2)
 
-    if not global_constraint in ["itakura", "sakoe_chiba"]:
-        global_constraint=None
-
     mask = compute_mask(
         ts1, ts2,
-        GLOBAL_CONSTRAINT_CODE[global_constraint],
+        GLOBAL_CONSTRAINT_CODE[constraint],
         sakoe_chiba_radius=sakoe_chiba_radius,
         itakura_max_slope=itakura_max_slope)
 
@@ -458,12 +458,12 @@ def get_mask(ts1, ts2, global_constraint, sakoe_chiba_radius, itakura_max_slope)
 
 
 #@timing_val
-def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, dtw_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None, term_exec=False):
+def dtw(ts1, ts2=None, type_dtw="d", constraint=None, local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, dtw_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None, term_exec=False):
 
     if check_errors:
         control_inputs(ts1, ts2, type_dtw, MTS, term_exec)
 
-    mask = get_mask(ts1, ts2, type_dtw, sakoe_chiba_radius, itakura_max_slope)
+    mask = get_mask(ts1, ts2, constraint, sakoe_chiba_radius, itakura_max_slope)
     
     if MTS:        
         if type_dtw == "i":
@@ -471,7 +471,7 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
             if regular_flag != 0:
                 ts1, ts2 = process_irregular_ts_dtw_ind(ts1, ts2, regular_flag)
 
-            dtw_distance, cost_matrix = dtw_ind(ts1, ts2, local_dissimilarity, get_visualization=get_visualization)
+            dtw_distance, cost_matrix = dtw_ind(ts1, ts2, local_dissimilarity, mask,  get_visualization=get_visualization)
         else:
             if regular_flag != 0:
                 ts1 = ts1[0:len(np.unique(np.where(ts1 != regular_flag)[0]))]
@@ -574,7 +574,7 @@ def dtw_tensor_3d(mts1, mts2, input_obj):
     """
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
-        delayed(dtw)(mts1[i], mts2[j], type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity,
+        delayed(dtw)(mts1[i], mts2[j], type_dtw=input_obj.type_dtw, constraint=input_obj.constraint, local_dissimilarity=input_obj.local_dissimilarity,
                       MTS=input_obj.MTS, get_visualization=input_obj.visualization,
                       check_errors=input_obj.check_errors, regular_flag=input_obj.regular_flag,
                       itakura_max_slope=input_obj.itakura_max_slope, sakoe_chiba_radius=input_obj.sakoe_chiba_radius)
@@ -584,7 +584,7 @@ def dtw_tensor_3d(mts1, mts2, input_obj):
     
     data = np.array(dtw_matrix_train).reshape((mts1.shape[0], mts2.shape[0]))
 
-    if input_obj.DTW_to_kernel:
+    if input_obj.dtw_to_kernel:
         return data, transform_dtw_to_kernel(data, input_obj.sigma_kernel)
 
     return data

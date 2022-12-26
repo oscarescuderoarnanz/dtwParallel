@@ -69,7 +69,7 @@ def main():
         if sys.argv[1].endswith('.csv'):
             input_obj = input_File()
             
-            dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
+            dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, constraint=input_obj.constraint, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
 
         # input 3D file. We include the possibility to parallelise.
         elif sys.argv[1].endswith('.npy'):
@@ -96,9 +96,8 @@ def main():
       
         input_obj.x = [[value] for value in args.x]
         input_obj.y = [[value] for value in args.y]
-        
-       
-        dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
+
+        dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, constraint=input_obj.constraint, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
         
         control_output(input_obj, dtw_distance)
         

@@ -9,8 +9,10 @@ At this point, using local dissimilarities such as norma1, norma2, or square euc
 The available variants of DTW are detailed below: 
 1) dependent DTW ("d").
 2) Independent DTW ("i").
-3) Itakura parallelogram.
-4) Sakoe-Chiba.
+
+We can set the following global constraints:
+1) Itakura parallelogram.
+2) Sakoe-Chiba.
 
 Extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel, given the sigma value (default 1).
 
@@ -52,7 +54,7 @@ for installing Python packages. To do it, run the following command:
 pip install dtwParallel
 ```
 
-Current version: 0.9.27
+Current version: 0.9.28
 
 
 ## Requirements
@@ -80,10 +82,11 @@ The different parameters available with their possible values are listed below:
 | Parameter description | Terminal usage | API usage | Possible values |
 |-|-|-|-|
 | Check errors | --check_errors or -ce | check_errors | True or False |
-| Type of DTW variant | --type_dtw or -t | type_dtw | "d", "i", "itakura" or "sakoe_chiba" |
+| Type of DTW variant | --type_dtw or -t | type_dtw | "d" or "i" |
+| Global constraint | --constraint or -c | constraint | "itakura" or "sakoe_chiba" |
+| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, "norm1", "norm2", "gower" or "square_euclidean_distance" |
 | Time series introduced: univariate or multivariate | MTS | MTS | True or False |
 | Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int |
-| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, "norm1", "norm2", "gower" or "square_euclidean_distance" |
 | Number of threads used for multiple MTS parallelization | --n_threads or -n | n_threads | int |
 | Visualization | --visualization or -vis | get_visualization | True or False |
 | Obtain the result in a file | --output_file or -of | not possible | True or False |
@@ -146,16 +149,16 @@ Based on the previous scheme, this package can be used in three different contex
    **d) Example 4.** **Novelty**: It has been included the possibility to calculate the Itakura parallelogram and the Sakoe-Chiba band.
    
    ```
-   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 -t "sakoe_chiba"
+   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 -c "sakoe_chiba" -d "square_euclidean_distance"
    ```
    ```
-   [out]: 17.20
+   [out]: 296.0
    ```   
    ```
-   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 2 4 7 1 9 10 -t "itakura"
+   dtwParallel -x 2 4 6 8 1 0 0 1 5 15 -y 1 0 0 1 2 4 7 1 9 10 -c "itakura" -d "square_euclidean_distance"
    ```
    ```
-   [out]: 13.0
+   [out]: 169.0
    ```   
 
    **e) Example e.** **Novelty**: A straightforward and optimal way to calculate norm 1, norm 2 and square euclidean distance is included.
@@ -195,15 +198,15 @@ Based on the previous scheme, this package can be used in three different contex
    dtwParallel -x 2 4 6 8 1 0 0 -y 1 0 0 1 5 6 1 0 -d "square_euclidean_distance"
    ```
    ```
-   [out]: 15
+   [out]: 15.0
    ```   
 
 
    **Remarks:**
    The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding due to the complexity of the terminal handling:
    - Univariate time series.
-   - Dependent DTW and two DTW variants: the Itakura parallelogram and the Sakoe-Chiba band.
-   - Include a straightforward and optimal way to calculate norm 1 and norm 2.
+   - We can set the following restrictions to the calculation of dependent (d) or independent DTW:  Itakura parallelogram and Sakoe-Chiba band.
+   - Include a straightforward and optimal way to calculate norm 1, norm 2 and square euclidean distance.
    - To visualize the cost matrix, routing and the alignment between a pair of series, it will be necessary to use an integrated development environment.
 
 ### 2) Calculation of the DTW distance with input from a file, haciendo uso de terminal.
@@ -286,13 +289,13 @@ Based on the previous scheme, this package can be used in three different contex
    ```
 
    ```
-   dtwParallel exampleData/Data/E0/X_train.npy -t "itakura"
+   dtwParallel exampleData/Data/E0/X_train.npy -c "itakura" -d "square_euclidean_distance"
    ```
    ```
-   [out]: [[0.00000000e+00 2.40671156e+17 1.11491169e+16 3.76625578e+17]
-           [2.40671156e+17 0.00000000e+00 2.29522040e+17 6.17296734e+17]
-           [1.11491169e+16 2.29522040e+17 0.00000000e+00 3.87774695e+17]
-           [3.76625578e+17 6.17296734e+17 3.87774695e+17 0.00000000e+00]]
+   [out]: [[0.00000000e+00 5.79226055e+34 1.24302808e+32 1.41846826e+35]
+           [5.79226055e+34 0.00000000e+00 5.26803666e+34 3.81055258e+35]
+           [1.24302808e+32 5.26803666e+34 0.00000000e+00 1.50369214e+35]
+           [1.41846826e+35 3.81055258e+35 1.50369214e+35 0.00000000e+00]]
    ```
 
 
@@ -569,6 +572,7 @@ Based on the previous scheme, this package can be used in three different contex
         def __init__(self):
             self.check_errors = False 
             self.type_dtw = "d"
+            self.constraint = None
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
@@ -603,6 +607,7 @@ Based on the previous scheme, this package can be used in three different contex
         def __init__(self):
             self.check_errors = False 
             self.type_dtw = "i"
+            self.constraint = None
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
@@ -637,11 +642,12 @@ Based on the previous scheme, this package can be used in three different contex
     class Input:
         def __init__(self):
             self.check_errors = False 
-            self.type_dtw = "i"
+            self.type_dtw = "d"
+            self.constraint = None
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
-            self.local_dissimilarity = "gower"
+            self.local_dissimilarity = "norm2"
             self.visualization = False
             self.output_file = True
             self.DTW_to_kernel = False
@@ -672,11 +678,12 @@ Based on the previous scheme, this package can be used in three different contex
     class Input:
         def __init__(self):
             self.check_errors = False 
-            self.type_dtw = "itakura"
+            self.type_dtw = "d"
+            self.constraint = "itakura"
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
-            self.local_dissimilarity = None
+            self.local_dissimilarity = "square_euclidean_distance"
             self.visualization = False
             self.output_file = True
             self.DTW_to_kernel = False
@@ -690,40 +697,12 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    ```
    [out]: 
-   array([[9.35069732e+15, 3.42960674e+17, 8.44836242e+16, 6.35776023e+17],
-       [2.31320459e+17, 5.83631830e+17, 3.25154781e+17, 8.76447180e+17],
-       [1.79841959e+15, 3.54109791e+17, 9.56327411e+16, 6.46925140e+17],
-       [3.85976275e+17, 3.36649042e+16, 2.92141954e+17, 2.59150445e+17]])
+   array([[8.74355404e+31, 1.17622024e+35, 7.13748276e+33, 4.04211152e+35],
+       [5.35091548e+34, 3.40626113e+35, 1.05725631e+35, 7.68159658e+35],
+       [3.23431302e+30, 1.25393744e+35, 9.14562117e+33, 4.18512137e+35],
+       [1.48977685e+35, 1.13332577e+33, 8.53469211e+34, 6.71589533e+34]])
    ```
 
-  **Example 8.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics. **Novelty:** irregular multivariate time series. You indicate the value of the flag. This value will be searched and removed from each of the MTS entered (this process is carried out transparently to the user). For the case of DTW (d), we normalize the value of the distance dtw obtained by the square root of the product of the length of the time series 1 by the time series 2. For the case of DTW (i), we replicate the values of the last time instant until completing the time series.
-
-  ```
-    import numpy as np
-    from dtwParallel import dtw_functions as dtw
-
-    x = np.load('../../Data/E0/X_train.npy')
-    y = np.load('../../Data/E0/X_test.npy')
-
-    class Input:
-        def __init__(self):
-            self.check_errors = False 
-            self.type_dtw = "d"
-            self.MTS = True
-            self.regular_flag = False
-            self.n_threads = -1
-            self.local_dissimilarity = None
-            self.visualization = False
-            self.output_file = True
-            self.DTW_to_kernel = False
-            self.sigma_kernel = 1
-            self.itakura_max_slope = None
-            self.sakoe_chiba_radius = None
-
-    input_obj = Input()
-    # API call. 
-    dtw_functions.dtw_tensor_3d(x, y, input_obj)
-   ```
 
 <a name="item1"></a>
 ## Configuration
@@ -735,6 +714,7 @@ The default values are:
 [DEFAULT]
 check_errors = False
 type_dtw = d
+constraint = None
 mts = False
 regular_flag = 0
 local_dissimilarity = euclidean
