@@ -9,13 +9,19 @@ from numba import njit
 # between time series. 
 
 
-
 @njit()
-def get_path(D):
-    '''
+def get_path(cost_matrix):
+    """
     Function that allows to obtain the path, that is, the route to reach the DTW distance value.
-    '''
-    path = [(D.shape[0] - 1, D.shape[1] - 1)]
+
+    Parameters
+    ------------
+    :param cost_matrix: cost matrix
+
+    :return: list
+        Optimal path
+    """
+    path = [(cost_matrix.shape[0] - 1, cost_matrix.shape[1] - 1)]
     while path[-1] != (0, 0):
         i, j = path[-1]
         if i == 0:
@@ -23,9 +29,9 @@ def get_path(D):
         elif j == 0:
             path.append((i - 1, 0))
         else:
-            arr = np.array([D[i - 1][j - 1],
-                               D[i - 1][j],
-                               D[i][j - 1]])
+            arr = np.array([cost_matrix[i - 1][j - 1],
+                            cost_matrix[i - 1][j],
+                            cost_matrix[i][j - 1]])
             argmin = np.argmin(arr)
             if argmin == 0:
                 path.append((i - 1, j - 1))
@@ -39,9 +45,16 @@ def get_path(D):
 
  
 def plot_cost_matrix(warp_path, cost):
-    '''
+    """
     Function to paint the cost matrix.
-    '''
+
+    Parameters
+    ------------
+    :param warp_path: list
+    :param cost: numpy.ndarray
+
+    :return: non return
+    """
     fig, ax = plt.subplots(figsize=(12, 10))
     ax = sbn.heatmap(cost[1:,1:], annot=True, square=True, linewidths=0.1, cmap="YlGnBu", ax=ax)
 
@@ -56,12 +69,18 @@ def plot_cost_matrix(warp_path, cost):
     ax.plot(path_xx, path_yy, color='blue', linewidth=3, alpha=0.2)
 
 
-
 def plot_alignment(x, y, warp_path):
-    '''
+    """
     Function to paint the alignment between time series.
-    '''
 
+    Parameters
+    ------------
+    :param x: list
+    :param y: list
+    :param warp_path: list
+
+    :return: non return
+    """
     linewidths =[3.5, 3.5, 0.5]
 
     fig, ax = plt.subplots(figsize=(10, 8))

@@ -29,7 +29,7 @@ def control_inputs(x, y, type_dtw, MTS, term_exec):
     if x.ndim == y.ndim > 1 and not MTS:
         raise ValueError('Change the value of the MTS flag.')
 
-    return x, y
+    #return x, y
 
 
 
