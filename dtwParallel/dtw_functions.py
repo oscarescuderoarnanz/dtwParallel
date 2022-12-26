@@ -1,4 +1,9 @@
-## Functions _njit_itakura_mask, itakura_mask, sakoe_chiba_mask, compute_mask obtained from tslearn
+## Functions _njit_itakura_mask, itakura_mask, sakoe_chiba_mask and compute_mask
+## have their origin in the tslearned project 
+## (https://github.com/tslearn-team/tslearn/blob/main/tslearn/metrics/dtw_variants.py)
+## released under a BSD 2-Clause license and with Copyright (c) 2017, Romain Tavenard
+## We incorporate them into dtwParallel, meeting the conditions specified in the license
+## as it can be seen in the LICENSE file of dtwParallel.
 
 import numpy as np
 from collections import defaultdict
