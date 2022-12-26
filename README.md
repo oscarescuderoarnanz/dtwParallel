@@ -52,7 +52,7 @@ for installing Python packages. To do it, run the following command:
 pip install dtwParallel
 ```
 
-Current version: 0.9.26
+Current version: 0.9.27
 
 
 ## Requirements
@@ -88,7 +88,7 @@ The different parameters available with their possible values are listed below:
 | Visualization | --visualization or -vis | get_visualization | True or False |
 | Obtain the result in a file | --output_file or -of | not possible | True or False |
 | Name for the output file | --name_file or -nf | not possible | string |
-| Transformation of the DTW distance matrix to an exponential kernel | --DTW_to_kernel or -k | DTW_to_kernel | True or False |
+| Transformation of the DTW distance matrix to an exponential kernel | --dtw_to_kernel or -k | dtw_to_kernel | True or False |
 | Sigma value for kernel transformation | --sigma_kernel or -s | sigma_kernel | float |
 | Maximum slope for the Itakura parallelogram | --itakura_max_slope or -imx | itakura_max_slope | float or None |
 | Radius to be used for Sakoe-Chiba band | --sakoe_chiba_radius or -scr | sakoe_chiba_radius | int or None |

@@ -13,7 +13,7 @@ from dtw_functions import dtw, dtw_tensor_3d
 
 
 
-def input_File(input_obj):
+def input_File():
     """
     For terminal. Controls the file entered. 
     In case of having 2 rows, we calculate DTW between 2 MTS. 
@@ -32,20 +32,19 @@ def input_File(input_obj):
 
     elif (data.shape[0] > 3) and (data.shape[0] % 2 == 0):
         input_obj.MTS = True
-        finalData = []
+        final_data = []
         index = data.shape[0]/2
         for i in range(2):
-            finalData.append(data.loc[(data.shape[0]/2)*i:index-1, :].values)
+            final_data.append(data.loc[(data.shape[0]/2)*i:index-1, :].values)
             index+=int(data.shape[0] / 2)
 
-        input_obj.x = finalData[0]
-        input_obj.y = finalData[1]
-        
+        input_obj.x = final_data[0]
+        input_obj.y = final_data[1]
 
     return input_obj
 
 
-def control_Output(input_obj, dtw_distance):
+def control_output(input_obj, dtw_distance):
 
     if input_obj.output_file:
         sys.stdout.write("Output to "  + input_obj.name_file + ".csv")
@@ -61,14 +60,14 @@ def main():
         sys.stderr.write(s)
         sys.exit(0)
 	
-	# Generate an object with the deafult parameters
+    # Generate an object with the deafult parameters
     input_obj = Input()
 	
     # Input type 1: input by files
     if os.path.exists(sys.argv[1]):
         # input 2D file
         if sys.argv[1].endswith('.csv'):
-            input_obj = input_File(input_obj)
+            input_obj = input_File()
             
             dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
 
@@ -85,13 +84,13 @@ def main():
 
             dtw_distance = dtw_tensor_3d(X, Y, input_obj)
             
-        control_Output(input_obj, dtw_distance)
+        control_output(input_obj, dtw_distance)
             
     # Input type 2: input by terminal
     elif sys.argv[1] == "-x":        
         args, input_obj = parse_args(False)
         
-        if args.y == None:
+        if args.y is None:
             sys.stderr.write("You need introduce a vector -y")
             sys.exit(0)
       
@@ -101,10 +100,10 @@ def main():
        
         dtw_distance = dtw(input_obj.x, input_obj.y, type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity, MTS=input_obj.MTS, get_visualization=input_obj.visualization, check_errors=input_obj.check_errors, term_exec=True)
         
-        control_Output(input_obj, dtw_distance)
+        control_output(input_obj, dtw_distance)
         
     else:
-        args, input_obj = parse_args(False)
+        _, _ = parse_args(False)
         sys.exit(0)
 
 

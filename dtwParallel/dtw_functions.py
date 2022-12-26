@@ -276,11 +276,11 @@ def square_euclidean_distance(s1, s2):
 
 
 @njit()
-def general_dtw_ind(typeDistance, len_ts1, len_ts2, ts1, ts2, cost_matrix):
+def general_dtw_ind(type_distance, len_ts1, len_ts2, ts1, ts2, cost_matrix):
 
     for i in range(len_ts1):
         for j in range(len_ts2):
-            cost_matrix[i + 1, j + 1] = typeDistance(ts1, ts2)
+            cost_matrix[i + 1, j + 1] = type_distance(ts1, ts2)
             cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
                                          cost_matrix[i + 1, j],
                                          cost_matrix[i, j])
@@ -346,7 +346,7 @@ def general_dtw_dep(local_dissimilarity, mask, len_ts1, len_ts2, ts1, ts2, cost_
 
 
 #@timing_val
-def dtw_dep(ts1, ts2, local_dissimilarity, mask, mult_UTS=False, regular_flag=0):
+def dtw_dep(ts1, ts2, local_dissimilarity, mask, mult_uts=False, regular_flag=0):
 
     len_ts1 = len(ts1)
     len_ts2 = len(ts2)
@@ -379,9 +379,7 @@ def dtw_dep(ts1, ts2, local_dissimilarity, mask, mult_UTS=False, regular_flag=0)
                                            cost_matrix[i + 1, j],
                                            cost_matrix[i, j])
 
-
-    
-    if mult_UTS:
+    if mult_uts:
         return cost_matrix[-1,-1]
 
     # irregular time series
@@ -400,6 +398,7 @@ def process_irregular_ts_dtw_ind(ts1, ts2, regular_flag):
     ------------
     :param ts1: time serie 1
     :param ts2: time serie 2
+    :param regular_flag: int value
 
     :return: time serie 1 and time serie 2
     """
@@ -412,7 +411,7 @@ def process_irregular_ts_dtw_ind(ts1, ts2, regular_flag):
         if ts1.shape[0] > 1:
             ts1_aux = ts1[-1].reshape((1,-1))
         
-        for idx in range(ts2.shape[0]-ts1.shape[0]):
+        for _ in range(ts2.shape[0] - ts1.shape[0]):
             ts1 = np.concatenate((ts1, ts1_aux))
 
     elif ts2.shape[0] < ts1.shape[0]:
@@ -420,7 +419,7 @@ def process_irregular_ts_dtw_ind(ts1, ts2, regular_flag):
         if ts2.shape[0] > 1:
             ts2_aux = ts2[-1].reshape((1,-1))
 
-        for idx in range(ts1.shape[0]-ts2.shape[0]):
+        for _ in range(ts1.shape[0] - ts2.shape[0]):
             ts2 = np.concatenate((ts2, ts2_aux))
 
     return ts1, ts2
@@ -459,7 +458,7 @@ def get_mask(ts1, ts2, global_constraint, sakoe_chiba_radius, itakura_max_slope)
 
 
 #@timing_val
-def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, DTW_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None, term_exec=False):
+def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, dtw_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None, term_exec=False):
 
     if check_errors:
         control_inputs(ts1, ts2, type_dtw, MTS, term_exec)
@@ -494,8 +493,8 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
 
             dtw_distance = np.array(dtw_matrix_train).reshape((len(ts1), len(ts2)))
 
-            if DTW_to_kernel:
-                return dtw_distance, transform_DTW_to_kernel(dtw_distance, sigma_kernel)
+            if dtw_to_kernel:
+                return dtw_distance, transform_dtw_to_kernel(dtw_distance, sigma_kernel)
 
         # In case we have a unidimensional UTS with dataframe format.
         elif isinstance(ts1, pd.DataFrame) and ts1.shape[0] == 1:
@@ -504,7 +503,7 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
         # If we hace a data matrix (UTS) introduced in array format with N UTS >= 2.
         else:
             if np.asanyarray(ts1, dtype='float').ndim > 1 and not(isinstance(ts1, pd.DataFrame)) and not term_exec:
-                if ts2 == None:
+                if ts2 is None:
                     ts2 = ts1
                 
                 len_ts1 = len(ts1)
@@ -518,8 +517,8 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
 
                 dtw_distance = np.array(dtw_matrix_train).reshape((len_ts1, len_ts2))
 
-                if DTW_to_kernel:
-                    return dtw_distance, transform_DTW_to_kernel(dtw_distance, sigma_kernel)
+                if dtw_to_kernel:
+                    return dtw_distance, transform_dtw_to_kernel(dtw_distance, sigma_kernel)
 
             # In case of having 2 UTS.
             else:
@@ -542,7 +541,7 @@ def dtw(ts1, ts2=None, type_dtw="d", local_dissimilarity=distance.euclidean, MTS
     return dtw_distance
 
 
-def transform_DTW_to_kernel(data, sigma_kernel):
+def transform_dtw_to_kernel(data, sigma_kernel):
     """
     We transform the DTW matrix to an exponential kernel.
 
@@ -560,14 +559,14 @@ def transform_DTW_to_kernel(data, sigma_kernel):
 	
 
 #@timing_val
-def dtw_tensor_3d(X_1, X_2, input_obj):
+def dtw_tensor_3d(mts1, mts2, input_obj):
     """
     Function to obtain the calculation of the DTW distance at a high level. Parallelization is included.
 
     Parameters
     ------------
-    :param X_1: tensor of N MTS.
-    :param X_2: Another tensor of N MTS.
+    :param mts1: tensor of N MTS.
+    :param mts2: Another tensor of N MTS.
     :param input_obj: object with parameters.
 
     :return: numpy.ndarray
@@ -575,17 +574,17 @@ def dtw_tensor_3d(X_1, X_2, input_obj):
     """
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
-        delayed(dtw)(X_1[i], X_2[j], type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity,
-                      MTS=input_obj.MTS, get_visualization=input_obj.visualization, 
+        delayed(dtw)(mts1[i], mts2[j], type_dtw=input_obj.type_dtw, local_dissimilarity=input_obj.local_dissimilarity,
+                      MTS=input_obj.MTS, get_visualization=input_obj.visualization,
                       check_errors=input_obj.check_errors, regular_flag=input_obj.regular_flag,
                       itakura_max_slope=input_obj.itakura_max_slope, sakoe_chiba_radius=input_obj.sakoe_chiba_radius)
-        for i in range(X_1.shape[0]) 
-        for j in range(X_2.shape[0])
+        for i in range(mts1.shape[0])
+        for j in range(mts2.shape[0])
     )
     
-    data = np.array(dtw_matrix_train).reshape((X_1.shape[0], X_2.shape[0]))
+    data = np.array(dtw_matrix_train).reshape((mts1.shape[0], mts2.shape[0]))
 
     if input_obj.DTW_to_kernel:
-        return data, transform_DTW_to_kernel(data, input_obj.sigma_kernel)
+        return data, transform_dtw_to_kernel(data, input_obj.sigma_kernel)
 
     return data

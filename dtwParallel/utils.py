@@ -42,7 +42,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.26
+    %(prog)s 0.9.27
 """
     
 
@@ -83,13 +83,13 @@ class Input:
         self.visualization = config.getboolean('DEFAULT', 'visualization')
         self.output_file = config.getboolean('DEFAULT', 'output_file')
         self.name_file = config['DEFAULT']['name_file']
-        self.DTW_to_kernel = config.getboolean('DEFAULT', 'DTW_to_kernel')
+        self.dtw_to_kernel = config.getboolean('DEFAULT', 'dtw_to_kernel')
         self.sigma_kernel = config.getint('DEFAULT', 'sigma_kernel')
         self.itakura_max_slope = config.get('DEFAULT', 'itakura_max_slope')
         self.sakoe_chiba_radius = config.get('DEFAULT', 'sakoe_chiba_radius')
 
 
-def parse_args(isEntryFile):
+def parse_args(is_entry_file):
     input_obj = Input()
 
     parser = argparse.ArgumentParser(usage=DTW_USAGE_MSG,
@@ -98,7 +98,7 @@ def parse_args(isEntryFile):
                              add_help=False)
 
     # Control input arguments by terminal
-    if isEntryFile:
+    if is_entry_file:
 
         parser.add_argument('X',
                             type=argparse.FileType('r'),
@@ -143,8 +143,8 @@ def parse_args(isEntryFile):
     parser.add_argument('-n', '--n_threads', nargs='?', default=input_obj.n_threads, type=int,
                         help="d: dependient or i: independient.")
 
-    parser.add_argument("-k", "--DTW_to_kernel", nargs='?', default=input_obj.DTW_to_kernel, type=bool,
-                        help="In case of DTW_to_kernel=True a transformation of the distance matrix to an exponential kernel with default sigma value equal to 1 is performed.")
+    parser.add_argument("-k", "--dtw_to_kernel", nargs='?', default=input_obj.dtw_to_kernel, type=bool,
+                        help="In case of dtw_to_kernel=True a transformation of the distance matrix to an exponential kernel with default sigma value equal to 1 is performed.")
 
     parser.add_argument("-s", "--sigma_kernel", nargs='?', default=input_obj.sigma_kernel, type=float,
                         help="Sigma value for kernel transformation.")
@@ -180,7 +180,7 @@ def parse_args(isEntryFile):
     input_obj.output_file = args.output_file
     input_obj.name_file = args.name_file
     input_obj.n_threads = args.n_threads
-    input_obj.DTW_to_kernel = args.DTW_to_kernel
+    input_obj.dtw_to_kernel = args.dtw_to_kernel
     input_obj.sigma_kernel = args.sigma_kernel
 
     if args.itakura_max_slope == "None":
