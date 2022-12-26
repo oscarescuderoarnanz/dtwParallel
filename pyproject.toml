@@ -29,7 +29,6 @@ dependencies = [
     "gower",
     "setuptools",
     "scipy",
-    "tslearn",
     "joblib",
     "numba"
 ]
