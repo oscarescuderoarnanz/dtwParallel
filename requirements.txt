@@ -13,6 +13,5 @@ seaborn
 gower
 setuptools
 scipy
-tslearn
 joblib
 numba

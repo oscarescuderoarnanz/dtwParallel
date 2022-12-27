@@ -25,21 +25,6 @@ from numba import njit, prange
 GLOBAL_CONSTRAINT_CODE = {None: 0, "": 0, "itakura": 1, "sakoe_chiba": 2}
 
 
-#import time 
-
-#def timing_val(func):
-#    def wrapper(*arg, **kw):
-#        
-#        t1 = time.time()
-#        res = func(*arg, **kw)
-#        t2 = time.time()
-#        print(f'Function {func.__name__} Took {t2-t1:.4f} seconds')
-#        return (t2 - t1)
-#    return wrapper
-
-# Function for the calculation of the independent DTW distance.
-
-
 def to_time_series(ts):
     ts_out = np.array(ts, copy=True)
     if ts_out.ndim <= 1:
@@ -353,7 +338,6 @@ def general_dtw_dep(local_dissimilarity, mask, len_ts1, len_ts2, ts1, ts2, cost_
 
 
 
-#@timing_val
 def dtw_dep(ts1, ts2, local_dissimilarity, mask, mult_uts=False, regular_flag=0):
 
     len_ts1 = len(ts1)
@@ -434,7 +418,7 @@ def process_irregular_ts_dtw_ind(ts1, ts2, regular_flag):
 
 
 
-def get_mask(ts1, ts2, constraint, sakoe_chiba_radius, itakura_max_slope):
+def get_mask(ts1, ts2, constrained_path_search, sakoe_chiba_radius, itakura_max_slope):
     """
     Compute the mask (region constraint)
 
@@ -442,7 +426,7 @@ def get_mask(ts1, ts2, constraint, sakoe_chiba_radius, itakura_max_slope):
     ------------
     :param ts1: A time series or integer
     :param ts2: Another time series or integer
-    :param constraint: type constraint (None, sakoe-chiba o itakura)
+    :param constrained_path_search: type constraint (None, sakoe-chiba o itakura)
     :param sakoe_chiba_radius: int or None
     :param itakura_max_slope: float or None
 
@@ -455,20 +439,20 @@ def get_mask(ts1, ts2, constraint, sakoe_chiba_radius, itakura_max_slope):
 
     mask = compute_mask(
         ts1, ts2,
-        GLOBAL_CONSTRAINT_CODE[constraint],
+        GLOBAL_CONSTRAINT_CODE[constrained_path_search],
         sakoe_chiba_radius=sakoe_chiba_radius,
         itakura_max_slope=itakura_max_slope)
 
     return mask
 
 
-#@timing_val
-def dtw(ts1, ts2=None, type_dtw="d", constraint=None, local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, dtw_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None, term_exec=False):
+
+def dtw(ts1, ts2=None, type_dtw="d", constrained_path_search=None, local_dissimilarity=distance.euclidean, MTS=False, get_visualization=False, check_errors=False, regular_flag=0, n_threads=-1, dtw_to_kernel=False, sigma_kernel=1, itakura_max_slope=None, sakoe_chiba_radius=None, term_exec=False):
 
     if check_errors:
         control_inputs(ts1, ts2, type_dtw, MTS, term_exec)
 
-    mask = get_mask(ts1, ts2, constraint, sakoe_chiba_radius, itakura_max_slope)
+    mask = get_mask(ts1, ts2, constrained_path_search, sakoe_chiba_radius, itakura_max_slope)
     
     if MTS:        
         if type_dtw == "i":
@@ -563,7 +547,6 @@ def transform_dtw_to_kernel(data, sigma_kernel):
     return np.exp(-data/(2*sigma_kernel**2))
 	
 
-#@timing_val
 def dtw_tensor_3d(mts1, mts2, input_obj):
     """
     Function to obtain the calculation of the DTW distance at a high level. Parallelization is included.
@@ -579,7 +562,7 @@ def dtw_tensor_3d(mts1, mts2, input_obj):
     """
 
     dtw_matrix_train = Parallel(n_jobs=input_obj.n_threads)(
-        delayed(dtw)(mts1[i], mts2[j], type_dtw=input_obj.type_dtw, constraint=input_obj.constraint, local_dissimilarity=input_obj.local_dissimilarity,
+        delayed(dtw)(mts1[i], mts2[j], type_dtw=input_obj.type_dtw, constrained_path_search=input_obj.constrained_path_search, local_dissimilarity=input_obj.local_dissimilarity,
                       MTS=input_obj.MTS, get_visualization=input_obj.visualization,
                       check_errors=input_obj.check_errors, regular_flag=input_obj.regular_flag,
                       itakura_max_slope=input_obj.itakura_max_slope, sakoe_chiba_radius=input_obj.sakoe_chiba_radius)
