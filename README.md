@@ -4,7 +4,7 @@ This package allows to measurement of the similarity between two-time sequences,
 
 One of the parameters available for this method is the method used to calculate the local similarity. For this case, it is possible to use any distance available in `scipy.spatial.distance` (it does not allow to work with variables of different nature, i.e., discrete, continuous, and categorical), `gower` distance (it allows to work with variables of different nature). 
 
-At this point, using local dissimilarities such as norma1, norma2, or square euclidean distance provides optimization in terms of computational time with respect to the rest of the available local dissimilarities.
+At this point, using local dissimilarities such as norm1, norm2, or square euclidean distance provides optimization in terms of computational time with respect to the rest of the available local dissimilarities.
 
 The available variants of DTW are detailed below: 
 1) dependent DTW ("d").
@@ -12,7 +12,7 @@ The available variants of DTW are detailed below:
 
 We can set the following global constraints:
 1) Itakura parallelogram.
-2) Sakoe-Chiba.
+2) Sakoe-Chiba band.
 
 Extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel, given the sigma value (default 1).
 
@@ -83,7 +83,7 @@ The different parameters available with their possible values are listed below:
 |-|-|-|-|
 | Check errors | --check_errors or -ce | check_errors | True or False |
 | Type of DTW variant | --type_dtw or -t | type_dtw | "d" or "i" |
-| Global constraint | --constraint or -c | constraint | "itakura" or "sakoe_chiba" |
+| Global constraint | --constrained_path_search or -c | constrained_path_search | "itakura" or "sakoe_chiba" |
 | Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, "norm1", "norm2", "gower" or "square_euclidean_distance" |
 | Time series introduced: univariate or multivariate | MTS | MTS | True or False |
 | Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int |
@@ -536,7 +536,7 @@ Based on the previous scheme, this package can be used in three different contex
    [out]: 22.546443515422986
    ```
 
-   **Example 5.** For multivariate time series with visualization.
+   **Example 6.** For multivariate time series with visualization.
    
    ```
    from dtwParallel import dtw_functions
@@ -551,7 +551,7 @@ Based on the previous scheme, this package can be used in three different contex
                  [1, 3, 8],
                  [4, 8, 12]])
 
-   dtw_functions.dtw(X, Y, type_dtw="d", local_dissimilarity=d.euclidean, MTS=True)
+   dtw_functions.dtw(X, Y, type_dtw="d", local_dissimilarity=d.euclidean, MTS=True, get_visualization=True)
    ```
    ![Example_2.png](./Images/Example_2.png)
 
@@ -572,7 +572,7 @@ Based on the previous scheme, this package can be used in three different contex
         def __init__(self):
             self.check_errors = False 
             self.type_dtw = "d"
-            self.constraint = None
+            self.constrained_path_search = None
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
@@ -607,7 +607,7 @@ Based on the previous scheme, this package can be used in three different contex
         def __init__(self):
             self.check_errors = False 
             self.type_dtw = "i"
-            self.constraint = None
+            self.constrained_path_search = None
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
@@ -643,7 +643,7 @@ Based on the previous scheme, this package can be used in three different contex
         def __init__(self):
             self.check_errors = False 
             self.type_dtw = "d"
-            self.constraint = None
+            self.constrained_path_search = None
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
@@ -679,7 +679,7 @@ Based on the previous scheme, this package can be used in three different contex
         def __init__(self):
             self.check_errors = False 
             self.type_dtw = "d"
-            self.constraint = "itakura"
+            self.constrained_path_search = "itakura"
             self.MTS = True
             self.regular_flag = False
             self.n_threads = -1
@@ -714,7 +714,7 @@ The default values are:
 [DEFAULT]
 check_errors = False
 type_dtw = d
-constraint = None
+constrained_path_search = None
 mts = False
 regular_flag = 0
 local_dissimilarity = euclidean

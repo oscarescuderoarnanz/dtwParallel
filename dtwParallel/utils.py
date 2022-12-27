@@ -42,7 +42,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.28
+    %(prog)s 0.9.29
 """
     
 
@@ -80,7 +80,7 @@ class Input:
              
         #self.distance = eval("distance." + config.get('DEFAULT', 'distance'))
         self.local_dissimilarity = config.get('DEFAULT', 'local_dissimilarity')
-        self.constraint = config.get('DEFAULT', 'constraint')
+        self.constrained_path_search = config.get('DEFAULT', 'constrained_path_search')
         self.visualization = config.getboolean('DEFAULT', 'visualization')
         self.output_file = config.getboolean('DEFAULT', 'output_file')
         self.name_file = config['DEFAULT']['name_file']
@@ -117,8 +117,8 @@ def parse_args(is_entry_file):
     parser.add_argument('-t', '--type_dtw', nargs='?', default=input_obj.type_dtw, type=str,
                         help="d: dependient or i: independient.")
 
-    parser.add_argument('-c', '--constraint', nargs='?', default=input_obj.constraint, type=str,
-                        help="d: itakura parallelogram or sakoe-chiba.")
+    parser.add_argument('-c', '--constrained_path_search', nargs='?', default=input_obj.constrained_path_search, type=str,
+                        help="itakura parallelogram or sakoe-chiba.")
     
     parser.add_argument("-d", "--local_dissimilarity", nargs='?', default=input_obj.local_dissimilarity, type=str,
                         help="Use a possible distance of scipy.spatial.distance, norm1, norm2, square_euclidean_distance or gower.")
@@ -176,7 +176,7 @@ def parse_args(is_entry_file):
     args = parser.parse_args()
     
     input_obj.type_dtw = args.type_dtw
-    input_obj.constraint = args.constraint
+    input_obj.constrained_path_search = args.constrained_path_search
     input_obj.local_dissimilarity = args.local_dissimilarity
     input_obj.check_errors = args.check_errors
     input_obj.MTS = args.MTS
@@ -198,8 +198,8 @@ def parse_args(is_entry_file):
     else:
         input_obj.sakoe_chiba_radius = float(args.sakoe_chiba_radius)
 
-    if args.constraint == "None":
-        input_obj.constraint = None
+    if args.constrained_path_search == "None":
+        input_obj.constrained_path_search = None
 
     # If the distance introduced is not correct, the execution is terminated.
     if input_obj.check_errors:
