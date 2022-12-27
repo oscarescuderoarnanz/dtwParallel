@@ -40,6 +40,7 @@ def get_path(cost_matrix):
             else:
                 path.append((i, j - 1))
 
+    #return path[::-1][1:]
     return path[::-1][1:]
 
 
@@ -69,6 +70,7 @@ def plot_cost_matrix(warp_path, cost):
     ax.plot(path_xx, path_yy, color='blue', linewidth=3, alpha=0.2)
 
 
+
 def plot_alignment(x, y, warp_path):
     """
     Function to paint the alignment between time series.
@@ -81,32 +83,28 @@ def plot_alignment(x, y, warp_path):
 
     :return: non return
     """
-    linewidths =[3.5, 3.5, 0.5]
+    linewidths =[3.75, 3.75, 0.5]
 
     fig, ax = plt.subplots(figsize=(10, 8))
 
-    # ASSESS WHETHER OR NOT TO REMOVE
     fig.patch.set_visible(False)
     ax.axis('off')
 
-    # This prevents unexpected changes in the reference signal after the duplicate
     x_ref = np.copy(x)  
-    # Set an offset for visualization
-    x_ref += 2 * np.max(x)  
+    # Offset for visualization
+    x_ref += 2 * np.max(x)
 
     xref = np.arange(len(x_ref))
 
     plt.plot(xref, x_ref, color="green", lw=linewidths[0], label="Time series 1")
     plt.plot(y, color="blue", lw=linewidths[1], label="Time series 2")
 
-    [
+    for i in range(len(warp_path)):
         plt.plot(
-            [warp_path[i][0], warp_path[i][1]],
-            [x_ref[warp_path[i][0]], y[warp_path[i][1]]],
+            [warp_path[i][0]-1, warp_path[i][1]-1],
+            [x_ref[warp_path[i][0]-1], y[warp_path[i][1]-1]],
             color="k",
             lw=linewidths[2],
         )
-        for i in range(len(warp_path)-1)
-    ]
 
     plt.legend(fontsize=14)
