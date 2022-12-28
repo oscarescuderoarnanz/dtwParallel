@@ -13,6 +13,7 @@ The available variants of DTW are detailed below:
 We can set the following global constraints:
 1) Itakura parallelogram.
 2) Sakoe-Chiba band.
+3) None.
 
 Extra functionality has been incorporated to transform the resulting DTW matrix into an exponential kernel, given the sigma value (default 1).
 
@@ -23,7 +24,7 @@ Common functionalities for N (> 2) time series (TS):
 - The calculation can be parallelized by the CPU by selecting the number of threads. As a result, we will obtain the distance matrix. 
 - It is possible to perform distance computation and similarity computation (based on an exponential kernel).
 
- The input data types via API are (1) CSV; (2) array; (3) pandas (pd.DataFrame or pd.Series); (4) npy (for tensors).
+ The input data types via API are (1) CSV; (2) array; (3) pandas (pd.DataFrame or pd.Series) and (4) npy (for tensors).
 
 ## Table of content 
 
@@ -83,7 +84,7 @@ The different parameters available with their possible values are listed below:
 |-|-|-|-|
 | Check errors | --check_errors or -ce | check_errors | True or False |
 | Type of DTW variant | --type_dtw or -t | type_dtw | "d" or "i" |
-| Global constraint | --constrained_path_search or -c | constrained_path_search | "itakura" or "sakoe_chiba" |
+| Global constraint | --constrained_path_search or -c | constrained_path_search | "itakura", "sakoe_chiba" or None |
 | Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, "norm1", "norm2", "gower" or "square_euclidean_distance" |
 | Time series introduced: univariate or multivariate | MTS | MTS | True or False |
 | Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int |
@@ -119,7 +120,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    ```
    ```
-   [out]: 65,0
+   [out]: 65.0
    ```
 
    **b) Example 2.** Considering the CityBlock distance.
@@ -128,22 +129,22 @@ Based on the previous scheme, this package can be used in three different contex
    dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2  -y 12.1 0 0 1 1 6.4 3.5 1 0 0  -d cityblock
    ```
    ```
-   [out]: 45,4
+   [out]: 45.4
    ```
 
-   **c) Example 3.** This examples are , respectively, counterparts to **Example 1** and **Example 2**.
+   **c) Example 3.** This examples are, respectively, counterparts to **Example 1** and **Example 2**.
    
    ```
-   dtwParallel -x 2 4 6 8 5 3 -y 12 0 0 3 5 6 30 1 2 4 
+   dtwParallel -x 2 4 6 8 5 3 -y 12 0 0 3 5 6 30 1 2 4
    ```
    ```
-   [out]: 44,0
+   [out]: 44.0
    ```   
    ```
    dtwParallel -x 2.5 4.3 6.6 8.0 1 0 0 1 5.5 15.2 -y 1 0 0 1 -d cityblock
    ```
    ```
-   [out]: 36,1
+   [out]: 36.09
    ```   
 
    **d) Example 4.** **Novelty**: It has been included the possibility to calculate the Itakura parallelogram and the Sakoe-Chiba band.
@@ -205,8 +206,8 @@ Based on the previous scheme, this package can be used in three different contex
    **Remarks:**
    The calculation of the DTW distance from the command line is limited to simple examples that allow a quick understanding due to the complexity of the terminal handling:
    - Univariate time series.
-   - We can set the following restrictions to the calculation of dependent (d) or independent DTW:  Itakura parallelogram and Sakoe-Chiba band.
-   - Include a straightforward and optimal way to calculate norm 1, norm 2 and square euclidean distance.
+   - We can set the following restrictions to the calculation of dependent (d) or independent (i) DTW:  Itakura parallelogram, Sakoe-Chiba band or None.
+   - Include a straightforward and optimal way to calculate norm 1 (l1), norm 2 (l2) and square euclidean distance.
    - To visualize the cost matrix, routing and the alignment between a pair of series, it will be necessary to use an integrated development environment.
 
 ### 2) Calculation of the DTW distance with input from a file, haciendo uso de terminal.
@@ -267,7 +268,7 @@ Based on the previous scheme, this package can be used in three different contex
    dtwParallel <file_X> <file_Y> -d <str> -t <str> -ce <bool> -of <bool> -n <int> -k <bool> -s <float>
    ```
 
-   **c) Example 3.** It computes the distance to itself. With differents types of DTW.
+   **c) Example 3.** It computes the distance to itself. With differents types of DTW, distances and constraints.
    ```
    dtwParallel exampleData/Data/E0/X_train.npy 
    ```
@@ -299,7 +300,7 @@ Based on the previous scheme, this package can be used in three different contex
    ```
 
 
-   **d) Example 4.** Compute the distance between X and Y.
+   **d) Example 4.** We compute the distance matrix DTW between X and Y.
 
    ```
    dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy
@@ -311,7 +312,7 @@ Based on the previous scheme, this package can be used in three different contex
           [1.02119724e+18 8.90689643e+16 7.72934957e+17 6.85647630e+17]]
    ```
 
-   **e) Example 5.** Compute the gower distance between X and Y.
+   **e) Example 5.** We select two types of distance: gower distance and norm 1. We obtain the distance matrix DTW between X and Y. 
 
    ```
    dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy -d "gower"
@@ -333,7 +334,7 @@ Based on the previous scheme, this package can be used in three different contex
            [2.67364557e+09 7.89609239e+08 2.32605776e+09 2.19078374e+09]]
    ```
 
-   **f) Example 6.** Compute the gower distance between X and Y and we vary the number of threads.
+   **f) Example 6.** Compute the gower distance between X and Y, and we select the number of threads.
 
    ```
    dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy -d "gower" -n 12
@@ -345,7 +346,7 @@ Based on the previous scheme, this package can be used in three different contex
           [0.70000006 1.57999993 1.10000018 1.69999999]]
    ```
 
-   **g) Example 7.** Compute the gower distance between X and Y and we obtain the output per file.
+   **g) Example 7.** Compute the gower distance between X and Y, then we obtain the output per file.
 
    ```
    dtwParallel exampleData/Data/E0/X_train.npy exampleData/Data/E0/X_test.npy -d "gower" -n 12 -of True
@@ -355,7 +356,7 @@ Based on the previous scheme, this package can be used in three different contex
    ```
 
 
-   **h) Example 8.** We calculate the distance between X and Y and transform to Gaussian kernel with sigma_kernel=0.5. We return the distance matrix and the kernel.  
+   **h) Example 8.** We calculate the distance between X and Y, and transform to Gaussian kernel with sigma_kernel=0.5. We return the distance matrix and the kernel.  
    ```
    dtwParallel exampleData/Data/E0/X_train.npy -k True -s 1000000000
    ```
@@ -403,6 +404,33 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    ```
    [out]: 5.0
+   ```
+
+   ```
+   from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   
+   # For Univariate Time Series
+   x = [1,2,3,3,4,5,6,7]
+   y = [0,1,5,7,1,8,1,4]
+   
+   dtw_functions.dtw(x,y,local_dissimilarity=d.euclidean)
+   ```
+   ```
+   [out]: 22.0
+   ```
+
+   ```
+   from dtwParallel import dtw_functions
+   
+   # For Univariate Time Series
+   x = [1,2,3,3,4,5,6,7]
+   y = [0,1,5,7,1,8,1,4]
+   
+   dtw_functions.dtw(x,y,local_dissimilarity="norm1")
+   ```
+   ```
+   [out]: 12.84
    ```
 
    ```
@@ -555,6 +583,8 @@ Based on the previous scheme, this package can be used in three different contex
    ```
    ![Example_2.png](./Images/Example_2.png)
 
+   **Remark**: In the case of MTS, it is not possible to display the alignment between the time series. 
+
    ```
    [out]: 21.801217248966267
    ```
@@ -562,31 +592,31 @@ Based on the previous scheme, this package can be used in three different contex
    **Example 7.** For a tensor formed by N x T x F, where N is the number of observations, T the time instants and F the characteristics.
     
    ```
-    import numpy as np
-    from dtwParallel import dtw_functions as dtw
+   import numpy as np
+   from dtwParallel import dtw_functions as dtw
 
-    x = np.load('../../Data/E0/X_train.npy')
-    y = np.load('../../Data/E0/X_test.npy')
+   x = np.load('../../Data/E0/X_train.npy')
+   y = np.load('../../Data/E0/X_test.npy')
 
-    class Input:
-        def __init__(self):
-            self.check_errors = False 
-            self.type_dtw = "d"
-            self.constrained_path_search = None
-            self.MTS = True
-            self.regular_flag = False
-            self.n_threads = -1
-            self.local_dissimilarity = "gower"
-            self.visualization = False
-            self.output_file = True
-            self.DTW_to_kernel = False
-            self.sigma_kernel = 1
-            self.itakura_max_slope = None
-            self.sakoe_chiba_radius = None
+   class Input:
+       def __init__(self):
+           self.check_errors = False 
+           self.type_dtw = "d"
+           self.constrained_path_search = None
+           self.MTS = True
+           self.regular_flag = False
+           self.n_threads = -1
+           self.local_dissimilarity = "gower"
+           self.visualization = False
+           self.output_file = True
+           self.DTW_to_kernel = False
+           self.sigma_kernel = 1
+           self.itakura_max_slope = None
+           self.sakoe_chiba_radius = None
 
-    input_obj = Input()
-    # API call. 
-    dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   input_obj = Input()
+   # API call. 
+   dtw_functions.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
@@ -597,31 +627,31 @@ Based on the previous scheme, this package can be used in three different contex
    ```
 
    ```
-    import numpy as np
-    from dtwParallel import dtw_functions as dtw
+   import numpy as np
+   from dtwParallel import dtw_functions as dtw
 
-    x = np.load('../../Data/E0/X_train.npy')
-    y = np.load('../../Data/E0/X_test.npy')
+   x = np.load('../../Data/E0/X_train.npy')
+   y = np.load('../../Data/E0/X_test.npy')
 
-    class Input:
-        def __init__(self):
-            self.check_errors = False 
-            self.type_dtw = "i"
-            self.constrained_path_search = None
-            self.MTS = True
-            self.regular_flag = False
-            self.n_threads = -1
-            self.local_dissimilarity = "gower"
-            self.visualization = False
-            self.output_file = True
-            self.DTW_to_kernel = False
-            self.sigma_kernel = 1
-            self.itakura_max_slope = None
-            self.sakoe_chiba_radius = None
+   class Input:
+       def __init__(self):
+           self.check_errors = False 
+           self.type_dtw = "i"
+           self.constrained_path_search = None
+           self.MTS = True
+           self.regular_flag = False
+           self.n_threads = -1
+           self.local_dissimilarity = "gower"
+           self.visualization = False
+           self.output_file = True
+           self.DTW_to_kernel = False
+           self.sigma_kernel = 1
+           self.itakura_max_slope = None
+           self.sakoe_chiba_radius = None
 
-    input_obj = Input()
-    # API call. 
-    dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   input_obj = Input()
+   # API call. 
+   dtw_functions.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
@@ -633,31 +663,31 @@ Based on the previous scheme, this package can be used in three different contex
 
 
    ```
-    import numpy as np
-    from dtwParallel import dtw_functions as dtw
+   import numpy as np
+   from dtwParallel import dtw_functions as dtw
 
-    x = np.load('../../Data/E0/X_train.npy')
-    y = np.load('../../Data/E0/X_test.npy')
+   x = np.load('../../Data/E0/X_train.npy')
+   y = np.load('../../Data/E0/X_test.npy')
 
-    class Input:
-        def __init__(self):
-            self.check_errors = False 
-            self.type_dtw = "d"
-            self.constrained_path_search = None
-            self.MTS = True
-            self.regular_flag = False
-            self.n_threads = -1
-            self.local_dissimilarity = "norm2"
-            self.visualization = False
-            self.output_file = True
-            self.DTW_to_kernel = False
-            self.sigma_kernel = 1
-            self.itakura_max_slope = None
-            self.sakoe_chiba_radius = None
+   class Input:
+       def __init__(self):
+           self.check_errors = False 
+           self.type_dtw = "d"
+           self.constrained_path_search = None
+           self.MTS = True
+           self.regular_flag = False
+           self.n_threads = -1
+           self.local_dissimilarity = "norm2"
+           self.visualization = False
+           self.output_file = True
+           self.DTW_to_kernel = False
+           self.sigma_kernel = 1
+           self.itakura_max_slope = None
+           self.sakoe_chiba_radius = None
 
-    input_obj = Input()
-    # API call. 
-    dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   input_obj = Input()
+   # API call. 
+   dtw_functions.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
@@ -669,31 +699,31 @@ Based on the previous scheme, this package can be used in three different contex
 
 
    ```
-    import numpy as np
-    from dtwParallel import dtw_functions as dtw
+   import numpy as np
+   from dtwParallel import dtw_functions as dtw
 
-    x = np.load('../../Data/E0/X_train.npy')
-    y = np.load('../../Data/E0/X_test.npy')
+   x = np.load('../../Data/E0/X_train.npy')
+   y = np.load('../../Data/E0/X_test.npy')
 
-    class Input:
-        def __init__(self):
-            self.check_errors = False 
-            self.type_dtw = "d"
-            self.constrained_path_search = "itakura"
-            self.MTS = True
-            self.regular_flag = False
-            self.n_threads = -1
-            self.local_dissimilarity = "square_euclidean_distance"
-            self.visualization = False
-            self.output_file = True
-            self.DTW_to_kernel = False
-            self.sigma_kernel = 1
-            self.itakura_max_slope = None
-            self.sakoe_chiba_radius = None
+   class Input:
+       def __init__(self):
+           self.check_errors = False 
+           self.type_dtw = "d"
+           self.constrained_path_search = "itakura"
+           self.MTS = True
+           self.regular_flag = False
+           self.n_threads = -1
+           self.local_dissimilarity = "square_euclidean_distance"
+           self.visualization = False
+           self.output_file = True
+           self.DTW_to_kernel = False
+           self.sigma_kernel = 1
+           self.itakura_max_slope = None
+           self.sakoe_chiba_radius = None
 
-    input_obj = Input()
-    # API call. 
-    dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   input_obj = Input()
+   # API call. 
+   dtw_functions.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
