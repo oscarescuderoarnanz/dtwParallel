@@ -609,7 +609,7 @@ Based on the previous scheme, this package can be used in three different contex
            self.local_dissimilarity = "gower"
            self.visualization = False
            self.output_file = True
-           self.DTW_to_kernel = False
+           self.dtw_to_kernel = False
            self.sigma_kernel = 1
            self.itakura_max_slope = None
            self.sakoe_chiba_radius = None
@@ -644,7 +644,7 @@ Based on the previous scheme, this package can be used in three different contex
            self.local_dissimilarity = "gower"
            self.visualization = False
            self.output_file = True
-           self.DTW_to_kernel = False
+           self.dtw_to_kernel = False
            self.sigma_kernel = 1
            self.itakura_max_slope = None
            self.sakoe_chiba_radius = None
@@ -680,7 +680,7 @@ Based on the previous scheme, this package can be used in three different contex
            self.local_dissimilarity = "norm2"
            self.visualization = False
            self.output_file = True
-           self.DTW_to_kernel = False
+           self.dtw_to_kernel = False
            self.sigma_kernel = 1
            self.itakura_max_slope = None
            self.sakoe_chiba_radius = None
@@ -716,7 +716,7 @@ Based on the previous scheme, this package can be used in three different contex
            self.local_dissimilarity = "square_euclidean_distance"
            self.visualization = False
            self.output_file = True
-           self.DTW_to_kernel = False
+           self.dtw_to_kernel = False
            self.sigma_kernel = 1
            self.itakura_max_slope = None
            self.sakoe_chiba_radius = None
