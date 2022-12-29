@@ -59,7 +59,8 @@ setup(
     py_modules={
         "utils",
         "dtw_functions",
-        "error_control" 
+        "error_control",
+        "utils_visualizations"
     },
     entry_points={
         'console_scripts': [

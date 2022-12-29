@@ -55,7 +55,7 @@ for installing Python packages. To do it, run the following command:
 pip install dtwParallel
 ```
 
-Current version: 0.9.31
+Current version: 0.9.33
 
 
 ## Requirements
@@ -532,7 +532,7 @@ Based on the previous scheme, this package can be used in three different contex
    x = [4,2,8,4,5,1,3,5,2,5,7,8,4,5,6,7]
    y = [0,1,0,8,9,1,3,2,4,3,5,6,7,8,5,6]
 
-   dtw_functions.dtw(x, y, constrained_path_search="None",local_dissimilarity=d.euclidean, get_visualization=True)
+   dtw_functions.dtw(x, y, constrained_path_search=None,local_dissimilarity=d.euclidean, get_visualization=True)
    ```
    ```
    [out]: 20.0

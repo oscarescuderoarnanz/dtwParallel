@@ -475,8 +475,8 @@ def dtw(ts1, ts2=None, type_dtw="d", constrained_path_search=None, local_dissimi
                 ts2 = ts1.copy()
 
             dtw_matrix_train = Parallel(n_jobs=n_threads)(
-                delayed(dtw_dep)(ts1.loc[index_1,:].values, ts2.loc[index_2, :], local_dissimilarity, mask, mult_UTS=True)
-                for index_1 in range(ts1.shape[0]) 
+                delayed(dtw_dep)(ts1.loc[index_1,:].values, ts2.loc[index_2, :].values, local_dissimilarity, mask=get_mask(ts1.loc[index_1,:].values, ts2.loc[index_1,:].values, constrained_path_search, sakoe_chiba_radius, itakura_max_slope), mult_uts=True)
+                for index_1 in range(ts1.shape[0])
                 for index_2 in range(ts2.shape[0])
             )
 
@@ -499,7 +499,7 @@ def dtw(ts1, ts2=None, type_dtw="d", constrained_path_search=None, local_dissimi
                 len_ts2 = len(ts2)
                 
                 dtw_matrix_train = Parallel(n_jobs=n_threads)(
-                    delayed(dtw_dep)(ts1[index_1], ts2[index_2], local_dissimilarity, mask, mult_UTS=True)
+                    delayed(dtw_dep)(ts1[index_1], ts2[index_2], local_dissimilarity, mask=get_mask(ts1[index_1], ts2[index_1], constrained_path_search, sakoe_chiba_radius, itakura_max_slope), mult_uts=True)
                     for index_1 in range(len_ts1) 
                     for index_2 in range(len_ts2)
                 )
