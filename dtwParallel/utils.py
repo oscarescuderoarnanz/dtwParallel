@@ -11,38 +11,39 @@ from error_control import possible_distances
 DTW_DESC_MSG = \
 """
     Args:
-        -x   Time series 1
-        -y   Time series 2
-        -t   Calculation type DTW (str)
-        -d   Type of distance (function, norm1, norm2, square_euclidean_distance or gower)
-        -ce  Check data for errors (bool)
-        -of Output to File (bool)
-        -nf Name of file (str)
-        -vis Visualization of Time Series. only available when using dtwParallel with an API. (bool)
-        -n Numero de hilos empleados para la paralelización (int)
-        -k Transformación de la matriz de distancia a kernel (bool)
-        -s Valor de sigma para la transformación a kernel exponencial aplicada (float)
-
-    Others args:
-        MTS  Bool value
+        -x: Time series 1
+        -y: Time series 2
+        -t or --type_dtw: Calculation type DTW (str)
+        -d or --local_dissimilarity: Type of distance (function, norm1, norm2, square_euclidean_distance or gower)
+        -c or --constrained_path_searhc: global constraint as "itakura", "sakoe_chiba" or None
+        MTS: bool value to select univariate or multivariate time series (bool)
+        -rf or --regular_flag: value used to complete irregular MTS. This value is removed transparently to the user 
+        -ce or --check_errors:  Check data for errors (bool)
+        -of or --output_file: Output to File (bool)
+        -nf or --name_file: Name of file (str)
+        -vis or --visualization: Visualization of Time Series. only available when using dtwParallel with an API. (bool)
+        -n or --n_threads: Number of threads used for parallelization (int)
+        -k or --dtw_to_kernel: Distance matrix transformation to kernel (bool)
+        -s or --sigma_value: Sigma value for the applied exponential kernel transformation (float)
+        -imx or --itakura_max_slope: Maximum slope for the Itakura parallelogram (float or None)
+        -scr or --sakoe_chiba_radius: Radius to be used for Sakoe-Chiba band (int or None)
     
     Optional arguments:
         -h, --help            show this help message and exit
         -v, --version         show version
-        -l, --list            show available backends
     \n
 """
 
 DTW_USAGE_MSG = \
 """
-    %(prog)s [<args>] | --help | --version | --list \n   
+    %(prog)s [<args>] | --help | --version \n   
 """ \
 + str(DTW_DESC_MSG)
 
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.34
+    %(prog)s 0.9.35
 """
     
 

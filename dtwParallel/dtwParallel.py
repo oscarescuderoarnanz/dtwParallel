@@ -102,7 +102,9 @@ def main():
         control_output(input_obj, dtw_distance)
         
     else:
-        _, _ = parse_args(False)
+        parse_args(False)
+        s = "\nIncorrect  input arguments.\n"
+        sys.stderr.write(s)
         sys.exit(0)
 
 

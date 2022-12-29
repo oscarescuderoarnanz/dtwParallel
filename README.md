@@ -55,7 +55,7 @@ for installing Python packages. To do it, run the following command:
 pip install dtwParallel
 ```
 
-**Current version:** 0.9.34
+**Current version:** 0.9.35
 
 
 ## Requirements
