@@ -82,20 +82,20 @@ The different parameters available with their possible values are listed below:
 
 | Parameter description | Terminal usage | API usage | Possible values |
 |-|-|-|-|
-| Check errors | --check_errors or -ce | check_errors | True or False |
-| Type of DTW variant | --type_dtw or -t | type_dtw | "d" or "i" |
-| Global constraint | --constrained_path_search or -c | constrained_path_search | "itakura", "sakoe_chiba" or None |
-| Local dissimilarity value | --local_dissimilarity or -d | local_dissimilarity | any distance available in `scipy.spatial.distance`, "norm1", "norm2", "gower" or "square_euclidean_distance" |
+| Check errors | -ce or --check_errors | check_errors | True or False |
+| Type of DTW variant | -t or --type_dtw| type_dtw | "d" or "i" |
+| Global constraint | -c or --constrained_path_search | constrained_path_search | "itakura", "sakoe_chiba" or None |
+| Local dissimilarity value | -d or --local_dissimilarity | local_dissimilarity | any distance available in `scipy.spatial.distance`, "norm1", "norm2", "gower" or "square_euclidean_distance" |
 | Time series introduced: univariate or multivariate | MTS | MTS | True or False |
-| Value used to complete irregular MTS. This value is removed transparently to the user | --regular_flag or -rf | regular_flag | int |
-| Number of threads used for multiple MTS parallelization | --n_threads or -n | n_threads | int |
-| Visualization | --visualization or -vis | get_visualization | True or False |
-| Obtain the result in a file | --output_file or -of | not possible | True or False |
-| Name for the output file | --name_file or -nf | not possible | string |
-| Transformation of the DTW distance matrix to an exponential kernel | --dtw_to_kernel or -k | dtw_to_kernel | True or False |
-| Sigma value for kernel transformation | --sigma_kernel or -s | sigma_kernel | float |
-| Maximum slope for the Itakura parallelogram | --itakura_max_slope or -imx | itakura_max_slope | float or None |
-| Radius to be used for Sakoe-Chiba band | --sakoe_chiba_radius or -scr | sakoe_chiba_radius | int or None |
+| Value used to complete irregular MTS. This value is removed transparently to the user | -rf or --regular_flag | regular_flag | int |
+| Number of threads used for multiple MTS parallelization | -n or --n_threads| n_threads | int |
+| Visualization | -vis or --visualization | get_visualization | True or False |
+| Obtain the result in a file | -of or --output_file | not possible | True or False |
+| Name for the output file | -nf or --name_file| not possible | string |
+| Transformation of the DTW distance matrix to an exponential kernel | -k or --dtw_to_kernel | dtw_to_kernel | True or False |
+| Sigma value for kernel transformation | -s or --sigma_kernel | sigma_kernel | float |
+| Maximum slope for the Itakura parallelogram | -imx or --itakura_max_slope | itakura_max_slope | float or None |
+| Radius to be used for Sakoe-Chiba band | -scr or --sakoe_chiba_radius | sakoe_chiba_radius | int or None |
 
 
 ## Usage
@@ -521,8 +521,76 @@ Based on the previous scheme, this package can be used in three different contex
    [out]: 15.0
    ```
 
-   ![Example_1.png](./Images/Example_1.png)
-   ![Example_1_2.png](./Images/Example_1_2.png)
+   ![Example_3_1.png](./Images/Example_3_1.png)
+   ![Example_3_1_2.png](./Images/Example_3_1_2.png)
+
+   ```
+   from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   
+   # For Univariate Time Series
+   x = [4,2,8,4,5,1,3,5,2,5,7,8,4,5,6,7]
+   y = [0,1,0,8,9,1,3,2,4,3,5,6,7,8,5,6]
+
+   dtw_functions.dtw(x, y, constrained_path_search="None",local_dissimilarity=d.euclidean, get_visualization=True)
+   ```
+   ```
+   [out]: 20.0
+   ```
+
+   ![Example_3_1.png](./Images/Example_3_2_0.png)
+   ![Example_3_1_2.png](./Images/Example_3_2_2_0.png)
+
+   ```
+   from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   
+   # For Univariate Time Series
+   x = [4,2,8,4,5,1,3,5,2,5,7,8,4,5,6,7]
+   y = [0,1,0,8,9,1,3,2,4,3,5,6,7,8,5,6]
+
+   dtw_functions.dtw(x, y, constrained_path_search="itakura",local_dissimilarity=d.euclidean, get_visualization=True)
+   ```
+   ```
+   [out]: 24.0
+   ```
+
+   ![Example_3_1.png](./Images/Example_3_2.png)
+   ![Example_3_1_2.png](./Images/Example_3_2_2.png)
+
+   ```
+   from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   
+   # For Univariate Time Series
+   x = [4,2,8,4,5,1,3,5,2,5,7,8,4,5,6,7]
+   y = [0,1,0,8,9,1,3,2,4,3,5,6,7,8,5,6]
+
+   dtw_functions.dtw(x, y, constrained_path_search="sakoe_chiba",local_dissimilarity=d.euclidean, get_visualization=True)
+   ```
+   ```
+   [out]: 25.0
+   ```
+
+   ![Example_3_1.png](./Images/Example_3_3.png)
+   ![Example_3_1_2.png](./Images/Example_3_3_2.png)
+
+   ```
+   from dtwParallel import dtw_functions
+   from scipy.spatial import distance as d
+   
+   # For Univariate Time Series
+   x = [4,2,8,4,5,1,3,5,2,5,7,8,4,5,6,7]
+   y = [0,1,0,8,9,1,3,2,4,3,5]
+   
+   dtw_functions.dtw(x, y, local_dissimilarity=d.euclidean, get_visualization=True)
+   ```
+   ```
+   [out]: 26.0
+   ```
+
+   ![Example_3_1.png](./Images/Example_3_4.png)
+   ![Example_3_1_2.png](./Images/Example_3_4_2.png)
 
    **Example 4.** For multivariate time series.
    
@@ -581,7 +649,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    dtw_functions.dtw(X, Y, type_dtw="d", local_dissimilarity=d.euclidean, MTS=True, get_visualization=True)
    ```
-   ![Example_2.png](./Images/Example_2.png)
+   ![Example_26png](./Images/Example_6.png)
 
    **Remark**: In the case of MTS, it is not possible to display the alignment between the time series. 
 

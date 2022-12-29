@@ -57,7 +57,12 @@ def plot_cost_matrix(warp_path, cost):
     :return: non return
     """
     fig, ax = plt.subplots(figsize=(12, 10))
-    ax = sbn.heatmap(cost[1:,1:], annot=True, square=True, linewidths=0.1, cmap="YlGnBu", ax=ax)
+    sbn.set(font_scale=2)
+    sbn.heatmap(cost[1:, 1:], annot=True, square=True, linewidths=0.25, cmap="YlGnBu", ax=ax, annot_kws={
+        'fontsize': 20,
+        'fontweight': 'bold',
+        'fontfamily': 'serif'
+    })
 
     # Get the warp path in x and y directions
     path_x = [p[1] for p in warp_path]
@@ -107,4 +112,4 @@ def plot_alignment(x, y, warp_path):
             lw=linewidths[2],
         )
 
-    plt.legend(fontsize=14)
+    plt.legend(fontsize=20)
