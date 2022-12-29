@@ -55,7 +55,7 @@ for installing Python packages. To do it, run the following command:
 pip install dtwParallel
 ```
 
-Current version: 0.9.30
+Current version: 0.9.31
 
 
 ## Requirements
@@ -834,21 +834,21 @@ I have used data from yahoo finance (https://finance.yahoo.com/) of 505 companie
 The computation of the distance matrix has been carried out using dependent and independent DTW varying the number of threads. Code of this example is available at exampleData/Code/E2_FinanceData (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples_new/E2_FinanceData).
 
 **DTW dependent**
-![dtwParallel_dtw_D.png](./exampleData/CodeExamples_new/Figures/dtwParallel_dtw_D.png)
+![dtwParallel_dtw_D.png](./exampleData/CodeExamples/Figures/dtwParallel_dtw_D.png)
 
 **DTW independent**
-![dtwParallel_dtw_I.png](./exampleData/CodeExamples_new/Figures/dtwParallel_dtw_I.png)
+![dtwParallel_dtw_I.png](./exampleData/CodeExamples/Figures/dtwParallel_dtw_I.png)
 
 ### Experiment 2. Comparison of computational time with other packages to calculate dependent DTW. 
 Code available for this example at exampleData/CodeExamples_new/plot_timeExamples_V2.ipynb (https://github.com/oscarescuderoarnanz/dtwParallel/tree/main/exampleData/CodeExamples_new/E2_FinanceData).
 
-![schema.png.png](./exampleData/CodeExamples_new/Figures/comparativeTime.png)
+![schema.png.png](./exampleData/CodeExamples/Figures/comparativeTime.png)
 
 
 ### Experiment 3. We performed a computational time comparison by increasing the length of the time series. 
 Note that the distances used in dtwParallel and tslearn are the same. 
 
-![schema.png.png](./exampleData/CodeExamples_new/Figures/comparativeTime_difflengths.png)
+![schema.png.png](./exampleData/CodeExamples/Figures/comparativeTime_difflengths.png)
 
 ## Reference 
 
