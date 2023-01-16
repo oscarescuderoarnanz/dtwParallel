@@ -1,17 +1,9 @@
-#numpy~=1.20.2
-#pandas~=1.2.2
-#matplotlib~=3.2.2
-#seaborn~=0.10.1
-#gower~=0.0.5
-#setuptools~=49.2.0
-#scipy~=1.6.1
-
 numpy
 pandas
 matplotlib
 seaborn
 gower
 setuptools
-scipy
+scipy <= 1.8
 joblib
 numba
