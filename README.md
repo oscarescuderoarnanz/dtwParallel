@@ -684,7 +684,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    input_obj = Input()
    # API call. 
-   dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   dtw.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
@@ -719,7 +719,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    input_obj = Input()
    # API call. 
-   dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   dtw.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
@@ -755,7 +755,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    input_obj = Input()
    # API call. 
-   dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   dtw.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
@@ -791,7 +791,7 @@ Based on the previous scheme, this package can be used in three different contex
 
    input_obj = Input()
    # API call. 
-   dtw_functions.dtw_tensor_3d(x, y, input_obj)
+   dtw.dtw_tensor_3d(x, y, input_obj)
    ```
    ```
    [out]: 
