@@ -43,7 +43,7 @@ DTW_USAGE_MSG = \
     
 DTW_VERSION_MSG = \
 """
-    %(prog)s 0.9.37
+    %(prog)s 0.9.38
 """
     
 

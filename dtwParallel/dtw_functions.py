@@ -514,7 +514,7 @@ def dtw(ts1, ts2=None, type_dtw="d", constrained_path_search=None, local_dissimi
                 dtw_distance, cost_matrix = dtw_dep(ts1, ts2, local_dissimilarity, mask)
 
 
-    if get_visualization:
+    if get_visualization and not MTS:
         if type_dtw == "i":
             for i in range(len(cost_matrix)):
                 path = uv.get_path(cost_matrix[i])
@@ -526,6 +526,7 @@ def dtw(ts1, ts2=None, type_dtw="d", constrained_path_search=None, local_dissimi
             uv.plot_cost_matrix(path, cost_matrix)
             if not MTS:
                 uv.plot_alignment(ts1, ts2, path)
+
 
     return dtw_distance
 
