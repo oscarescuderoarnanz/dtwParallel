@@ -1,5 +1,10 @@
 # Dynamic Time Warping 
 
+## Paper reference
+
+https://www.sciencedirect.com/science/article/pii/S2352711023000602
+
+## Summary 
 This package allows to measurement of the similarity between two-time sequences, i.e., it finds the optimal alignment between two time-dependent sequences. It allows working with univariate (UTS) and multivariate (MTS) time series, regular (same time length), or irregular (different time length). 
 
 One of the parameters available for this method is the method used to calculate the local similarity. For this case, it is possible to use any distance available in `scipy.spatial.distance` (it does not allow to work with variables of different nature, i.e., discrete, continuous, and categorical), `gower` distance (it allows to work with variables of different nature). 
@@ -853,8 +858,17 @@ Note that the distances used in dtwParallel and tslearn are the same.
 ## Reference 
 
 If you use `dtwParallel` in your research papers, please refer to it using following reference:
-
-[To be done, paper under review]
+```bibtex
+@article{escudero2023dtwparallel,
+  title={dtwParallel: A Python package to efficiently compute dynamic time warping between time series},
+  author={Escudero-Arnanz, {\'O}scar and Marques, Antonio G and Soguero-Ruiz, Cristina and Mora-Jim{\'e}nez, Inmaculada and Robles, Gregorio},
+  journal={SoftwareX},
+  volume={22},
+  pages={101364},
+  year={2023},
+  publisher={Elsevier}
+}
+```
 
 In case of using the `itakura parrallelogram` or `sakoe_chiba band` variants, we ask you to cite as well the following work, as we have taken this functionality granted from [tslearn](https://github.com/tslearn-team/tslearn):
 ```bibtex
