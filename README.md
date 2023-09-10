@@ -60,7 +60,7 @@ for installing Python packages. To do it, run the following command:
 pip install dtwParallel
 ```
 
-**Current version:** 0.9.38
+**Current version:** 0.9.39
 
 
 ## Requirements
