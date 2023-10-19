@@ -4,6 +4,6 @@ matplotlib
 seaborn
 gower
 setuptools
-scipy
+scipy <= 1.8
 joblib
 numba
