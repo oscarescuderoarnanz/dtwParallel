@@ -8,6 +8,7 @@
 import numpy as np
 from collections import defaultdict
 import pandas as pd
+import warnings
 
 import gower
 from joblib import Parallel, delayed
