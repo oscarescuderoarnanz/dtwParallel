@@ -2,6 +2,19 @@
 
 ## Paper reference
 
+If you use `dtwParallel` in your research papers, please refer to it using following reference:
+```bibtex
+@article{escudero2023dtwparallel,
+  title={dtwParallel: A Python package to efficiently compute dynamic time warping between time series},
+  author={Escudero-Arnanz, {\'O}scar and Marques, Antonio G and Soguero-Ruiz, Cristina and Mora-Jim{\'e}nez, Inmaculada and Robles, Gregorio},
+  journal={SoftwareX},
+  volume={22},
+  pages={101364},
+  year={2023},
+  publisher={Elsevier}
+}
+```
+
 https://www.sciencedirect.com/science/article/pii/S2352711023000602
 
 ## Summary 
