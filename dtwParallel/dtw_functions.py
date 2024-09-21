@@ -272,7 +272,7 @@ def general_dtw_ind(type_distance, mask, len_ts1, len_ts2, ts1, ts2, cost_matrix
     for i in range(len_ts1):
         for j in range(len_ts2):
             if np.isfinite(mask[i, j]):
-                cost_matrix[i + 1, j + 1] = type_distance(ts1, ts2)
+                cost_matrix[i + 1, j + 1] = type_distance(ts1[i], ts2[j])
                 cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
                                              cost_matrix[i + 1, j],
                                              cost_matrix[i, j])
@@ -294,14 +294,16 @@ def dtw_ind(ts1, ts2, local_dissimilarity, mask, dtw_distance=0, get_visualizati
         cost_matrix = np.full((len_ts1+1, len_ts2+1), np.inf)
         cost_matrix[0, 0] = 0.
 
-        if local_dissimilarity in ["norm1", "norm2", "square_euclidean_distance"]:
+        if local_dissimilarity in ["norm1", "norm2", "square_euclidean_distance"]:               
+            ts1_aux = to_time_series(ts1_aux)
+            ts2_aux = to_time_series(ts2_aux)
             cost_matrix = general_dtw_ind(eval(local_dissimilarity), mask, len_ts1, len_ts2, ts1_aux, ts2_aux, cost_matrix)
 
         elif local_dissimilarity == "gower":
             for i in range(len_ts1):
                 for j in range(len_ts2):
                     if np.isfinite(mask[i, j]):
-                        df = pd.DataFrame(np.array([ts1_aux, ts2_aux]))
+                        df = pd.DataFrame(np.array([ts1_aux[i], ts2_aux[j]]))
                         cost_matrix[i + 1, j + 1] = gower.gower_matrix(df)[1][0]
                         cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
                                                cost_matrix[i + 1, j],
@@ -310,18 +312,17 @@ def dtw_ind(ts1, ts2, local_dissimilarity, mask, dtw_distance=0, get_visualizati
             for i in range(len_ts1):
                 for j in range(len_ts2):
                     if np.isfinite(mask[i, j]):
-                        cost_matrix[i + 1, j + 1] = local_dissimilarity(ts1_aux, ts2_aux)
+                        cost_matrix[i + 1, j + 1] = local_dissimilarity(ts1_aux[i], ts2_aux[j])
                         cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
                                                          cost_matrix[i + 1, j],
                                                          cost_matrix[i, j])
 
-        if get_visualization:
-            arr_cost_matrix.append(cost_matrix)
+        arr_cost_matrix.append(cost_matrix)
         
 
         dtw_distance += cost_matrix[-1,-1]
 
-    return dtw_distance, arr_cost_matrix
+    return dtw_distance, sum(arr_cost_matrix)
 
 
 
