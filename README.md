@@ -73,7 +73,7 @@ for installing Python packages. To do it, run the following command:
 pip install dtwParallel
 ```
 
-**Current version:** 0.9.40
+**Current version:** 0.9.41
 
 
 ## Requirements
@@ -90,7 +90,7 @@ Note that you should have also the following packages installed in your system:
 - seaborn
 - gower
 - setuptools
-- scipy<=1.8
+- scipy
 - joblib
 - numba
 
