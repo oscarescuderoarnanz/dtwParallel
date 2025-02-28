@@ -368,7 +368,7 @@ def dtw_dep(ts1, ts2, local_dissimilarity, mask, mult_uts=False, regular_flag=0)
         for i in range(len_ts1):
             for j in range(len_ts2):
                 if np.isfinite(mask[i, j]):
-                    cost_matrix[i + 1, j + 1] = local_dissimilarity(ts1[i], ts2[j])
+                    cost_matrix[i + 1, j + 1] = local_dissimilarity(np.atleast_1d(ts1[i]), np.atleast_1d(ts2[j]))
                     cost_matrix[i + 1, j + 1] += min(cost_matrix[i, j + 1],
                                            cost_matrix[i + 1, j],
                                            cost_matrix[i, j])
